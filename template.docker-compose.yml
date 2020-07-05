@@ -1,0 +1,54 @@
+# Maintainer: konrad@diva.exchange
+#
+# use the supplied ${PROJECT_PATH}/build.sh to build the images
+# use the supplied ${PROJECT_PATH}/up.sh to start the containers
+
+version: "3.7"
+services:
+  ${I2PD_CONTAINER_NAME}:
+    image: ${I2PD_IMAGE_NAME:?err}:${I2PD_IMAGE_TAG:-latest}
+    container_name: ${I2PD_CONTAINER_NAME:?err}
+    expose:
+      - ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT?:err} # i2p webconsole
+    ports:
+      - target: ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT:?err}
+        published: ${I2PD_WEBCONSOLE_PORT:?err}
+        protocol: tcp
+        mode: host
+    environment:
+      ENABLE_TUNNELS: "1"
+    volumes:
+      - type: bind
+        source: ${PWD}/tunnels.conf.d
+        target: /home/i2pd/tunnels.source.conf.d
+      - type: volume
+        source: ${I2PD_CONTAINER_NAME}_i2pd
+        target: /home/i2pd/
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${I2PD_IP:?err}
+    extra_hosts:
+      - "iroha-testnet:${IROHA_IP:?err}"
+
+  ${IROHA_CONTAINER_NAME}:
+    image: ${IROHA_IMAGE_NAME:?err}:${IROHA_IMAGE_TAG:-latest}
+    container_name: ${IROHA_CONTAINER_NAME:?err}
+    environment:
+      NAME_KEY: ${NAME_KEY:?err}
+    volumes:
+      - type: volume
+        source: ${IROHA_CONTAINER_NAME}_iroha
+        target: /opt/iroha
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IROHA_IP:?err}
+
+networks:
+  ${NETWORK_NAME}:
+    external: true
+
+volumes:
+  ${I2PD_CONTAINER_NAME}_i2pd:
+    name: ${I2PD_CONTAINER_NAME:?err}_i2pd
+  ${IROHA_CONTAINER_NAME}_iroha:
+    name: ${IROHA_CONTAINER_NAME:?err}_iroha
