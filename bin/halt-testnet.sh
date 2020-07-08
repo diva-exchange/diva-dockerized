@@ -18,12 +18,11 @@ declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
 for NAME_KEY in "${testnet[@]}"; do
   IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
 
-  echo ${PWD}
+  PATH_OUTPUT_YML=/tmp/docker-compose-${IDENT_INSTANCE}.yml
   source ${PWD}/iroha-diva.env
-  PATH_OUTPUT_YML=/tmp/docker-compose-up-${IDENT_INSTANCE}.yml
-  envsubst < $PATH_INPUT_YML > $PATH_OUTPUT_YML
+  envsubst <${PATH_INPUT_YML} >${PATH_OUTPUT_YML}
 
-  echo "Stopping instance ${IDENT_INSTANCE} with key ${NAME_KEY}, ${PATH_OUTPUT_YML}"
+  echo "Stopping instance ${IDENT_INSTANCE} with key ${NAME_KEY}"
   docker-compose -f ${PATH_OUTPUT_YML} down
   rm ${PATH_OUTPUT_YML}
 

@@ -5,14 +5,14 @@
 
 version: "3.7"
 services:
-  ${I2PD_CONTAINER_NAME}:
-    image: ${I2PD_IMAGE_NAME:?err}:${I2PD_IMAGE_TAG:-latest}
-    container_name: ${I2PD_CONTAINER_NAME:?err}
+  ${I2P_CONTAINER_NAME}:
+    image: ${I2PD_IMAGE_NAME}:${I2PD_IMAGE_TAG}
+    container_name: ${I2P_CONTAINER_NAME}
     expose:
-      - ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT?:err} # i2p webconsole
+      - ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT} # i2p webconsole
     ports:
-      - target: ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT:?err}
-        published: ${I2PD_WEBCONSOLE_PORT:?err}
+      - target: ${CONST_I2PD_DOCKER_WEBCONSOLE_PORT}
+        published: ${I2PD_WEBCONSOLE_PORT}
         protocol: tcp
         mode: host
     environment:
@@ -22,33 +22,45 @@ services:
         source: ${PWD}/tunnels.conf.d
         target: /home/i2pd/tunnels.source.conf.d
       - type: volume
-        source: ${I2PD_CONTAINER_NAME}_i2pd
+        source: ${I2P_CONTAINER_NAME}_i2pd
         target: /home/i2pd/
     networks:
       ${NETWORK_NAME}:
-        ipv4_address: ${I2PD_IP:?err}
+        ipv4_address: ${IP_I2P}
     extra_hosts:
-      - "iroha-testnet:${IROHA_IP:?err}"
+      - "iroha:${IP_IROHA}"
 
   ${IROHA_CONTAINER_NAME}:
-    image: ${IROHA_IMAGE_NAME:?err}:${IROHA_IMAGE_TAG:-latest}
-    container_name: ${IROHA_CONTAINER_NAME:?err}
+    image: ${IROHA_IMAGE_NAME}:${IROHA_IMAGE_TAG}
+    container_name: ${IROHA_CONTAINER_NAME}
     environment:
-      NAME_KEY: ${NAME_KEY:?err}
+      NAME_KEY: ${NAME_KEY}
+      IP_IROHA_PROXY: ${IP_IROHA_PROXY}
     volumes:
       - type: volume
         source: ${IROHA_CONTAINER_NAME}_iroha
         target: /opt/iroha
     networks:
       ${NETWORK_NAME}:
-        ipv4_address: ${IROHA_IP:?err}
+        ipv4_address: ${IP_IROHA}
+    extra_hosts:
+      - "iroha-proxy:${IP_IROHA_PROXY}"
+
+  ${IROHA_PROXY_CONTAINER_NAME}:
+    image: ${IROHA_PROXY_IMAGE_NAME}:${IROHA_PROXY_IMAGE_TAG}
+    container_name: ${IROHA_PROXY_CONTAINER_NAME}
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_IROHA_PROXY}
+    extra_hosts:
+      - "i2p:${IP_I2P}"
 
 networks:
   ${NETWORK_NAME}:
     external: true
 
 volumes:
-  ${I2PD_CONTAINER_NAME}_i2pd:
-    name: ${I2PD_CONTAINER_NAME:?err}_i2pd
+  ${I2P_CONTAINER_NAME}_i2pd:
+    name: ${I2P_CONTAINER_NAME}_i2pd
   ${IROHA_CONTAINER_NAME}_iroha:
-    name: ${IROHA_CONTAINER_NAME:?err}_iroha
+    name: ${IROHA_CONTAINER_NAME}_iroha
