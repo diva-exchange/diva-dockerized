@@ -1,0 +1,46 @@
+# Maintainer: konrad@diva.exchange
+#
+
+version: "3.7"
+services:
+  ${IROHA_CONTAINER_NAME}:
+    image: ${IROHA_IMAGE_NAME}:${IROHA_IMAGE_TAG}
+    container_name: p2p-${IROHA_CONTAINER_NAME}
+    environment:
+      NAME_KEY: ${NAME_KEY}
+      IP_IROHA_NODE: ${IP_IROHA_NODE}
+      TYPE: P2P
+    volumes:
+      - type: volume
+        source: p2p-${IROHA_CONTAINER_NAME}
+        target: /opt/iroha
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_IROHA}
+
+  ${IROHA_NODE_CONTAINER_NAME}:
+    image: ${IROHA_NODE_IMAGE_NAME}:p2p
+    container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
+    environment:
+      IDENT: ${NAME_KEY}
+      TYPE: P2P
+      IP: ${IP_IROHA_NODE}
+      PORT: 10001
+    volumes:
+      - type: volume
+        source: p2p-${IROHA_NODE_CONTAINER_NAME}
+        target: /home/node
+    networks:
+      default:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_IROHA_NODE}
+
+networks:
+  ${NETWORK_NAME}:
+    external: true
+
+volumes:
+  p2p-${IROHA_CONTAINER_NAME}:
+    name: p2p-${IROHA_CONTAINER_NAME}
+  p2p-${IROHA_NODE_CONTAINER_NAME}:
+    name: p2p-${IROHA_NODE_CONTAINER_NAME}

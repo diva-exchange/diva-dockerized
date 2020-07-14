@@ -1,7 +1,5 @@
 # Maintainer: konrad@diva.exchange
 #
-# use the supplied ${PROJECT_PATH}/build.sh to build the images
-# use the supplied ${PROJECT_PATH}/up.sh to start the containers
 
 version: "3.7"
 services:
@@ -22,7 +20,7 @@ services:
         source: ${PWD}/tunnels.conf.d
         target: /home/i2pd/tunnels.source.conf.d
       - type: volume
-        source: ${I2P_CONTAINER_NAME}_i2pd
+        source: i2p-${I2P_CONTAINER_NAME}
         target: /home/i2pd/
     networks:
       ${NETWORK_NAME}:
@@ -32,26 +30,30 @@ services:
 
   ${IROHA_CONTAINER_NAME}:
     image: ${IROHA_IMAGE_NAME}:${IROHA_IMAGE_TAG}
-    container_name: ${IROHA_CONTAINER_NAME}
+    container_name: i2p-${IROHA_CONTAINER_NAME}
     environment:
       NAME_KEY: ${NAME_KEY}
-      IP_IROHA_PROXY: ${IP_IROHA_PROXY}
+      IP_IROHA_NODE: ${IP_IROHA_NODE}
+      TYPE: I2P
     volumes:
       - type: volume
-        source: ${IROHA_CONTAINER_NAME}_iroha
+        source: i2p-${IROHA_CONTAINER_NAME}
         target: /opt/iroha
     networks:
       ${NETWORK_NAME}:
         ipv4_address: ${IP_IROHA}
-    extra_hosts:
-      - "iroha-proxy:${IP_IROHA_PROXY}"
 
-  ${IROHA_PROXY_CONTAINER_NAME}:
-    image: ${IROHA_PROXY_IMAGE_NAME}:${IROHA_PROXY_IMAGE_TAG}
-    container_name: ${IROHA_PROXY_CONTAINER_NAME}
+  ${IROHA_NODE_CONTAINER_NAME}:
+    image: ${IROHA_NODE_IMAGE_NAME}:i2p
+    container_name: i2p-${IROHA_NODE_CONTAINER_NAME}
+    environment:
+      NAME_KEY: ${NAME_KEY}
+      TYPE: I2P
+      IP: ${IP_IROHA_NODE}
+      PORT: 10001
     networks:
       ${NETWORK_NAME}:
-        ipv4_address: ${IP_IROHA_PROXY}
+        ipv4_address: ${IP_IROHA_NODE}
     extra_hosts:
       - "i2p:${IP_I2P}"
 
@@ -60,7 +62,7 @@ networks:
     external: true
 
 volumes:
-  ${I2P_CONTAINER_NAME}_i2pd:
-    name: ${I2P_CONTAINER_NAME}_i2pd
-  ${IROHA_CONTAINER_NAME}_iroha:
-    name: ${IROHA_CONTAINER_NAME}_iroha
+  i2p-${I2P_CONTAINER_NAME}:
+    name: i2p-${I2P_CONTAINER_NAME}
+  i2p-${IROHA_CONTAINER_NAME}:
+    name: i2p-${IROHA_CONTAINER_NAME}

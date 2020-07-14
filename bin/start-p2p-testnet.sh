@@ -11,22 +11,23 @@ set -a
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}/../
 
-PATH_INPUT_YML=template.docker-compose.yml
+PATH_INPUT_YML=p2p-docker-compose.yml
 IDENT_INSTANCE=0
+NAME_NETWORK=diva-p2p-net
 
 declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
 for NAME_KEY in "${testnet[@]}"; do
   IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
 
   # create network
-  [[ $(docker network inspect diva-net${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] || \
+  [[ $(docker network inspect ${NAME_NETWORK}${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] || \
     docker network create \
       --driver=bridge \
       --subnet=172.18.${IDENT_INSTANCE}.0/24 \
       --gateway=172.18.${IDENT_INSTANCE}.1 \
-      diva-net${IDENT_INSTANCE}
+      ${NAME_NETWORK}${IDENT_INSTANCE}
 
-  PATH_OUTPUT_YML=/tmp/docker-compose-${IDENT_INSTANCE}.yml
+  PATH_OUTPUT_YML=/tmp/p2p-dc${IDENT_INSTANCE}.yml
   source ${PWD}/iroha-diva.env
   envsubst <${PATH_INPUT_YML} >${PATH_OUTPUT_YML}
 
