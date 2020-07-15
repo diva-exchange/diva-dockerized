@@ -1,0 +1,85 @@
+#
+#    Copyright (C) 2020 diva.exchange
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#    Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
+#
+
+version: "3.7"
+services:
+  ${I2P_CONTAINER_NAME}:
+    image: divax/i2p:latest
+    container_name: ${I2P_CONTAINER_NAME}
+    expose:
+      - 7070 # i2p webconsole
+    ports:
+      - target: 7070
+        published: ${I2PD_WEBCONSOLE_PORT}
+        protocol: tcp
+        mode: host
+    environment:
+      ENABLE_TUNNELS: "1"
+    volumes:
+      - type: bind
+        source: ${PWD}/tunnels.conf.d
+        target: /home/i2pd/tunnels.source.conf.d
+      - type: volume
+        source: i2p-${I2P_CONTAINER_NAME}
+        target: /home/i2pd/
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_I2P}
+    extra_hosts:
+      - "iroha:${IP_IROHA}"
+
+  ${IROHA_CONTAINER_NAME}:
+    image: divax/iroha:latest
+    container_name: i2p-${IROHA_CONTAINER_NAME}
+    environment:
+      NAME_KEY: ${NAME_KEY}
+      IP_IROHA_NODE: ${IP_IROHA_NODE}
+      TYPE: I2P
+    volumes:
+      - type: volume
+        source: i2p-${IROHA_CONTAINER_NAME}
+        target: /opt/iroha
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_IROHA}
+
+  ${IROHA_NODE_CONTAINER_NAME}:
+    image: divax/iroha-node:latest
+    container_name: i2p-${IROHA_NODE_CONTAINER_NAME}
+    environment:
+      NAME_KEY: ${NAME_KEY}
+      TYPE: I2P
+      IP: ${IP_IROHA_NODE}
+      PORT: 10001
+    networks:
+      ${NETWORK_NAME}:
+        ipv4_address: ${IP_IROHA_NODE}
+    extra_hosts:
+      - "i2p:${IP_I2P}"
+
+networks:
+  ${NETWORK_NAME}:
+    external: true
+
+volumes:
+  i2p-${I2P_CONTAINER_NAME}:
+    name: i2p-${I2P_CONTAINER_NAME}
+  i2p-${IROHA_CONTAINER_NAME}:
+    name: i2p-${IROHA_CONTAINER_NAME}
