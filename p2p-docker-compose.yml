@@ -23,6 +23,13 @@ services:
   ${IROHA_CONTAINER_NAME}:
     image: divax/iroha:latest
     container_name: p2p-${IROHA_CONTAINER_NAME}
+    expose:
+      - 50051 # Iroha torii
+    ports:
+      - target: 50051
+        published: ${IROHA_TORII_PORT}
+        protocol: tcp
+        mode: host
     environment:
       NAME_KEY: ${NAME_KEY}
       IP_IROHA_NODE: ${IP_IROHA_NODE}
