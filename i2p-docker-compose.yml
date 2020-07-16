@@ -26,10 +26,7 @@ services:
     expose:
       - 7070 # i2p webconsole
     ports:
-      - target: 7070
-        published: ${I2PD_WEBCONSOLE_PORT}
-        protocol: tcp
-        mode: host
+      - "${I2PD_WEBCONSOLE_PORT}:7070/tcp"
     environment:
       ENABLE_TUNNELS: "1"
     volumes:
@@ -50,11 +47,10 @@ services:
     container_name: i2p-${IROHA_CONTAINER_NAME}
     expose:
       - 50051 # Iroha torii
+      - 5432 # Postgres
     ports:
-      - target: 50051
-        published: ${IROHA_TORII_PORT}
-        protocol: tcp
-        mode: host
+      - "${IROHA_TORII_PORT}:50051/tcp"
+      - "${IROHA_POSTGRES_PORT}:5432/tcp"
     environment:
       NAME_KEY: ${NAME_KEY}
       IP_IROHA_NODE: ${IP_IROHA_NODE}
