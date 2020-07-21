@@ -46,6 +46,7 @@ services:
     container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
     environment:
       IDENT: ${NAME_KEY}
+      ROOM: ${ROOM}
       TYPE: P2P
       IP: ${IP_IROHA_NODE}
       PORT: 10001

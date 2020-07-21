@@ -29,6 +29,7 @@ cd ${PROJECT_PATH}/../
 
 PATH_INPUT_YML=p2p-docker-compose.yml
 IDENT_INSTANCE=0
+ROOM=iroha_`date -u +%s`_${RANDOM}
 NAME_NETWORK=diva-p2p-net
 
 declare -a testnet=("testnet-a" "testnet-b" "testnet-c")

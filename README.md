@@ -8,7 +8,7 @@ There are two different flavours of testnets available: an I2P based one and a p
 
 The I2P based testnet routes all traffic between the Iroha nodes through the private network I2P. The Iroha nodes itself remain private. The I2P network might have quite some latency and hence the synchronisation between the Iroha nodes might be slow.
 
-The peer-to-peer based testnet routes all traffic between the Iroha nodes through the clearnet. Initially, the Iroha nodes are connected with each other with then help of a signal/STUN service. A signal/STUN service enables peer-to-peer connections behind firewalls. This signal/STUN implementation is used to establish the connections between the Iroha nodes: https://codeberg.org/diva.exchange/signal 
+The peer-to-peer based testnet routes all traffic between the Iroha nodes through the clearnet. Initially, the Iroha nodes are connected with each other with the help of a signal/STUN service. A signal/STUN service enables peer-to-peer connections behind firewalls. This signal/STUN implementation is used to establish the connections between the Iroha nodes: https://codeberg.org/diva.exchange/signal 
 
 ### I2P based Testnet
 
