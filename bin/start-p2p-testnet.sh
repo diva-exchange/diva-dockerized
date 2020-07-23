@@ -27,6 +27,9 @@ set -a
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}/../
 
+docker pull divax/iroha:latest
+docker pull divax/iroha-node:latest
+
 PATH_INPUT_YML=p2p-docker-compose.yml
 IDENT_INSTANCE=0
 ROOM=iroha_`date -u +%s`_${RANDOM}
