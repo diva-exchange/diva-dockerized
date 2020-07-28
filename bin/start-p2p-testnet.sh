@@ -24,34 +24,71 @@ set -e
 # -a Export variables
 set -a
 
-PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd ${PROJECT_PATH}/../
+PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
+cd ${PROJECT_PATH}
 
-docker pull divax/iroha:latest
-docker pull divax/iroha-node:latest
+DO_PULL=${DO_PULL:-1}
+
+if [[ ${DO_PULL} -gt 0 ]]
+then
+  docker pull divax/iroha:latest
+  docker pull divax/iroha-node:latest
+fi
+
+# used to store temporary data related to running containers
+DATA_PATH=${PROJECT_PATH}data/
+if [[ ! -f ${DATA_PATH}instance ]]
+then
+  echo 1 >${DATA_PATH}instance
+fi
+
+IDENT_INSTANCE=$(<${DATA_PATH}instance)
+#@TODO hard coded upper limit of running instances
+if [[ ${IDENT_INSTANCE} -gt 100 ]]
+then
+  echo "ERROR: too many instances"
+  exit 2
+fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
-IDENT_INSTANCE=0
-ROOM=iroha_`date -u +%s`_${RANDOM}
-NAME_NETWORK=diva-p2p-net
+BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-"testnet"}
+JOIN_EXISTING=${JOIN_EXISTING:-0}
 
-declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
-for NAME_KEY in "${testnet[@]}"; do
-  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
+if [[ ${JOIN_EXISTING} -eq 1 ]]
+then
+  declare -a testnet=("")
+else
+  if [[ -f ${DATA_PATH}has-testnet ]]
+  then
+    echo "ERROR: testnet already started"
+    exit 3
+  fi
+
+  declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
+  touch ${DATA_PATH}has-testnet
+fi
+
+for NAME_KEY in "${testnet[@]}"
+do
+  NETWORK_NAME=diva-p2p-net-${IDENT_INSTANCE}
 
   # create network
-  [[ $(docker network inspect ${NAME_NETWORK}${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] || \
+  [[ $(docker network inspect ${NETWORK_NAME} 2>/dev/null | wc -l) > 1 ]] || \
     docker network create \
       --driver=bridge \
       --subnet=172.18.${IDENT_INSTANCE}.0/24 \
       --gateway=172.18.${IDENT_INSTANCE}.1 \
-      ${NAME_NETWORK}${IDENT_INSTANCE}
+      ${NETWORK_NAME}
 
-  PATH_OUTPUT_YML=/tmp/p2p-dc${IDENT_INSTANCE}.yml
+  PATH_OUTPUT_YML=${DATA_PATH}p2p-dc${IDENT_INSTANCE}.yml
   source ${PWD}/iroha-diva.env
   envsubst <${PATH_INPUT_YML} >${PATH_OUTPUT_YML}
 
-  echo "Starting instance ${IDENT_INSTANCE} with key ${NAME_KEY}, ${PATH_OUTPUT_YML}"
+  echo "Starting instance ${IDENT_INSTANCE}; Key: ${NAME_KEY}; Config: ${PATH_OUTPUT_YML}"
   docker-compose -f ${PATH_OUTPUT_YML} up -d
   rm ${PATH_OUTPUT_YML}
+
+  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
 done
+
+echo ${IDENT_INSTANCE} >${DATA_PATH}instance

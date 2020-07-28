@@ -24,15 +24,16 @@ services:
     image: divax/iroha:latest
     container_name: p2p-${IROHA_CONTAINER_NAME}
     expose:
-      - 50051 # Iroha torii
-      - 5432 # Postgres
+      - 50051 # Iroha torii port
+      - 5432 # Postgres port
     ports:
       - "${IROHA_TORII_PORT}:50051/tcp"
       - "${IROHA_POSTGRES_PORT}:5432/tcp"
     environment:
-      NAME_KEY: ${NAME_KEY}
+      NAME_KEY: "${NAME_KEY}"
+      BLOCKCHAIN_NETWORK: "${BLOCKCHAIN_NETWORK}"
+      IP: ${IP_IROHA}
       IP_IROHA_NODE: ${IP_IROHA_NODE}
-      TYPE: P2P
     volumes:
       - type: volume
         source: p2p-${IROHA_CONTAINER_NAME}
@@ -44,12 +45,14 @@ services:
   ${IROHA_NODE_CONTAINER_NAME}:
     image: divax/iroha-node:latest
     container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
+    expose:
+      - 10001 # Proxy port
+      - 10002 # Http Control port
     environment:
-      IDENT: ${NAME_KEY}
-      ROOM: ${ROOM}
       TYPE: P2P
       IP: ${IP_IROHA_NODE}
       PORT: 10001
+      CONTROL_PORT: 10002
     volumes:
       - type: volume
         source: p2p-${IROHA_NODE_CONTAINER_NAME}

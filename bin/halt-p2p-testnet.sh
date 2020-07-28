@@ -24,15 +24,20 @@ set -e
 # -a Export variables
 set -a
 
-PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd ${PROJECT_PATH}/../
+PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
+cd ${PROJECT_PATH}
 
-IDENT_INSTANCE=0
-NAME_NETWORK=diva-p2p-net
+# used to store temporary data related to running containers
+DATA_PATH=${PROJECT_PATH}data/
 
-declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
-for NAME_KEY in "${testnet[@]}"; do
-  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
+if [[ ! -f ${DATA_PATH}instance ]]
+then
+  exit 1
+fi
+
+for (( IDENT_INSTANCE=1; IDENT_INSTANCE < $(<${DATA_PATH}instance); IDENT_INSTANCE++ ))
+do
+  NETWORK_NAME=diva-p2p-net-${IDENT_INSTANCE}
 
   [[ $(docker inspect p2p-iroha${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
     docker stop p2p-iroha${IDENT_INSTANCE} && \
@@ -43,8 +48,8 @@ for NAME_KEY in "${testnet[@]}"; do
     docker rm p2p-iroha-node${IDENT_INSTANCE}
 
   # drop network
-  [[ $(docker network inspect ${NAME_NETWORK}${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
-    docker network rm ${NAME_NETWORK}${IDENT_INSTANCE}
+  [[ $(docker network inspect ${NETWORK_NAME} 2>/dev/null | wc -l) > 1 ]] && \
+    docker network rm ${NETWORK_NAME}
 
   # remove volumes
   docker volume rm p2p-iroha${IDENT_INSTANCE} -f
@@ -54,3 +59,6 @@ done
 # drop tmp_default network
 [[ $(docker network inspect tmp_default 2>/dev/null | wc -l) > 1 ]] && \
   docker network rm tmp_default
+
+rm -f ${DATA_PATH}instance
+rm -f ${DATA_PATH}has-testnet
