@@ -2,6 +2,9 @@
 
 This project has the following purpose: even if DIVA.EXCHANGE consists of several independent modules, it still should be easy to have the complete environment available.
 
+Online Demo and Test sites:
+* https://testnet.diva.exchange - The public DIVA.EXCHANGE testnet. Everybody can join. 
+
 ## Get Started
 
 There are two different flavours of testnets available: an I2P based one and a peer-to-peer based one.
@@ -14,21 +17,46 @@ The peer-to-peer based testnet routes all traffic between the Iroha nodes throug
 
 To start the I2P-based testnet (3 nodes) execute:
 
-`./bin/start-i2p-testnet.sh`
+```
+./bin/start-i2p-testnet.sh
+```
 
 To stop the I2P-based testnet execute:
 
-`./bin/halt-i2p-testnet.sh`
+```
+./bin/halt-i2p-testnet.sh
+```
 
-### Peer-to-peer based Testnet
 
-To start the peer-to-peer-based testnet (3 nodes) execute:
+### Peer-to-peer based local Testnet
 
-`./bin/start-p2p-testnet.sh`
+To start the peer-to-peer-based local testnet (3 nodes) execute:
+
+```
+./bin/start-p2p-testnet.sh
+```
 
 To stop the peer-to-peer-based testnet execute:
 
-`./bin/halt-p2p-testnet.sh`
+```
+./bin/halt-p2p-testnet.sh
+```
+
+### Join testnet.diva.exchange
+
+To join the existing https://testnet.diva.exchange network:
+
+```
+JOIN_EXISTING=1 \
+BLOCKCHAIN_NETWORK=testnet \
+./bin/start-p2p-testnet.sh
+```
+
+To disconnect from the network:
+
+```
+./bin/halt-p2p-testnet.sh
+```
 
 ## Contact the Developers
 

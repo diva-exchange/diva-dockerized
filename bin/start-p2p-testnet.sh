@@ -51,7 +51,7 @@ then
 fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
-BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-"testnet"}
+BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-"tn-`date -u +%s`-${RANDOM}"}
 JOIN_EXISTING=${JOIN_EXISTING:-0}
 
 if [[ ${JOIN_EXISTING} -eq 1 ]]
