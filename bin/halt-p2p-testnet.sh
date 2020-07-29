@@ -19,8 +19,6 @@
 #    Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
 
-# -e Exit immediately if a simple command exits with a non-zero status
-set -e
 # -a Export variables
 set -a
 

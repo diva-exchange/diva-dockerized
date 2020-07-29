@@ -53,6 +53,7 @@ services:
         source: p2p-${IROHA_NODE_CONTAINER_NAME}
         target: /home/node
     networks:
+      default:
       ${NETWORK_NAME}:
         ipv4_address: ${IP_IROHA_NODE}
 

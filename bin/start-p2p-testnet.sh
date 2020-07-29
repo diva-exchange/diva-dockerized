@@ -51,21 +51,17 @@ then
 fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
-BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-""}
+BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-}
 
-if [[ ! ${BLOCKCHAIN_NETWORK} -eq "" ]]
+if test -f ${DATA_PATH}has-testnet || test -n ${BLOCKCHAIN_NETWORK}
 then
-  declare -a testnet=("")
+  BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-$(<${DATA_PATH}has-testnet)}
+  NAME_KEY=${NAME_KEY:-${BLOCKCHAIN_NETWORK}-`date -u +%s`-${RANDOM}}
+  declare -a testnet=("${NAME_KEY}")
 else
-  if [[ -f ${DATA_PATH}has-testnet ]]
-  then
-    echo "ERROR: testnet already started"
-    exit 3
-  fi
-
-  BLOCKCHAIN_NETWORK="tn-`date -u +%s`-${RANDOM}"
+  BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-tn-`date -u +%s`-${RANDOM}}
   declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
-  touch ${DATA_PATH}has-testnet
+  echo ${BLOCKCHAIN_NETWORK} > ${DATA_PATH}has-testnet
 fi
 
 for NAME_KEY in "${testnet[@]}"
@@ -87,10 +83,6 @@ do
   echo "Starting instance ${IDENT_INSTANCE}; Key: ${NAME_KEY}; Config: ${PATH_OUTPUT_YML}"
   docker-compose -f ${PATH_OUTPUT_YML} up -d
   rm ${PATH_OUTPUT_YML}
-
-  # connect the iroha-node container to the default bridge network, needed for P2P communication between iroha nodes
-  IROHA_NODE_CONTAINER_NAME=${IROHA_NODE_CONTAINER_NAME:?err}
-  docker network connect bridge p2p-${IROHA_NODE_CONTAINER_NAME}
 
   IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
   echo ${IDENT_INSTANCE} >${DATA_PATH}instance
