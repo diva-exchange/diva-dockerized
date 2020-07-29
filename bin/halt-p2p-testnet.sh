@@ -55,4 +55,3 @@ do
 done
 
 rm -f ${DATA_PATH}instance
-rm -f ${DATA_PATH}has-testnet

@@ -43,10 +43,10 @@ To stop the I2P-based testnet execute:
 
 ### Join testnet.diva.exchange
 
-To join the existing https://testnet.diva.exchange network:
+To join an existing network, like the "testnet" of diva.exchange (see https://testnet.diva.exchange):
 
 ```
-BLOCKCHAIN_NETWORK=testnet ./bin/start-p2p-testnet.sh
+JOIN=1 BLOCKCHAIN_NETWORK=testnet ./bin/start-p2p-testnet.sh
 ```
 
 To disconnect from the network:

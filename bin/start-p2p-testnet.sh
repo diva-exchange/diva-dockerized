@@ -52,25 +52,17 @@ fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
 BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK}
-NAME_KEY=${NAME_KEY}
+JOIN=${JOIN}
 
-if (test -f ${DATA_PATH}has-testnet || test ${BLOCKCHAIN_NETWORK:-"0"} != "0")
+if (test ${JOIN:-"0"} = "0" || test ${BLOCKCHAIN_NETWORK:-"0"} = "0")
 then
-  BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-$(<${DATA_PATH}has-testnet)}
-  NAME_KEY=${NAME_KEY:-${BLOCKCHAIN_NETWORK}-`date -u +%s`-${RANDOM}}
-else
   BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-tn-`date -u +%s`-${RANDOM}}
-  echo ${BLOCKCHAIN_NETWORK} >${DATA_PATH}has-testnet
-fi
-
-if (test ${NAME_KEY:-"0"} != "0")
-then
-  declare -a testnet=("${NAME_KEY}")
+  declare -a member=("testnet-a" "testnet-b" "testnet-c")
 else
-  declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
+  declare -a member=("${BLOCKCHAIN_NETWORK}-`date -u +%s`-${RANDOM}")
 fi
 
-for NAME_KEY in "${testnet[@]}"
+for NAME_KEY in "${member[@]}"
 do
   NETWORK_NAME=diva-p2p-net-${IDENT_INSTANCE}
 
