@@ -7,26 +7,11 @@ Online Demo and Test sites:
 
 ## Get Started
 
-There are two different flavours of testnets available: an I2P based one and a peer-to-peer based one.
+There are two different flavours of testnets available: a peer-to-peer (P2P) based one and an I2P based one.
+
+The peer-to-peer (P2P) based testnet routes all traffic between the Iroha nodes through the clearnet. Initially, the Iroha nodes are connected with each other with the help of a signal/STUN service. A signal/STUN service enables peer-to-peer connections behind firewalls. This signal/STUN implementation is used to establish the connections between the Iroha nodes: https://codeberg.org/diva.exchange/signal 
 
 The I2P based testnet routes all traffic between the Iroha nodes through the private network I2P. The Iroha nodes itself remain private. The I2P network might have quite some latency and hence the synchronisation between the Iroha nodes might be slow.
-
-The peer-to-peer based testnet routes all traffic between the Iroha nodes through the clearnet. Initially, the Iroha nodes are connected with each other with the help of a signal/STUN service. A signal/STUN service enables peer-to-peer connections behind firewalls. This signal/STUN implementation is used to establish the connections between the Iroha nodes: https://codeberg.org/diva.exchange/signal 
-
-### I2P based Testnet
-
-To start the I2P-based testnet (3 nodes) execute:
-
-```
-./bin/start-i2p-testnet.sh
-```
-
-To stop the I2P-based testnet execute:
-
-```
-./bin/halt-i2p-testnet.sh
-```
-
 
 ### Peer-to-peer based local Testnet
 
@@ -42,14 +27,26 @@ To stop the peer-to-peer-based testnet execute:
 ./bin/halt-p2p-testnet.sh
 ```
 
+### I2P based Testnet
+
+To start the I2P-based testnet (3 nodes) execute:
+
+```
+./bin/start-i2p-testnet.sh
+```
+
+To stop the I2P-based testnet execute:
+
+```
+./bin/halt-i2p-testnet.sh
+```
+
 ### Join testnet.diva.exchange
 
 To join the existing https://testnet.diva.exchange network:
 
 ```
-JOIN_EXISTING=1 \
-BLOCKCHAIN_NETWORK=testnet \
-./bin/start-p2p-testnet.sh
+BLOCKCHAIN_NETWORK=testnet ./bin/start-p2p-testnet.sh
 ```
 
 To disconnect from the network:

@@ -32,7 +32,7 @@ services:
     environment:
       NAME_KEY: "${NAME_KEY}"
       BLOCKCHAIN_NETWORK: "${BLOCKCHAIN_NETWORK}"
-      IP: ${IP_IROHA}
+      IP_CONTAINER: ${IP_IROHA}
       IP_IROHA_NODE: ${IP_IROHA_NODE}
     volumes:
       - type: volume
@@ -45,20 +45,14 @@ services:
   ${IROHA_NODE_CONTAINER_NAME}:
     image: divax/iroha-node:latest
     container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
-    expose:
-      - 10001 # Proxy port
-      - 10002 # Http Control port
     environment:
       TYPE: P2P
-      IP: ${IP_IROHA_NODE}
-      PORT: 10001
-      CONTROL_PORT: 10002
+      IP_CONTAINER: ${IP_IROHA_NODE}
     volumes:
       - type: volume
         source: p2p-${IROHA_NODE_CONTAINER_NAME}
         target: /home/node
     networks:
-      default:
       ${NETWORK_NAME}:
         ipv4_address: ${IP_IROHA_NODE}
 

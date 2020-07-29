@@ -56,9 +56,5 @@ do
   docker volume rm p2p-iroha-node${IDENT_INSTANCE} -f
 done
 
-# drop tmp_default network
-[[ $(docker network inspect tmp_default 2>/dev/null | wc -l) > 1 ]] && \
-  docker network rm tmp_default
-
 rm -f ${DATA_PATH}instance
 rm -f ${DATA_PATH}has-testnet

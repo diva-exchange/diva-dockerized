@@ -51,10 +51,9 @@ then
 fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
-BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-"tn-`date -u +%s`-${RANDOM}"}
-JOIN_EXISTING=${JOIN_EXISTING:-0}
+BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-""}
 
-if [[ ${JOIN_EXISTING} -eq 1 ]]
+if [[ ! ${BLOCKCHAIN_NETWORK} -eq "" ]]
 then
   declare -a testnet=("")
 else
@@ -64,6 +63,7 @@ else
     exit 3
   fi
 
+  BLOCKCHAIN_NETWORK="tn-`date -u +%s`-${RANDOM}"
   declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
   touch ${DATA_PATH}has-testnet
 fi
@@ -88,7 +88,10 @@ do
   docker-compose -f ${PATH_OUTPUT_YML} up -d
   rm ${PATH_OUTPUT_YML}
 
-  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
-done
+  # connect the iroha-node container to the default bridge network, needed for P2P communication between iroha nodes
+  IROHA_NODE_CONTAINER_NAME=${IROHA_NODE_CONTAINER_NAME:?err}
+  docker network connect bridge p2p-${IROHA_NODE_CONTAINER_NAME}
 
-echo ${IDENT_INSTANCE} >${DATA_PATH}instance
+  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
+  echo ${IDENT_INSTANCE} >${DATA_PATH}instance
+done
