@@ -51,17 +51,23 @@ then
 fi
 
 PATH_INPUT_YML=p2p-docker-compose.yml
-BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-}
+BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK}
+NAME_KEY=${NAME_KEY}
 
-if test -f ${DATA_PATH}has-testnet || test -n ${BLOCKCHAIN_NETWORK}
+if (test -f ${DATA_PATH}has-testnet || test ${BLOCKCHAIN_NETWORK:-"0"} != "0")
 then
   BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-$(<${DATA_PATH}has-testnet)}
   NAME_KEY=${NAME_KEY:-${BLOCKCHAIN_NETWORK}-`date -u +%s`-${RANDOM}}
-  declare -a testnet=("${NAME_KEY}")
 else
   BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-tn-`date -u +%s`-${RANDOM}}
+  echo ${BLOCKCHAIN_NETWORK} >${DATA_PATH}has-testnet
+fi
+
+if (test ${NAME_KEY:-"0"} != "0")
+then
+  declare -a testnet=("${NAME_KEY}")
+else
   declare -a testnet=("testnet-a" "testnet-b" "testnet-c")
-  echo ${BLOCKCHAIN_NETWORK} > ${DATA_PATH}has-testnet
 fi
 
 for NAME_KEY in "${testnet[@]}"
