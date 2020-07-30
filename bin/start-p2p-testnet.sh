@@ -27,7 +27,7 @@ set -a
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
 cd ${PROJECT_PATH}
 
-DO_PULL=${DO_PULL}
+DO_PULL=${DO_PULL:-1}
 
 if test ${DO_PULL:-"0"} != "0"
 then
