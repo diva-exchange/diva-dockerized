@@ -35,8 +35,6 @@ fi
 
 for (( IDENT_INSTANCE=1; IDENT_INSTANCE < $(<${DATA_PATH}instance); IDENT_INSTANCE++ ))
 do
-  NETWORK_NAME=diva-p2p-net-${IDENT_INSTANCE}
-
   [[ $(docker inspect p2p-iroha${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
     docker stop p2p-iroha${IDENT_INSTANCE} && \
     docker rm p2p-iroha${IDENT_INSTANCE}
@@ -45,13 +43,12 @@ do
     docker stop p2p-iroha-node${IDENT_INSTANCE} && \
     docker rm p2p-iroha-node${IDENT_INSTANCE}
 
-  # drop network
-  [[ $(docker network inspect ${NETWORK_NAME} 2>/dev/null | wc -l) > 1 ]] && \
-    docker network rm ${NETWORK_NAME}
-
   # remove volumes
   docker volume rm p2p-iroha${IDENT_INSTANCE} -f
   docker volume rm p2p-iroha-node${IDENT_INSTANCE} -f
 done
+
+[[ $(docker network inspect diva-p2p-stun-ice 2>/dev/null | wc -l) > 1 ]] && \
+  docker network rm diva-p2p-stun-ice
 
 rm -f ${DATA_PATH}instance

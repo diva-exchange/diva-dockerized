@@ -27,9 +27,9 @@ set -a
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
 cd ${PROJECT_PATH}
 
-DO_PULL=${DO_PULL:-1}
+DO_PULL=${DO_PULL}
 
-if [[ ${DO_PULL} -gt 0 ]]
+if test ${DO_PULL:-"0"} != "0"
 then
   docker pull divax/iroha:latest
   docker pull divax/iroha-node:latest
@@ -64,16 +64,6 @@ fi
 
 for NAME_KEY in "${member[@]}"
 do
-  NETWORK_NAME=diva-p2p-net-${IDENT_INSTANCE}
-
-  # create network
-  [[ $(docker network inspect ${NETWORK_NAME} 2>/dev/null | wc -l) > 1 ]] || \
-    docker network create \
-      --driver=bridge \
-      --subnet=172.18.${IDENT_INSTANCE}.0/24 \
-      --gateway=172.18.${IDENT_INSTANCE}.1 \
-      ${NETWORK_NAME}
-
   PATH_OUTPUT_YML=${DATA_PATH}p2p-dc${IDENT_INSTANCE}.yml
   source ${PWD}/iroha-diva.env
   envsubst <${PATH_INPUT_YML} >${PATH_OUTPUT_YML}

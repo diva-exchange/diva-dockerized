@@ -20,6 +20,21 @@
 
 version: "3.7"
 services:
+  ${IROHA_NODE_CONTAINER_NAME}:
+    image: divax/iroha-node:latest
+    container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
+    environment:
+      IDENT_INSTANCE: ${IDENT_INSTANCE}
+      TYPE: P2P
+    volumes:
+      - type: volume
+        source: p2p-${IROHA_NODE_CONTAINER_NAME}
+        target: /home/node
+    networks:
+      bridge:
+        aliases:
+          - p2p-${IROHA_NODE_CONTAINER_NAME}
+
   ${IROHA_CONTAINER_NAME}:
     image: divax/iroha:latest
     container_name: p2p-${IROHA_CONTAINER_NAME}
@@ -30,36 +45,20 @@ services:
       - "${IROHA_TORII_PORT}:50051/tcp"
       - "${IROHA_POSTGRES_PORT}:5432/tcp"
     environment:
+      IDENT_INSTANCE: ${IDENT_INSTANCE}
       NAME_KEY: "${NAME_KEY}"
       BLOCKCHAIN_NETWORK: "${BLOCKCHAIN_NETWORK}"
-      IP_CONTAINER: ${IP_IROHA}
-      IP_IROHA_NODE: ${IP_IROHA_NODE}
+      HOST_IROHA_NODE: p2p-${IROHA_NODE_CONTAINER_NAME}
     volumes:
       - type: volume
         source: p2p-${IROHA_CONTAINER_NAME}
         target: /opt/iroha
     networks:
-      ${NETWORK_NAME}:
-        ipv4_address: ${IP_IROHA}
-
-  ${IROHA_NODE_CONTAINER_NAME}:
-    image: divax/iroha-node:latest
-    container_name: p2p-${IROHA_NODE_CONTAINER_NAME}
-    environment:
-      TYPE: P2P
-      IP_CONTAINER: ${IP_IROHA_NODE}
-    volumes:
-      - type: volume
-        source: p2p-${IROHA_NODE_CONTAINER_NAME}
-        target: /home/node
-    networks:
-      default:
-      ${NETWORK_NAME}:
-        ipv4_address: ${IP_IROHA_NODE}
+      bridge:
 
 networks:
-  ${NETWORK_NAME}:
-    external: true
+  bridge:
+    name: diva-p2p-stun-ice
 
 volumes:
   p2p-${IROHA_CONTAINER_NAME}:
