@@ -33,22 +33,22 @@ then
   exit 1
 fi
 
-for (( IDENT_INSTANCE=1; IDENT_INSTANCE < $(<${DATA_PATH}instance); IDENT_INSTANCE++ ))
+[[ $(docker inspect iroha-node 2>/dev/null | wc -l) > 1 ]] && \
+  docker stop iroha-node && \
+  docker rm iroha-node
+
+# remove iroha-node volume
+docker volume rm iroha-node -f
+
+for (( ID_INSTANCE=1; ID_INSTANCE < $(<${DATA_PATH}instance); ID_INSTANCE++ ))
 do
-  [[ $(docker inspect p2p-iroha${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
-    docker stop p2p-iroha${IDENT_INSTANCE} && \
-    docker rm p2p-iroha${IDENT_INSTANCE}
+  [[ $(docker inspect iroha${ID_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
+    docker stop iroha${ID_INSTANCE} && \
+    docker rm iroha${ID_INSTANCE}
 
-  [[ $(docker inspect p2p-iroha-node${IDENT_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
-    docker stop p2p-iroha-node${IDENT_INSTANCE} && \
-    docker rm p2p-iroha-node${IDENT_INSTANCE}
-
-  # remove volumes
-  docker volume rm p2p-iroha${IDENT_INSTANCE} -f
-  docker volume rm p2p-iroha-node${IDENT_INSTANCE} -f
+  # remove iroha volume
+  docker volume rm iroha${ID_INSTANCE} -f
 done
 
-[[ $(docker network inspect diva-p2p-stun-ice 2>/dev/null | wc -l) > 1 ]] && \
-  docker network rm diva-p2p-stun-ice
-
+# remove instance file
 rm -f ${DATA_PATH}instance

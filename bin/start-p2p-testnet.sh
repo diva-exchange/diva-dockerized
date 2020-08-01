@@ -21,8 +21,6 @@
 
 # -e Exit immediately if a simple command exits with a non-zero status
 set -e
-# -a Export variables
-set -a
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
 cd ${PROJECT_PATH}
@@ -42,36 +40,88 @@ then
   echo 1 >${DATA_PATH}instance
 fi
 
-IDENT_INSTANCE=$(<${DATA_PATH}instance)
+ID_INSTANCE=$(<${DATA_PATH}instance)
 #@TODO hard coded upper limit of running instances
-if [[ ${IDENT_INSTANCE} -gt 100 ]]
+if [[ ${ID_INSTANCE} -gt 100 ]]
 then
   echo "ERROR: too many instances"
   exit 2
 fi
 
-PATH_INPUT_YML=p2p-docker-compose.yml
+NODE_ENV=${NODE_ENV:-production}
 BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK}
 JOIN=${JOIN}
 
 if (test ${JOIN:-"0"} = "0" || test ${BLOCKCHAIN_NETWORK:-"0"} = "0")
 then
   BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK:-tn-`date -u +%s`-${RANDOM}}
-  declare -a member=("testnet-a" "testnet-b" "testnet-c")
+  NAME_KEY=${NAME_KEY}
+  if (test ${NAME_KEY:-"0"} = "0")
+  then
+    declare -a member=("testnet-a" "testnet-b" "testnet-c")
+  else
+    declare -a member=(${NAME_KEY})
+  fi
 else
   declare -a member=("${BLOCKCHAIN_NETWORK}-`date -u +%s`-${RANDOM}")
 fi
 
+######
+# Iroha Node (Proxy): config & start
+######
+TYPE=${TYPE:-P2P}
+STUN=${STUN:-}
+SIGNAL=${SIGNAL:-}
+PORT_IROHA_PROXY=${PORT_IROHA_PROXY:-10001}
+PORT_CONTROL=${PORT_CONTROL:-10002}
+
+docker run \
+  -d \
+  --env NODE_ENV=${NODE_ENV} \
+  --env TYPE=${TYPE} \
+  --env PORT_NODE=${PORT_IROHA_PROXY} \
+  --env PORT_CONTROL=${PORT_CONTROL} \
+  --env STUN=${STUN} \
+  --env SIGNAL=${SIGNAL} \
+  -v iroha-node:/home/node \
+  --name iroha-node \
+  --network host \
+  divax/iroha-node:latest
+
+######
+# Iroha: config & start
+######
+IP_IROHA_NODE=`ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'`
+PORT_CONTROL=${PORT_CONTROL:-10002}
+
+PORT_EXPOSE_POSTGRES=${PORT_EXPOSE_POSTGRES:-10032}
+PORT_EXPOSE_IROHA_INTERNAL=${PORT_EXPOSE_IROHA_INTERNAL:-10011}
+PORT_EXPOSE_IROHA_TORII=${PORT_EXPOSE_IROHA_TORII:-10051}
+
 for NAME_KEY in "${member[@]}"
 do
-  PATH_OUTPUT_YML=${DATA_PATH}p2p-dc${IDENT_INSTANCE}.yml
-  source ${PWD}/iroha-diva.env
-  envsubst <${PATH_INPUT_YML} >${PATH_OUTPUT_YML}
+  NAME=iroha${ID_INSTANCE}
+  IP_PUBLISHED=127.19.${ID_INSTANCE}.1
 
-  echo "Starting instance ${IDENT_INSTANCE}; Key: ${NAME_KEY}; Config: ${PATH_OUTPUT_YML}"
-  docker-compose -f ${PATH_OUTPUT_YML} up -d
-  rm ${PATH_OUTPUT_YML}
+  # start the container
+  echo "Starting instance ${ID_INSTANCE}; Key: ${NAME_KEY}"
+  docker run \
+    -d \
+    -p ${IP_PUBLISHED}:${PORT_EXPOSE_POSTGRES}:5432 \
+    -p ${IP_PUBLISHED}:${PORT_EXPOSE_IROHA_INTERNAL}:10001 \
+    -p ${IP_PUBLISHED}:${PORT_EXPOSE_IROHA_TORII}:50051 \
+    -v ${NAME}:/opt/iroha \
+    --env BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK} \
+    --env NAME_KEY=${NAME_KEY} \
+    --env IP_PUBLISHED=${IP_PUBLISHED} \
+    --env IP_IROHA_NODE=${IP_IROHA_NODE} \
+    --env PORT_CONTROL=${PORT_CONTROL} \
+    --env PORT_IROHA_PROXY=${PORT_IROHA_PROXY} \
+    --name ${NAME} \
+    --network bridge \
+    divax/iroha:latest
 
-  IDENT_INSTANCE=$((IDENT_INSTANCE + 1))
-  echo ${IDENT_INSTANCE} >${DATA_PATH}instance
+  echo "Running ${NAME_KEY} on blockchain network ${BLOCKCHAIN_NETWORK}"
+  ID_INSTANCE=$((ID_INSTANCE + 1))
+  echo ${ID_INSTANCE} >${DATA_PATH}instance
 done

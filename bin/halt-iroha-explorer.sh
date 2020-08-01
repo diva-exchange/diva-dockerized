@@ -26,20 +26,9 @@ set -e
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
 
-IP_EXPLORER=${IP_EXPLORER:-"127.20.20.20"}
-PORT_EXPLORER=${PORT_EXPLORER:-3920}
-NAME_VOLUME_IROHA=${NAME_VOLUME_IROHA:-"iroha1"}
-POSTGRES_HOST_IROHA=${POSTGRES_HOST_IROHA:-"127.19.1.1:10032"}
+# stop and remove the container
+docker stop iroha-explorer
+docker rm iroha-explorer
 
-# start the container
-docker run \
-  -d \
-  --env IP_EXPLORER=${IP_EXPLORER} \
-  --env PORT_EXPLORER=${PORT_EXPLORER} \
-  --env PATH_BLOCKSTORE_IROHA="/tmp/iroha/blockstore/" \
-  --env POSTGRES_HOST_IROHA=${POSTGRES_HOST_IROHA} \
-  -v ${NAME_VOLUME_IROHA}:/tmp/iroha:ro \
-  -v iroha-explorer:/home/node \
-  --name=iroha-explorer \
-  --network host \
-  divax/iroha-explorer:latest
+# remove the volume
+docker volume rm iroha-explorer
