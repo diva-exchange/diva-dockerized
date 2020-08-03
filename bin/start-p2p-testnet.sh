@@ -67,37 +67,29 @@ else
 fi
 
 ######
-# Iroha Node (Proxy): config & start
+# Iroha Node (Proxy): config
 ######
 TYPE=${TYPE:-P2P}
 STUN=${STUN:-}
 SIGNAL=${SIGNAL:-}
-PORT_IROHA_PROXY=${PORT_IROHA_PROXY:-10001}
 PORT_CONTROL=${PORT_CONTROL:-10002}
 
-docker run \
-  -d \
-  --env NODE_ENV=${NODE_ENV} \
-  --env TYPE=${TYPE} \
-  --env PORT_NODE=${PORT_IROHA_PROXY} \
-  --env PORT_CONTROL=${PORT_CONTROL} \
-  --env STUN=${STUN} \
-  --env SIGNAL=${SIGNAL} \
-  -v iroha-node:/home/node \
-  --name iroha-node \
-  --network host \
-  divax/iroha-node:latest
+NAME_VOLUME_IROHA=${NAME_VOLUME_IROHA:-"iroha1"}
+TORII=${TORII:-"127.19.1.1:10051"}
+CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID:-"diva@testnet"}
 
 ######
 # Iroha: config & start
 ######
 IP_IROHA_NODE=`ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'`
+PORT_IROHA_PROXY=${PORT_IROHA_PROXY:-10001}
 PORT_CONTROL=${PORT_CONTROL:-10002}
 
 PORT_EXPOSE_POSTGRES=${PORT_EXPOSE_POSTGRES:-10032}
 PORT_EXPOSE_IROHA_INTERNAL=${PORT_EXPOSE_IROHA_INTERNAL:-10011}
 PORT_EXPOSE_IROHA_TORII=${PORT_EXPOSE_IROHA_TORII:-10051}
 
+# Iroha: start
 for NAME_KEY in "${member[@]}"
 do
   NAME=iroha${ID_INSTANCE}
@@ -125,3 +117,20 @@ do
   ID_INSTANCE=$((ID_INSTANCE + 1))
   echo ${ID_INSTANCE} >${DATA_PATH}instance
 done
+
+# Iroha Node (proxy): start
+docker run \
+  -d \
+  --env NODE_ENV=${NODE_ENV} \
+  --env TYPE=${TYPE} \
+  --env PORT_NODE=${PORT_IROHA_PROXY} \
+  --env PORT_CONTROL=${PORT_CONTROL} \
+  --env STUN=${STUN} \
+  --env SIGNAL=${SIGNAL} \
+  --env TORII=${TORII} \
+  --env CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID} \
+  -v iroha-node:/home/node \
+  -v ${NAME_VOLUME_IROHA}:/tmp/iroha:ro \
+  --name iroha-node \
+  --network host \
+  divax/iroha-node:latest

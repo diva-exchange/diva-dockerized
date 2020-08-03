@@ -25,30 +25,34 @@ set -a
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/../"
 cd ${PROJECT_PATH}
 
+${PROJECT_PATH}bin/halt-iroha-explorer.sh
+
 # used to store temporary data related to running containers
 DATA_PATH=${PROJECT_PATH}data/
 
 if [[ ! -f ${DATA_PATH}instance ]]
 then
+  echo "${DATA_PATH}instance not found"
   exit 1
 fi
 
-[[ $(docker inspect iroha-node 2>/dev/null | wc -l) > 1 ]] && \
+INSTANCES=$(<${DATA_PATH}instance)
+# remove instance file
+docker ps >/dev/null && rm -f ${DATA_PATH}instance
+
+docker inspect iroha-node >/dev/null && \
   docker stop iroha-node && \
   docker rm iroha-node
 
 # remove iroha-node volume
 docker volume rm iroha-node -f
 
-for (( ID_INSTANCE=1; ID_INSTANCE < $(<${DATA_PATH}instance); ID_INSTANCE++ ))
+for (( ID_INSTANCE=1; ID_INSTANCE < ${INSTANCES}; ID_INSTANCE++ ))
 do
-  [[ $(docker inspect iroha${ID_INSTANCE} 2>/dev/null | wc -l) > 1 ]] && \
+  docker inspect iroha${ID_INSTANCE} >/dev/null && \
     docker stop iroha${ID_INSTANCE} && \
     docker rm iroha${ID_INSTANCE}
 
   # remove iroha volume
   docker volume rm iroha${ID_INSTANCE} -f
 done
-
-# remove instance file
-rm -f ${DATA_PATH}instance
