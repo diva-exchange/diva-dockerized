@@ -85,9 +85,22 @@ IP_IROHA_NODE=`ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'`
 PORT_IROHA_PROXY=${PORT_IROHA_PROXY:-10001}
 PORT_CONTROL=${PORT_CONTROL:-10002}
 
-PORT_EXPOSE_POSTGRES=${PORT_EXPOSE_POSTGRES:-10032}
+IP_POSTGRES=${IP_POSTGRES:-${IP_IROHA_NODE}}
+
 PORT_EXPOSE_IROHA_INTERNAL=${PORT_EXPOSE_IROHA_INTERNAL:-10011}
 PORT_EXPOSE_IROHA_TORII=${PORT_EXPOSE_IROHA_TORII:-10051}
+
+# Postgres  start
+docker run \
+  -d \
+  -p ${IP_POSTGRES}:5432:5432 \
+  -v iroha-postgres:/var/lib/postgresql/data/ \
+  --env POSTGRES_USER=iroha \
+  --env POSTGRES_PASSWORD=iroha \
+  --network bridge \
+  --name iroha-postgres \
+  postgres:10 \
+  -c 'max_prepared_transactions=100'
 
 # Iroha: start
 for NAME_KEY in "${member[@]}"
@@ -99,14 +112,15 @@ do
   echo "Starting instance ${ID_INSTANCE}; Key: ${NAME_KEY}"
   docker run \
     -d \
-    -p ${IP_PUBLISHED}:${PORT_EXPOSE_POSTGRES}:5432 \
     -p ${IP_PUBLISHED}:${PORT_EXPOSE_IROHA_INTERNAL}:10001 \
     -p ${IP_PUBLISHED}:${PORT_EXPOSE_IROHA_TORII}:50051 \
     -v ${NAME}:/opt/iroha \
+    --env ID_INSTANCE=${ID_INSTANCE} \
     --env BLOCKCHAIN_NETWORK=${BLOCKCHAIN_NETWORK} \
     --env NAME_KEY=${NAME_KEY} \
     --env IP_PUBLISHED=${IP_PUBLISHED} \
     --env IP_IROHA_NODE=${IP_IROHA_NODE} \
+    --env IP_POSTGRES=${IP_POSTGRES} \
     --env PORT_CONTROL=${PORT_CONTROL} \
     --env PORT_IROHA_PROXY=${PORT_IROHA_PROXY} \
     --name ${NAME} \

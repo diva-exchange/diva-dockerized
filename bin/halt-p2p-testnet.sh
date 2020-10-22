@@ -56,3 +56,7 @@ do
   # remove iroha volume
   docker volume rm iroha${ID_INSTANCE} -f
 done
+
+docker stop iroha-postgres
+docker rm iroha-postgres
+docker volume rm iroha-postgres
