@@ -75,7 +75,6 @@ SIGNAL=${SIGNAL:-}
 PORT_CONTROL=${PORT_CONTROL:-10002}
 
 NAME_VOLUME_IROHA=${NAME_VOLUME_IROHA:-"iroha1"}
-TORII=${TORII:-"127.19.1.1:10051"}
 CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID:-"diva@testnet"}
 
 ######
@@ -147,7 +146,7 @@ then
     --env PORT_CONTROL=${PORT_CONTROL} \
     --env STUN=${STUN} \
     --env SIGNAL=${SIGNAL} \
-    --env TORII=${TORII} \
+    --env TORII=${IP_PUBLISHED}:${PORT_EXPOSE_IROHA_TORII} \
     --env CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID} \
     -v iroha-node:/home/node \
     -v ${NAME_VOLUME_IROHA}:/tmp/iroha:ro \
