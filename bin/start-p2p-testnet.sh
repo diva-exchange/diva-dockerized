@@ -91,16 +91,20 @@ PORT_EXPOSE_IROHA_INTERNAL=${PORT_EXPOSE_IROHA_INTERNAL:-10011}
 PORT_EXPOSE_IROHA_TORII=${PORT_EXPOSE_IROHA_TORII:-10051}
 
 # Postgres  start
-docker run \
-  -d \
-  -p ${IP_POSTGRES}:5432:5432 \
-  -v iroha-postgres:/var/lib/postgresql/data/ \
-  --env POSTGRES_USER=iroha \
-  --env POSTGRES_PASSWORD=iroha \
-  --network bridge \
-  --name iroha-postgres \
-  postgres:10 \
-  -c 'max_prepared_transactions=100'
+if [[ ! -f ${DATA_PATH}postgres ]]
+then
+  docker run \
+    -d \
+    -p ${IP_POSTGRES}:5432:5432 \
+    -v iroha-postgres:/var/lib/postgresql/data/ \
+    --env POSTGRES_USER=iroha \
+    --env POSTGRES_PASSWORD=iroha \
+    --network bridge \
+    --name iroha-postgres \
+    postgres:10 \
+    -c 'max_prepared_transactions=100'
+  echo 1 >${DATA_PATH}instance
+fi
 
 # Iroha: start
 for NAME_KEY in "${member[@]}"
@@ -132,19 +136,23 @@ do
   echo ${ID_INSTANCE} >${DATA_PATH}instance
 done
 
-# Iroha Node (proxy): start
-docker run \
-  -d \
-  --env NODE_ENV=${NODE_ENV} \
-  --env TYPE=${TYPE} \
-  --env PORT_NODE=${PORT_IROHA_PROXY} \
-  --env PORT_CONTROL=${PORT_CONTROL} \
-  --env STUN=${STUN} \
-  --env SIGNAL=${SIGNAL} \
-  --env TORII=${TORII} \
-  --env CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID} \
-  -v iroha-node:/home/node \
-  -v ${NAME_VOLUME_IROHA}:/tmp/iroha:ro \
-  --name iroha-node \
-  --network host \
-  divax/iroha-node:latest
+if [[ ! -f ${DATA_PATH}node ]]
+then
+  # Iroha Node (proxy): start
+  docker run \
+    -d \
+    --env NODE_ENV=${NODE_ENV} \
+    --env TYPE=${TYPE} \
+    --env PORT_NODE=${PORT_IROHA_PROXY} \
+    --env PORT_CONTROL=${PORT_CONTROL} \
+    --env STUN=${STUN} \
+    --env SIGNAL=${SIGNAL} \
+    --env TORII=${TORII} \
+    --env CREATOR_ACCOUNT_ID=${CREATOR_ACCOUNT_ID} \
+    -v iroha-node:/home/node \
+    -v ${NAME_VOLUME_IROHA}:/tmp/iroha:ro \
+    --name iroha-node \
+    --network host \
+    divax/iroha-node:latest
+  echo 1 >${DATA_PATH}node
+fi

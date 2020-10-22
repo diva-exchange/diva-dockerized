@@ -36,10 +36,6 @@ then
   exit 1
 fi
 
-INSTANCES=$(<${DATA_PATH}instance)
-# remove instance file
-docker ps >/dev/null && rm -f ${DATA_PATH}instance
-
 docker inspect iroha-node >/dev/null && \
   docker stop iroha-node && \
   docker rm iroha-node
@@ -47,6 +43,10 @@ docker inspect iroha-node >/dev/null && \
 # remove iroha-node volume
 docker volume rm iroha-node -f
 
+# remove node file
+rm -f ${DATA_PATH}node
+
+INSTANCES=$(<${DATA_PATH}instance)
 for (( ID_INSTANCE=1; ID_INSTANCE < ${INSTANCES}; ID_INSTANCE++ ))
 do
   docker inspect iroha${ID_INSTANCE} >/dev/null && \
@@ -56,7 +56,12 @@ do
   # remove iroha volume
   docker volume rm iroha${ID_INSTANCE} -f
 done
+# remove instance file
+docker ps >/dev/null && rm -f ${DATA_PATH}instance
 
 docker stop iroha-postgres
 docker rm iroha-postgres
 docker volume rm iroha-postgres
+
+# remove postgres file
+rm -f ${DATA_PATH}postgres
