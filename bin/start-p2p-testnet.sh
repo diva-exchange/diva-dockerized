@@ -102,7 +102,7 @@ then
     --name iroha-postgres \
     postgres:10 \
     -c 'max_prepared_transactions=100'
-  echo 1 >${DATA_PATH}instance
+  echo 1 >${DATA_PATH}postgres
 fi
 
 # Iroha: start
