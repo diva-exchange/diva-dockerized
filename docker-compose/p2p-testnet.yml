@@ -118,6 +118,7 @@ services:
 
 networks:
   iroha-testnet-p2p:
+    name: iroha-testnet-p2p
     ipam:
       driver: default
       config:
@@ -125,7 +126,12 @@ networks:
 
 volumes:
   iroha-postgres-testnet-p2p:
+    name: iroha-postgres-testnet-p2p
   iroha-node-testnet-p2p:
+    name: iroha-node-testnet-p2p
   iroha-a-testnet-p2p:
+    name: iroha-a-testnet-p2p
   iroha-b-testnet-p2p:
+    name: iroha-b-testnet-p2p
   iroha-c-testnet-p2p:
+    name: iroha-c-testnet-p2p
