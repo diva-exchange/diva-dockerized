@@ -15,44 +15,32 @@ The I2P based testnet routes all traffic between the Iroha nodes through the pri
 
 ### Peer-to-peer based local Testnet
 
-To start the peer-to-peer-based local testnet (3 nodes) execute:
-
+Clone the code repository from the public repository:
 ```
-./bin/start-p2p-testnet.sh
+git clone -b master https://codeberg.org/diva.exchange/diva-dockerized.git
+cd diva-dockerized
+```
+
+To join or start a preconfigured local testnet, make sure you have "Docker Compose" installed (https://docs.docker.com/compose/install/). Check your Docker Compose installation by executing `docker-compose --version` in a terminal.
+
+To join an existing network, like the "testnet" of diva.exchange (see https://testnet.diva.exchange):
+```
+sudo docker-compose -f docker-compose/p2p-join-testnet.yml up -d
+```
+
+To disconnect from the testnet:
+```
+sudo docker-compose -f docker-compose/p2p-join-testnet.yml down --volumes
+```
+
+To start the peer-to-peer-based local testnet (3 nodes) execute:
+```
+sudo docker-compose -f docker-compose/p2p-testnet.yml up -d
 ```
 
 To stop the peer-to-peer-based testnet execute:
-
 ```
-./bin/halt-p2p-testnet.sh
-```
-
-### I2P based Testnet
-
-To start the I2P-based testnet (3 nodes) execute:
-
-```
-./bin/start-i2p-testnet.sh
-```
-
-To stop the I2P-based testnet execute:
-
-```
-./bin/halt-i2p-testnet.sh
-```
-
-### Join testnet.diva.exchange
-
-To join an existing network, like the "testnet" of diva.exchange (see https://testnet.diva.exchange):
-
-```
-JOIN=1 BLOCKCHAIN_NETWORK=testnet ./bin/start-p2p-testnet.sh
-```
-
-To disconnect from the network:
-
-```
-./bin/halt-p2p-testnet.sh
+sudo docker-compose -f docker-compose/p2p-testnet.yml down --volumes
 ```
 
 ## Contact the Developers

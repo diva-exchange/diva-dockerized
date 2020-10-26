@@ -35,6 +35,22 @@ services:
         target: /home/node
     network_mode: host
 
+  iroha-explorer:
+    container_name: iroha-explorer
+    image: divax/iroha-explorer:latest
+    environment:
+      IP_EXPLORER: 0.0.0.0
+      PORT_EXPLORER: 3900
+      PATH_IROHA: /tmp/iroha/
+      POSTGRES_HOST_IROHA: iroha-postgres:5432
+    ports:
+      - 127.19.101.250:3900:3900
+    volumes:
+      - iroha-local-p2p:/tmp/iroha/:ro
+    networks:
+      iroha-testnet-p2p:
+        ipv4_address: 172.19.101.250
+
   iroha-postgres:
     container_name: iroha-postgres
     image: postgres:10
