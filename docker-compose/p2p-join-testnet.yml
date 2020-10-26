@@ -50,20 +50,20 @@ services:
       iroha-testnet-p2p:
         ipv4_address: 172.19.101.2
 
-  iroha-testnet-a:
-    container_name: iroha-testnet-a
+  iroha-local-p2p:
+    container_name: iroha-local-p2p
     image: divax/iroha:latest
     environment:
       IP_PUBLISHED: 127.19.101.3
       IP_POSTGRES: 172.19.101.2
       BLOCKCHAIN_NETWORK: testnet
-      NAME_KEY: testnet-a
+      NAME_KEY:
       IP_IROHA_PROXY: bridge
       PORT_IROHA_PROXY: 10001
       PORT_CONTROL: 19012
     volumes:
       - type: volume
-        source: iroha-a-testnet-p2p
+        source: iroha-local-p2p
         target: /opt/iroha
     ports:
       - 127.19.101.3:10011:10001
@@ -71,50 +71,6 @@ services:
     networks:
       iroha-testnet-p2p:
         ipv4_address: 172.19.101.3
-
-  iroha-testnet-b:
-    container_name: iroha-testnet-b
-    image: divax/iroha:latest
-    environment:
-      IP_PUBLISHED: 127.19.101.4
-      IP_POSTGRES: 172.19.101.2
-      BLOCKCHAIN_NETWORK: testnet
-      NAME_KEY: testnet-b
-      IP_IROHA_PROXY: bridge
-      PORT_IROHA_PROXY: 10001
-      PORT_CONTROL: 19012
-    volumes:
-      - type: volume
-        source: iroha-b-testnet-p2p
-        target: /opt/iroha
-    ports:
-      - 127.19.101.4:10011:10001
-      - 127.19.101.4:10051:50051
-    networks:
-      iroha-testnet-p2p:
-        ipv4_address: 172.19.101.4
-
-  iroha-testnet-c:
-    container_name: iroha-testnet-c
-    image: divax/iroha:latest
-    environment:
-      IP_PUBLISHED: 127.19.101.5
-      IP_POSTGRES: 172.19.101.2
-      BLOCKCHAIN_NETWORK: testnet
-      NAME_KEY: testnet-c
-      IP_IROHA_PROXY: bridge
-      PORT_IROHA_PROXY: 10001
-      PORT_CONTROL: 19012
-    volumes:
-      - type: volume
-        source: iroha-c-testnet-p2p
-        target: /opt/iroha
-    ports:
-      - 127.19.101.5:10011:10001
-      - 127.19.101.5:10051:50051
-    networks:
-      iroha-testnet-p2p:
-        ipv4_address: 172.19.101.5
 
 networks:
   iroha-testnet-p2p:
@@ -126,6 +82,4 @@ networks:
 volumes:
   iroha-postgres-testnet-p2p:
   iroha-node-testnet-p2p:
-  iroha-a-testnet-p2p:
-  iroha-b-testnet-p2p:
-  iroha-c-testnet-p2p:
+  iroha-local-p2p:
