@@ -119,7 +119,7 @@ services:
       PORT_EXPLORER: 3900
       PATH_IROHA: /tmp/iroha/
     ports:
-      - 127.20.101.100:3900:3900
+      - 3920:3900
     volumes:
       - iroha-a-testnet-i2p:/tmp/iroha/:ro
       - iroha-explorer-testnet-i2p:/home/node/
