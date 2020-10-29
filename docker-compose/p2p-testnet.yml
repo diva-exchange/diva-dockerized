@@ -29,10 +29,6 @@ services:
       PORT_CONTROL: 19012
       TORII: 127.19.101.3:10051
       CREATOR_ACCOUNT_ID: diva@testnet
-    volumes:
-      - type: volume
-        source: iroha-node-testnet-p2p
-        target: /home/node
     network_mode: host
 
   iroha-postgres:
@@ -114,6 +110,7 @@ services:
     container_name: iroha-c-testnet-p2p
     image: divax/iroha:latest
     environment:
+      TYPE: P2P
       IP_PUBLISHED: 127.19.101.5
       IP_POSTGRES: 172.19.101.2
       BLOCKCHAIN_NETWORK: ${BLOCKCHAIN_NETWORK:-}
@@ -143,8 +140,6 @@ networks:
 volumes:
   iroha-postgres-testnet-p2p:
     name: iroha-postgres-testnet-p2p
-  iroha-node-testnet-p2p:
-    name: iroha-node-testnet-p2p
   iroha-a-testnet-p2p:
     name: iroha-a-testnet-p2p
   iroha-b-testnet-p2p:

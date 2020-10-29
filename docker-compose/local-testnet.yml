@@ -19,34 +19,6 @@
 
 version: "3.7"
 services:
-  i2p:
-    image: divax/i2p:latest
-    container_name: i2p
-    ports:
-      - 127.20.101.200:7070:7070
-    environment:
-      ENABLE_TUNNELS: 1
-    volumes:
-      - ../tunnels.conf.d:/home/i2pd/tunnels.source.conf.d/
-      - iroha-testnet-i2p:/home/i2pd/
-    networks:
-      iroha-testnet-i2p:
-        ipv4_address: 172.20.101.200
-
-  iroha-node:
-    container_name: iroha-node
-    image: divax/iroha-node:latest
-    environment:
-      TYPE: I2P
-      NODE_ENV: ${NODE_ENV:-development}
-      PORT_IROHA_PROXY: 10001
-      CREATOR_ACCOUNT_ID: diva@testnet
-    volumes:
-      - iroha-node-testnet-i2p:/home/node/
-    networks:
-      iroha-testnet-i2p:
-        ipv4_address: 172.20.101.201
-
   iroha-postgres:
     container_name: iroha-postgres
     image: postgres:10
@@ -56,65 +28,68 @@ services:
       POSTGRES_PASSWORD: iroha
     volumes:
       - type: volume
-        source: iroha-postgres-testnet-i2p
+        source: iroha-postgres
         target: /var/lib/postgresql/data/
     networks:
-      iroha-testnet-i2p:
+      iroha-testnet:
         ipv4_address: 172.20.101.2
 
-  iroha-a-testnet-i2p:
-    container_name: iroha-a-testnet-i2p
+  iroha-a-testnet:
+    container_name: iroha-a-testnet
     image: divax/iroha:latest
     environment:
-      TYPE: I2P
+      TYPE: NONE
       IP_PUBLISHED: 127.20.101.3
-      IP_POSTGRES: 172.20.101.2
+      BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-a
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
     volumes:
       - type: volume
-        source: iroha-a-testnet-i2p
+        source: iroha-a-testnet
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      iroha-testnet:
         ipv4_address: 172.20.101.3
+    extra_hosts:
+      - testnet-b.diva:172.20.101.4
+      - testnet-c.diva:172.20.101.5
 
-  iroha-b-testnet-i2p:
-    container_name: iroha-b-testnet-i2p
+  iroha-b-testnet:
+    container_name: iroha-b-testnet
     image: divax/iroha:latest
     environment:
-      TYPE: I2P
+      TYPE: NONE
       IP_PUBLISHED: 127.20.101.4
-      IP_POSTGRES: 172.20.101.2
+      BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-b
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
     volumes:
       - type: volume
-        source: iroha-b-testnet-i2p
+        source: iroha-b-testnet
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      iroha-testnet:
         ipv4_address: 172.20.101.4
+    extra_hosts:
+      - testnet-a.diva:172.20.101.3
+      - testnet-c.diva:172.20.101.5
 
-  iroha-c-testnet-i2p:
-    container_name: iroha-c-testnet-i2p
+  iroha-c-testnet:
+    container_name: iroha-c-testnet
     image: divax/iroha:latest
     environment:
-      TYPE: I2P
+      TYPE: NONE
       IP_PUBLISHED: 127.20.101.5
-      IP_POSTGRES: 172.20.101.2
+      BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-c
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
     volumes:
       - type: volume
-        source: iroha-c-testnet-i2p
+        source: iroha-c-testnet
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      iroha-testnet:
         ipv4_address: 172.20.101.5
+    extra_hosts:
+      - testnet-a.diva:172.20.101.3
+      - testnet-b.diva:172.20.101.4
 
   iroha-explorer:
     container_name: iroha-explorer
@@ -126,32 +101,28 @@ services:
     ports:
       - 127.20.101.100:3900:3900
     volumes:
-      - iroha-a-testnet-i2p:/tmp/iroha/:ro
-      - iroha-explorer-testnet-i2p:/home/node/
+      - iroha-a-testnet:/tmp/iroha/:ro
+      - iroha-explorer-testnet:/home/node/
     networks:
-      iroha-testnet-i2p:
+      iroha-testnet:
         ipv4_address: 172.20.101.100
 
 networks:
-  iroha-testnet-i2p:
-    name: iroha-testnet-i2p
+  iroha-testnet:
+    name: iroha-testnet
     ipam:
       driver: default
       config:
         - subnet: 172.20.101.0/24
 
 volumes:
-  iroha-testnet-i2p:
-    name: iroha-testnet-i2p
-  iroha-postgres-testnet-i2p:
-    name: iroha-postgres-testnet-i2p
-  iroha-node-testnet-i2p:
-    name: iroha-node-testnet-i2p
-  iroha-a-testnet-i2p:
-    name: iroha-a-testnet-i2p
-  iroha-b-testnet-i2p:
-    name: iroha-b-testnet-i2p
-  iroha-c-testnet-i2p:
-    name: iroha-c-testnet-i2p
-  iroha-explorer-testnet-i2p:
-    name: iroha-explorer-testnet-i2p
+  iroha-a-testnet:
+    name: iroha-a-testnet
+  iroha-b-testnet:
+    name: iroha-b-testnet
+  iroha-c-testnet:
+    name: iroha-c-testnet
+  iroha-postgres:
+    name: iroha-postgres
+  iroha-explorer-testnet:
+    name: iroha-explorer-testnet
