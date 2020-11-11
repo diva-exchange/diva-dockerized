@@ -25,9 +25,6 @@ set -e
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}/../
 
-docker pull divax/i2p:latest
-docker pull divax/iroha:latest
-docker pull divax/iroha-node:latest
-docker pull divax/iroha-explorer:latest
+#docker-compose -f docker-compose/i2p-testnet.yml pull
 
 docker-compose -f docker-compose/i2p-testnet.yml up -d

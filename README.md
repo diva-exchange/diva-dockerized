@@ -39,7 +39,7 @@ To stop the local testnet execute:
 sudo docker-compose -f docker-compose/local-testnet.yml down --volumes
 ```
 
-Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://127.20.101.100:3900
+Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://127.20.101.100:3920
 
 ### Stable & Private: I2P based Testnet
 
@@ -63,7 +63,7 @@ sudo docker-compose -f docker-compose/i2p-testnet.yml down --volumes
 
 Starting up the I2P testnet might take while - up to 5 minutes.
 
-Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://127.20.101.100:3900
+Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://127.20.101.100:3920
 
 ### Experimental: Peer-to-peer based Testnet
 

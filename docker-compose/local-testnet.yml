@@ -39,9 +39,10 @@ services:
     image: divax/iroha:latest
     environment:
       TYPE: NONE
-      IP_PUBLISHED: 127.20.101.3
       BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-a
+    ports:
+      - 127.20.101.3:50051:50051 # torii
     volumes:
       - type: volume
         source: iroha-a-testnet
@@ -50,15 +51,14 @@ services:
       iroha-testnet:
         ipv4_address: 172.20.101.3
     extra_hosts:
-      - testnet-b.diva:172.20.101.4
-      - testnet-c.diva:172.20.101.5
+      - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   iroha-b-testnet:
     container_name: iroha-b-testnet
     image: divax/iroha:latest
     environment:
       TYPE: NONE
-      IP_PUBLISHED: 127.20.101.4
       BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-b
     volumes:
@@ -69,15 +69,14 @@ services:
       iroha-testnet:
         ipv4_address: 172.20.101.4
     extra_hosts:
-      - testnet-a.diva:172.20.101.3
-      - testnet-c.diva:172.20.101.5
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-c.diva.i2p:172.20.101.5
 
   iroha-c-testnet:
     container_name: iroha-c-testnet
     image: divax/iroha:latest
     environment:
       TYPE: NONE
-      IP_PUBLISHED: 127.20.101.5
       BLOCKCHAIN_NETWORK: testnet-local
       NAME_KEY: testnet-c
     volumes:
@@ -88,18 +87,18 @@ services:
       iroha-testnet:
         ipv4_address: 172.20.101.5
     extra_hosts:
-      - testnet-a.diva:172.20.101.3
-      - testnet-b.diva:172.20.101.4
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
 
   iroha-explorer:
     container_name: iroha-explorer
     image: divax/iroha-explorer:latest
     environment:
       IP_EXPLORER: 0.0.0.0
-      PORT_EXPLORER: 3900
+      PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
     ports:
-      - 127.20.101.100:3900:3900
+      - 127.20.101.100:3920:3920
     volumes:
       - iroha-a-testnet:/tmp/iroha/:ro
       - iroha-explorer-testnet:/home/node/

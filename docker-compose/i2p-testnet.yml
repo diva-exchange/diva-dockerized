@@ -24,8 +24,12 @@ services:
     container_name: i2p
     environment:
       ENABLE_TUNNELS: 1
+    ports:
+      - 127.20.101.200:7070:7070 # webconsole
+      - 127.20.101.200:4444:4444 # http proxy
+      - 127.20.101.200:4445:4445 # socks proxy
     volumes:
-      - ../tunnels.conf.d:/home/i2pd/tunnels.source.conf.d/
+      - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
       - iroha-testnet-i2p:/home/i2pd/
     networks:
       iroha-testnet-i2p:
@@ -33,14 +37,14 @@ services:
 
   iroha-node:
     container_name: iroha-node
-    image: divax/iroha-node:latest
+    image: divax/iroha-node:dev
     environment:
-      TYPE: I2P
       NODE_ENV: ${NODE_ENV:-development}
-      PORT_IROHA_PROXY: 10001
-      CREATOR_ACCOUNT_ID: diva@testnet
+      TORII: 172.20.101.3:50051
+      I2P_HOSTNAME: 172.20.101.200
     volumes:
       - iroha-node-testnet-i2p:/home/node/
+      - iroha-a-testnet-i2p:/tmp/iroha/:ro
     networks:
       iroha-testnet-i2p:
         ipv4_address: 172.20.101.201
@@ -65,10 +69,10 @@ services:
     image: divax/iroha:latest
     environment:
       TYPE: I2P
-      IP_PUBLISHED: 127.20.101.3
       NAME_KEY: testnet-a
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
+      BLOCKCHAIN_NETWORK: testnet-local
+      IP_IROHA_API: 172.20.101.201
+      PORT_IROHA_API: 19012
     volumes:
       - type: volume
         source: iroha-a-testnet-i2p
@@ -76,16 +80,19 @@ services:
     networks:
       iroha-testnet-i2p:
         ipv4_address: 172.20.101.3
+    extra_hosts:
+      - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   iroha-b-testnet-i2p:
     container_name: iroha-b-testnet-i2p
     image: divax/iroha:latest
     environment:
       TYPE: I2P
-      IP_PUBLISHED: 127.20.101.4
       NAME_KEY: testnet-b
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
+      BLOCKCHAIN_NETWORK: testnet-local
+      IP_IROHA_API: 172.20.101.201
+      PORT_IROHA_API: 19012
     volumes:
       - type: volume
         source: iroha-b-testnet-i2p
@@ -93,16 +100,19 @@ services:
     networks:
       iroha-testnet-i2p:
         ipv4_address: 172.20.101.4
+    extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-c.diva.i2p:172.20.101.5
 
   iroha-c-testnet-i2p:
     container_name: iroha-c-testnet-i2p
     image: divax/iroha:latest
     environment:
       TYPE: I2P
-      IP_PUBLISHED: 127.20.101.5
       NAME_KEY: testnet-c
-      IP_IROHA_PROXY: 172.20.101.201
-      PORT_IROHA_PROXY: 10001
+      BLOCKCHAIN_NETWORK: testnet-local
+      IP_IROHA_API: 172.20.101.201
+      PORT_IROHA_API: 19012
     volumes:
       - type: volume
         source: iroha-c-testnet-i2p
@@ -110,16 +120,19 @@ services:
     networks:
       iroha-testnet-i2p:
         ipv4_address: 172.20.101.5
+    extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
 
   iroha-explorer:
     container_name: iroha-explorer
     image: divax/iroha-explorer:latest
     environment:
       IP_EXPLORER: 0.0.0.0
-      PORT_EXPLORER: 3900
+      PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
     ports:
-      - 3920:3900
+      - 127.20.101.100:3920:3920
     volumes:
       - iroha-a-testnet-i2p:/tmp/iroha/:ro
       - iroha-explorer-testnet-i2p:/home/node/
