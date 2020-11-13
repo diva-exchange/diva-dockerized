@@ -25,9 +25,7 @@ services:
     environment:
       ENABLE_TUNNELS: 1
     ports:
-      - 127.20.101.200:7270:7070 # webconsole
-      - 127.20.101.200:4644:4444 # http proxy
-      - 127.20.101.200:4645:4445 # socks proxy
+      - 7270:7070 # webconsole
     volumes:
       - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
       - iroha-testnet-i2p:/home/i2pd/
@@ -42,6 +40,8 @@ services:
       NODE_ENV: ${NODE_ENV:-development}
       TORII: 172.20.101.3:50051
       I2P_HOSTNAME: 172.20.101.200
+      I2P_HTTP_PROXY_PORT: 4444
+      I2P_WEBCONSOLE_PORT: 7070
     volumes:
       - iroha-node-testnet-i2p:/home/node/
       - iroha-a-testnet-i2p:/tmp/iroha/:ro
@@ -70,9 +70,11 @@ services:
     environment:
       TYPE: I2P
       NAME_KEY: testnet-a
-      BLOCKCHAIN_NETWORK: testnet-local
+      BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
+      IP_HTTP_PROXY: 172.20.101.200
+      PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
         source: iroha-a-testnet-i2p
@@ -91,9 +93,11 @@ services:
     environment:
       TYPE: I2P
       NAME_KEY: testnet-b
-      BLOCKCHAIN_NETWORK: testnet-local
+      BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
+      IP_HTTP_PROXY: 172.20.101.200
+      PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
         source: iroha-b-testnet-i2p
@@ -112,9 +116,11 @@ services:
     environment:
       TYPE: I2P
       NAME_KEY: testnet-c
-      BLOCKCHAIN_NETWORK: testnet-local
+      BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
+      IP_HTTP_PROXY: 172.20.101.200
+      PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
         source: iroha-c-testnet-i2p
@@ -135,7 +141,7 @@ services:
       PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
     ports:
-      - 127.20.101.100:3920:3920
+      - 3920:3920
     volumes:
       - iroha-a-testnet-i2p:/tmp/iroha/:ro
       - iroha-explorer-testnet-i2p:/home/node/

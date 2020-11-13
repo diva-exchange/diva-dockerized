@@ -51,6 +51,7 @@ services:
       iroha-testnet:
         ipv4_address: 172.20.101.3
     extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
       - testnet-b.diva.i2p:172.20.101.4
       - testnet-c.diva.i2p:172.20.101.5
 
@@ -70,6 +71,7 @@ services:
         ipv4_address: 172.20.101.4
     extra_hosts:
       - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
       - testnet-c.diva.i2p:172.20.101.5
 
   iroha-c-testnet:
@@ -89,6 +91,7 @@ services:
     extra_hosts:
       - testnet-a.diva.i2p:172.20.101.3
       - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   iroha-explorer:
     container_name: iroha-explorer

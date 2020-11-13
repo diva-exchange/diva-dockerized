@@ -25,9 +25,7 @@ services:
     environment:
       ENABLE_TUNNELS: 1
     ports:
-      - 127.30.101.200:7070:7070 # webconsole
-      - 127.30.101.200:4444:4444 # http proxy
-      - 127.30.101.200:4445:4445 # socks proxy
+      - 7370:7070 # webconsole
     volumes:
       - ../tunnels.conf.d/join:/home/i2pd/tunnels.source.conf.d/
       - iroha-join-i2p:/home/i2pd/
@@ -44,6 +42,8 @@ services:
       I2P_HOSTNAME: 172.30.101.200
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
+    ports:
+      - 19012:19012 # api
     volumes:
       - iroha-node-join-i2p:/home/node/
       - iroha-x-join-i2p:/tmp/iroha/:ro
