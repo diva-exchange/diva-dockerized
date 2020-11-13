@@ -25,9 +25,9 @@ services:
     environment:
       ENABLE_TUNNELS: 1
     ports:
-      - 127.20.101.200:7070:7070 # webconsole
-      - 127.20.101.200:4444:4444 # http proxy
-      - 127.20.101.200:4445:4445 # socks proxy
+      - 127.20.101.200:7270:7070 # webconsole
+      - 127.20.101.200:4644:4444 # http proxy
+      - 127.20.101.200:4645:4445 # socks proxy
     volumes:
       - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
       - iroha-testnet-i2p:/home/i2pd/
