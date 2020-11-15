@@ -19,22 +19,22 @@
 
 version: "3.7"
 services:
-  i2p:
+  i2p.testnet.diva.i2p:
     image: divax/i2p:latest
-    container_name: i2p
+    container_name: i2p.testnet.diva.i2p
     environment:
       ENABLE_TUNNELS: 1
     ports:
       - 7270:7070 # webconsole
     volumes:
       - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
-      - iroha-testnet-i2p:/home/i2pd/
+      - i2p.testnet.diva.i2p:/home/i2pd/
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.200
 
-  iroha-node:
-    container_name: iroha-node
+  node.testnet.diva.i2p:
+    container_name: node.testnet.diva.i2p
     image: divax/iroha-node:dev
     environment:
       NODE_ENV: ${NODE_ENV:-development}
@@ -43,14 +43,14 @@ services:
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
     volumes:
-      - iroha-node-testnet-i2p:/home/node/
-      - iroha-a-testnet-i2p:/tmp/iroha/:ro
+      - node.testnet.diva.i2p:/home/node/
+      - a.testnet.diva.i2p:/tmp/iroha/:ro
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
 
-  iroha-postgres:
-    container_name: iroha-postgres
+  postgres.testnet.diva.i2p:
+    container_name: postgres.testnet.diva.i2p
     image: postgres:10
     command: -c max_prepared_transactions=100
     environment:
@@ -58,15 +58,15 @@ services:
       POSTGRES_PASSWORD: iroha
     volumes:
       - type: volume
-        source: iroha-postgres-testnet-i2p
+        source: postgres.testnet.diva.i2p
         target: /var/lib/postgresql/data/
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.2
 
-  iroha-a-testnet-i2p:
-    container_name: iroha-a-testnet-i2p
-    image: divax/iroha:latest
+  a.testnet.diva.i2p:
+    container_name: a.testnet.diva.i2p
+    image: divax/iroha:${TAG:-1.1.3}
     environment:
       TYPE: I2P
       NAME_KEY: testnet-a
@@ -77,19 +77,15 @@ services:
       PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
-        source: iroha-a-testnet-i2p
+        source: a.testnet.diva.i2p
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
-    extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
 
-  iroha-b-testnet-i2p:
-    container_name: iroha-b-testnet-i2p
-    image: divax/iroha:latest
+  b.testnet.diva.i2p:
+    container_name: b.testnet.diva.i2p
+    image: divax/iroha:${TAG:-1.1.3}
     environment:
       TYPE: I2P
       NAME_KEY: testnet-b
@@ -100,19 +96,15 @@ services:
       PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
-        source: iroha-b-testnet-i2p
+        source: b.testnet.diva.i2p
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.4
-    extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
 
-  iroha-c-testnet-i2p:
-    container_name: iroha-c-testnet-i2p
-    image: divax/iroha:latest
+  c.testnet.diva.i2p:
+    container_name: c.testnet.diva.i2p
+    image: divax/iroha:${TAG:-1.1.3}
     environment:
       TYPE: I2P
       NAME_KEY: testnet-c
@@ -123,18 +115,14 @@ services:
       PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
-        source: iroha-c-testnet-i2p
+        source: c.testnet.diva.i2p
         target: /opt/iroha
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.5
-    extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
 
-  iroha-explorer:
-    container_name: iroha-explorer
+  explorer.testnet.diva.i2p:
+    container_name: explorer.testnet.diva.i2p
     image: divax/iroha-explorer:latest
     environment:
       IP_EXPLORER: 0.0.0.0
@@ -143,32 +131,32 @@ services:
     ports:
       - 3920:3920
     volumes:
-      - iroha-a-testnet-i2p:/tmp/iroha/:ro
-      - iroha-explorer-testnet-i2p:/home/node/
+      - c.testnet.diva.i2p:/tmp/iroha/:ro
+      - explorer.testnet.diva.i2p:/home/node/
     networks:
-      iroha-testnet-i2p:
+      network.testnet.diva.i2p:
         ipv4_address: 172.20.101.100
 
 networks:
-  iroha-testnet-i2p:
-    name: iroha-testnet-i2p
+  network.testnet.diva.i2p:
+    name: network.testnet.diva.i2p
     ipam:
       driver: default
       config:
         - subnet: 172.20.101.0/24
 
 volumes:
-  iroha-testnet-i2p:
-    name: iroha-testnet-i2p
-  iroha-postgres-testnet-i2p:
-    name: iroha-postgres-testnet-i2p
-  iroha-node-testnet-i2p:
-    name: iroha-node-testnet-i2p
-  iroha-a-testnet-i2p:
-    name: iroha-a-testnet-i2p
-  iroha-b-testnet-i2p:
-    name: iroha-b-testnet-i2p
-  iroha-c-testnet-i2p:
-    name: iroha-c-testnet-i2p
-  iroha-explorer-testnet-i2p:
-    name: iroha-explorer-testnet-i2p
+  i2p.testnet.diva.i2p:
+    name: i2p.testnet.diva.i2p
+  postgres.testnet.diva.i2p:
+    name: postgres.testnet.diva.i2p
+  node.testnet.diva.i2p:
+    name: node.testnet.diva.i2p
+  a.testnet.diva.i2p:
+    name: a.testnet.diva.i2p
+  b.testnet.diva.i2p:
+    name: b.testnet.diva.i2p
+  c.testnet.diva.i2p:
+    name: c.testnet.diva.i2p
+  explorer.testnet.diva.i2p:
+    name: explorer.testnet.diva.i2p

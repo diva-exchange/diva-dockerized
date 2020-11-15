@@ -68,7 +68,7 @@ services:
 
   iroha-x-join-i2p:
     container_name: iroha-x-join-i2p
-    image: divax/iroha:latest
+    image: divax/iroha:${TAG:-1.1.3}
     environment:
       TYPE: I2P
       BLOCKCHAIN_NETWORK: testnet
