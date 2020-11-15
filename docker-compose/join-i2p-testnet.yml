@@ -83,6 +83,22 @@ services:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
 
+  explorer.testnet.diva.i2p:
+    container_name: explorer.testnet.diva.i2p
+    image: divax/iroha-explorer:latest
+    environment:
+      IP_EXPLORER: 0.0.0.0
+      PORT_EXPLORER: 3920
+      PATH_IROHA: /tmp/iroha/
+    ports:
+      - 3920:3920
+    volumes:
+      - testnet-x.diva.i2p:/tmp/iroha/:ro
+      - explorer.testnet.diva.i2p:/home/node/
+    networks:
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.100
+
 networks:
   network.testnet.diva.i2p:
     name: network.testnet.diva.i2p
@@ -100,3 +116,5 @@ volumes:
     name: node.testnet.diva.i2p
   testnet-x.diva.i2p:
     name: testnet-x.diva.i2p
+  explorer.testnet.diva.i2p:
+    name: explorer.testnet.diva.i2p

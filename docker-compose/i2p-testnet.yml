@@ -83,6 +83,10 @@ services:
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
+    extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   testnet-b.diva.i2p:
     container_name: testnet-b.diva.i2p
@@ -103,6 +107,10 @@ services:
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.4
+    extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   testnet-c.diva.i2p:
     container_name: testnet-c.diva.i2p
@@ -123,6 +131,10 @@ services:
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.5
+    extra_hosts:
+      - testnet-a.diva.i2p:172.20.101.3
+      - testnet-b.diva.i2p:172.20.101.4
+      - testnet-c.diva.i2p:172.20.101.5
 
   explorer.testnet.diva.i2p:
     container_name: explorer.testnet.diva.i2p
