@@ -71,7 +71,6 @@ services:
     image: divax/iroha:${TAG:-1.2.0-rc2}
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: testnet-x
       BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
