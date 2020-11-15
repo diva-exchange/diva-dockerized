@@ -64,58 +64,61 @@ services:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.2
 
-  a.testnet.diva.i2p:
-    container_name: a.testnet.diva.i2p
+  testnet-a.diva.i2p:
+    container_name: testnet-a.diva.i2p
     image: divax/iroha:${TAG:-1.1.3}
     environment:
-      TYPE: I2P
+      NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-a
       BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
+      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
       - type: volume
-        source: a.testnet.diva.i2p
+        source: testnet-a.diva.i2p
         target: /opt/iroha
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
 
-  b.testnet.diva.i2p:
-    container_name: b.testnet.diva.i2p
+  testnet-b.diva.i2p:
+    container_name: testnet-b.diva.i2p
     image: divax/iroha:${TAG:-1.1.3}
     environment:
-      TYPE: I2P
+      NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-b
       BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
+      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
       - type: volume
-        source: b.testnet.diva.i2p
+        source: testnet-b.diva.i2p
         target: /opt/iroha
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.4
 
-  c.testnet.diva.i2p:
-    container_name: c.testnet.diva.i2p
+  testnet-c.diva.i2p:
+    container_name: testnet-c.diva.i2p
     image: divax/iroha:${TAG:-1.1.3}
     environment:
-      TYPE: I2P
+      NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-c
       BLOCKCHAIN_NETWORK: testnet
       IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
+      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
       - type: volume
-        source: c.testnet.diva.i2p
+        source: testnet-c.diva.i2p
         target: /opt/iroha
     networks:
       network.testnet.diva.i2p:
@@ -131,7 +134,7 @@ services:
     ports:
       - 3920:3920
     volumes:
-      - c.testnet.diva.i2p:/tmp/iroha/:ro
+      - testnet-c.diva.i2p:/tmp/iroha/:ro
       - explorer.testnet.diva.i2p:/home/node/
     networks:
       network.testnet.diva.i2p:
@@ -152,11 +155,11 @@ volumes:
     name: postgres.testnet.diva.i2p
   node.testnet.diva.i2p:
     name: node.testnet.diva.i2p
-  a.testnet.diva.i2p:
-    name: a.testnet.diva.i2p
-  b.testnet.diva.i2p:
-    name: b.testnet.diva.i2p
-  c.testnet.diva.i2p:
-    name: c.testnet.diva.i2p
+  testnet-a.diva.i2p:
+    name: testnet-a.diva.i2p
+  testnet-b.diva.i2p:
+    name: testnet-b.diva.i2p
+  testnet-c.diva.i2p:
+    name: testnet-c.diva.i2p
   explorer.testnet.diva.i2p:
     name: explorer.testnet.diva.i2p
