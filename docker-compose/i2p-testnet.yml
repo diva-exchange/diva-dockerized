@@ -44,7 +44,7 @@ services:
       I2P_WEBCONSOLE_PORT: 7070
     volumes:
       - node.testnet.diva.i2p:/home/node/
-      - a.testnet.diva.i2p:/tmp/iroha/:ro
+      - testnet-a.diva.i2p:/tmp/iroha/:ro
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
@@ -75,7 +75,7 @@ services:
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-a.diva.i2p
@@ -95,7 +95,7 @@ services:
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-b.diva.i2p
@@ -115,7 +115,7 @@ services:
       PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-c.diva.i2p

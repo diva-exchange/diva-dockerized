@@ -43,7 +43,7 @@ services:
       LOG_LEVEL: trace
       IP_HTTP_PROXY: bridge
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-a.diva.i2p
@@ -61,7 +61,7 @@ services:
       LOG_LEVEL: trace
       IP_HTTP_PROXY: bridge
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-b.diva.i2p
@@ -79,7 +79,7 @@ services:
       LOG_LEVEL: trace
       IP_HTTP_PROXY: bridge
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: .diva.i2p
     volumes:
       - type: volume
         source: testnet-c.diva.i2p

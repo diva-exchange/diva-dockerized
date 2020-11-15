@@ -19,40 +19,38 @@
 
 version: "3.7"
 services:
-  i2p-join:
+  i2p.testnet.diva.i2p:
     image: divax/i2p:latest
-    container_name: i2p-join
+    container_name: i2p.testnet.diva.i2p
     environment:
       ENABLE_TUNNELS: 1
     ports:
-      - 7370:7070 # webconsole
+      - 7270:7070 # webconsole
     volumes:
-      - ../tunnels.conf.d/join:/home/i2pd/tunnels.source.conf.d/
-      - iroha-join-i2p:/home/i2pd/
+      - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
+      - i2p.testnet.diva.i2p:/home/i2pd/
     networks:
-      iroha-join-i2p:
-        ipv4_address: 172.30.101.200
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.200
 
-  iroha-node-join:
-    container_name: iroha-node-join
+  node.testnet.diva.i2p:
+    container_name: node.testnet.diva.i2p
     image: divax/iroha-node:dev
     environment:
       NODE_ENV: ${NODE_ENV:-development}
-      TORII: 172.30.101.3:50051
-      I2P_HOSTNAME: 172.30.101.200
+      TORII: 172.20.101.3:50051
+      I2P_HOSTNAME: 172.20.101.200
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
-    ports:
-      - 19012:19012 # api
     volumes:
-      - iroha-node-join-i2p:/home/node/
-      - iroha-x-join-i2p:/tmp/iroha/:ro
+      - node.testnet.diva.i2p:/home/node/
+      - testnet-x.diva.i2p:/tmp/iroha/:ro
     networks:
-      iroha-join-i2p:
-        ipv4_address: 172.30.101.201
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.201
 
-  iroha-postgres-join:
-    container_name: iroha-postgres-join
+  postgres.testnet.diva.i2p:
+    container_name: postgres.testnet.diva.i2p
     image: postgres:10
     command: -c max_prepared_transactions=100
     environment:
@@ -60,45 +58,45 @@ services:
       POSTGRES_PASSWORD: iroha
     volumes:
       - type: volume
-        source: iroha-postgres-join-i2p
+        source: postgres.testnet.diva.i2p
         target: /var/lib/postgresql/data/
     networks:
-      iroha-join-i2p:
-        ipv4_address: 172.30.101.2
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.2
 
-  iroha-x-join-i2p:
-    container_name: iroha-x-join-i2p
+  testnet-x.diva.i2p:
+    container_name: testnet-x.diva.i2p
     image: divax/iroha:${TAG:-1.1.3}
     environment:
-      TYPE: I2P
+      NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
+      NAME_KEY: testnet-x
       BLOCKCHAIN_NETWORK: testnet
-      IP_IROHA_API: 172.30.101.201
+      IP_IROHA_API: 172.20.101.201
       PORT_IROHA_API: 19012
-      NAME_CONTAINER_POSTGRES: iroha-postgres-join
-      IP_HTTP_PROXY: 172.30.101.200
+      IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
     volumes:
       - type: volume
-        source: iroha-x-join-i2p
+        source: testnet-x.diva.i2p
         target: /opt/iroha
     networks:
-      iroha-join-i2p:
-        ipv4_address: 172.30.101.3
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.3
 
 networks:
-  iroha-join-i2p:
-    name: iroha-join-i2p
+  network.testnet.diva.i2p:
+    name: network.testnet.diva.i2p
     ipam:
       driver: default
       config:
-        - subnet: 172.30.101.0/24
+        - subnet: 172.20.101.0/24
 
 volumes:
-  iroha-join-i2p:
-    name: iroha-join-i2p
-  iroha-postgres-join-i2p:
-    name: iroha-postgres-join-i2p
-  iroha-node-join-i2p:
-    name: iroha-node-join-i2p
-  iroha-x-join-i2p:
-    name: iroha-x-join-i2p
+  i2p.testnet.diva.i2p:
+    name: i2p.testnet.diva.i2p
+  postgres.testnet.diva.i2p:
+    name: postgres.testnet.diva.i2p
+  node.testnet.diva.i2p:
+    name: node.testnet.diva.i2p
+  testnet-x.diva.i2p:
+    name: testnet-x.diva.i2p
