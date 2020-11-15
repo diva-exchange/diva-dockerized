@@ -42,6 +42,8 @@ services:
       I2P_HOSTNAME: 172.20.101.200
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
+    ports:
+      - 19012:19012 # api
     volumes:
       - node.testnet.diva.i2p:/home/node/
       - testnet-x.diva.i2p:/tmp/iroha/:ro
