@@ -27,7 +27,7 @@ services:
     ports:
       - 7270:7070 # webconsole
     volumes:
-      - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
+      - ../tunnels.conf.d/join:/home/i2pd/tunnels.source.conf.d/
       - i2p.testnet.diva.i2p:/home/i2pd/
     networks:
       network.testnet.diva.i2p:

@@ -27,11 +27,11 @@ cd ${PROJECT_PATH}/../
 
 docker-compose -f docker-compose/i2p-testnet.yml down
 
-# clean up
+# clean up, keep i2p volume to preserve keys
 docker volume rm \
-  iroha-a-testnet-i2p \
-  iroha-b-testnet-i2p \
-  iroha-c-testnet-i2p \
-  iroha-postgres-testnet-i2p \
-  iroha-node-testnet-i2p \
-  iroha-explorer-testnet-i2p
+  postgres.testnet.diva.i2p \
+  node.testnet.diva.i2p \
+  testnet-a.diva.i2p \
+  testnet-b.diva.i2p \
+  testnet-c.diva.i2p \
+  explorer.testnet.diva.i2p
