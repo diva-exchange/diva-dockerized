@@ -68,7 +68,7 @@ services:
 
   testnet-x.diva.i2p:
     container_name: testnet-x.diva.i2p
-    image: divax/iroha:${TAG:-1.1.3}
+    image: divax/iroha:${TAG:-1.2.0-rc2}
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-x
