@@ -20,8 +20,9 @@
 version: "3.7"
 services:
   i2p.testnet.diva.i2p:
-    image: divax/i2p:latest
     container_name: i2p.testnet.diva.i2p
+    image: divax/i2p:latest
+    restart: unless-stopped
     environment:
       ENABLE_TUNNELS: 1
     ports:
@@ -36,6 +37,7 @@ services:
   node.testnet.diva.i2p:
     container_name: node.testnet.diva.i2p
     image: divax/iroha-node:dev
+    restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       TORII: 172.20.101.3:50051
@@ -55,6 +57,7 @@ services:
     container_name: postgres.testnet.diva.i2p
     image: postgres:10
     command: -c max_prepared_transactions=100
+    restart: unless-stopped
     environment:
       POSTGRES_USER: iroha
       POSTGRES_PASSWORD: iroha
@@ -69,6 +72,7 @@ services:
   testnet-x.diva.i2p:
     container_name: testnet-x.diva.i2p
     image: divax/iroha:${TAG:-1.2.0-rc2}
+    restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       BLOCKCHAIN_NETWORK: testnet
@@ -87,6 +91,7 @@ services:
   explorer.testnet.diva.i2p:
     container_name: explorer.testnet.diva.i2p
     image: divax/iroha-explorer:latest
+    restart: unless-stopped
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
