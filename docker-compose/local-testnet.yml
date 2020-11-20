@@ -19,8 +19,8 @@
 
 version: "3.7"
 services:
-  postgres.local.diva.i2p:
-    container_name: postgres.local.diva.i2p
+  postgres.diva.local:
+    container_name: postgres.diva.local
     image: postgres:10
     command: -c max_prepared_transactions=100
     restart: unless-stopped
@@ -29,70 +29,74 @@ services:
       POSTGRES_PASSWORD: iroha
     volumes:
       - type: volume
-        source: postgres.local.diva.i2p
+        source: postgres.diva.local
         target: /var/lib/postgresql/data/
     networks:
-      network.local.diva.i2p:
+      network.diva.local:
+        ipv4_address: 172.29.101.2
 
-  testnet-a.diva.i2p:
-    container_name: testnet-a.diva.i2p
-    image: divax/iroha:${TAG:-1.1.3}
+  testnet-a.diva.local:
+    container_name: testnet-a.diva.local
+    image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
     environment:
-      NAME_CONTAINER_POSTGRES: postgres.local.diva.i2p
-      BLOCKCHAIN_NETWORK: testnet-local
+      NAME_CONTAINER_POSTGRES: postgres.diva.local
       NAME_KEY: testnet-a
-      LOG_LEVEL: trace
-      IP_HTTP_PROXY: bridge
-      PORT_HTTP_PROXY: 4444
-      NO_PROXY: .diva.i2p
+      BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - type: volume
-        source: testnet-a.diva.i2p
+        source: testnet-a.diva.local
         target: /opt/iroha
     networks:
-      network.local.diva.i2p:
+      network.diva.local:
+        ipv4_address: 172.29.101.3
+    extra_hosts:
+      - testnet-a.diva.i2p:172.29.101.3
+      - testnet-b.diva.i2p:172.29.101.4
+      - testnet-c.diva.i2p:172.29.101.5
 
-  testnet-b.diva.i2p:
-    container_name: testnet-b.diva.i2p
-    image: divax/iroha:${TAG:-1.1.3}
+  testnet-b.diva.local:
+    container_name: testnet-b.diva.local
+    image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
     environment:
-      NAME_CONTAINER_POSTGRES: postgres.local.diva.i2p
-      BLOCKCHAIN_NETWORK: testnet-local
+      NAME_CONTAINER_POSTGRES: postgres.diva.local
       NAME_KEY: testnet-b
-      LOG_LEVEL: trace
-      IP_HTTP_PROXY: bridge
-      PORT_HTTP_PROXY: 4444
-      NO_PROXY: .diva.i2p
+      BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - type: volume
-        source: testnet-b.diva.i2p
+        source: testnet-b.diva.local
         target: /opt/iroha
     networks:
-      network.local.diva.i2p:
+      network.diva.local:
+        ipv4_address: 172.29.101.4
+    extra_hosts:
+      - testnet-a.diva.i2p:172.29.101.3
+      - testnet-b.diva.i2p:172.29.101.4
+      - testnet-c.diva.i2p:172.29.101.5
 
-  testnet-c.diva.i2p:
-    container_name: testnet-c.diva.i2p
-    image: divax/iroha:${TAG:-1.1.3}
+  testnet-c.diva.local:
+    container_name: testnet-c.diva.local
+    image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
     environment:
-      NAME_CONTAINER_POSTGRES: postgres.local.diva.i2p
-      BLOCKCHAIN_NETWORK: testnet-local
+      NAME_CONTAINER_POSTGRES: postgres.diva.local
       NAME_KEY: testnet-c
-      LOG_LEVEL: trace
-      IP_HTTP_PROXY: bridge
-      PORT_HTTP_PROXY: 4444
-      NO_PROXY: .diva.i2p
+      BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - type: volume
-        source: testnet-c.diva.i2p
+        source: testnet-c.diva.local
         target: /opt/iroha
     networks:
-      network.local.diva.i2p:
+      network.diva.local:
+        ipv4_address: 172.29.101.5
+    extra_hosts:
+      - testnet-a.diva.i2p:172.29.101.3
+      - testnet-b.diva.i2p:172.29.101.4
+      - testnet-c.diva.i2p:172.29.101.5
 
-  explorer.local.diva.i2p:
-    container_name: explorer.local.diva.i2p
+  explorer.diva.local:
+    container_name: explorer.diva.local
     image: divax/iroha-explorer:latest
     restart: unless-stopped
     environment:
@@ -102,23 +106,28 @@ services:
     ports:
       - 3920:3920
     volumes:
-      - testnet-c.diva.i2p:/tmp/iroha/:ro
-      - explorer.local.diva.i2p:/home/node/
+      - testnet-c.diva.local:/tmp/iroha/:ro
+      - explorer.diva.local:/home/node/
     networks:
-      network.local.diva.i2p:
+      network.diva.local:
+        ipv4_address: 172.29.101.100
 
 networks:
-  network.local.diva.i2p:
-    name: network.local.diva.i2p
+  network.diva.local:
+    name: network.diva.local
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.101.0/24
 
 volumes:
-  testnet-a.diva.i2p:
-    name: testnet-a.diva.i2p
-  testnet-b.diva.i2p:
-    name: testnet-b.diva.i2p
-  testnet-c.diva.i2p:
-    name: testnet-c.diva.i2p
-  postgres.local.diva.i2p:
-    name: postgres.local.diva.i2p
-  explorer.local.diva.i2p:
-    name: explorer.local.diva.i2p
+  testnet-a.diva.local:
+    name: testnet-a.diva.local
+  testnet-b.diva.local:
+    name: testnet-b.diva.local
+  testnet-c.diva.local:
+    name: testnet-c.diva.local
+  postgres.diva.local:
+    name: postgres.diva.local
+  explorer.diva.local:
+    name: explorer.diva.local
