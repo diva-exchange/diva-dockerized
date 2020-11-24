@@ -25,14 +25,26 @@ services:
     restart: unless-stopped
     environment:
       ENABLE_TUNNELS: 1
-    ports:
-      - 7270:7070 # webconsole
     volumes:
       - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
       - i2p.testnet.diva.i2p:/home/i2pd/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.200
+
+  postgres.testnet.diva.i2p:
+    container_name: postgres.testnet.diva.i2p
+    image: postgres:10
+    command: -c max_prepared_transactions=100
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: iroha
+      POSTGRES_PASSWORD: iroha
+    volumes:
+      - postgres.testnet.diva.i2p:/var/lib/postgresql/data/
+    networks:
+      network.testnet.diva.i2p:
+        ipv4_address: 172.20.101.2
 
   node.testnet.diva.i2p:
     container_name: node.testnet.diva.i2p
@@ -45,45 +57,28 @@ services:
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
     volumes:
-      - node.testnet.diva.i2p:/home/node/
       - testnet-a.diva.i2p:/tmp/iroha/:ro
+      - node.testnet.diva.i2p:/home/node/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
-
-  postgres.testnet.diva.i2p:
-    container_name: postgres.testnet.diva.i2p
-    image: postgres:10
-    command: -c max_prepared_transactions=100
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: iroha
-      POSTGRES_PASSWORD: iroha
-    volumes:
-      - type: volume
-        source: postgres.testnet.diva.i2p
-        target: /var/lib/postgresql/data/
-    networks:
-      network.testnet.diva.i2p:
-        ipv4_address: 172.20.101.2
 
   testnet-a.diva.i2p:
     container_name: testnet-a.diva.i2p
     image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-a
       BLOCKCHAIN_NETWORK: testnet
-      IP_IROHA_API: 172.20.101.201
-      PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
-      - type: volume
-        source: testnet-a.diva.i2p
-        target: /opt/iroha
+      - testnet-a.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
@@ -96,19 +91,18 @@ services:
     container_name: testnet-b.diva.i2p
     image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-b
       BLOCKCHAIN_NETWORK: testnet
-      IP_IROHA_API: 172.20.101.201
-      PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
-      - type: volume
-        source: testnet-b.diva.i2p
-        target: /opt/iroha
+      - testnet-b.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.4
@@ -121,19 +115,18 @@ services:
     container_name: testnet-c.diva.i2p
     image: divax/iroha:${TAG:-1.2.0-rc2}
     restart: unless-stopped
+    stop_grace_period: 30s
+    depends_on:
+      - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_KEY: testnet-c
       BLOCKCHAIN_NETWORK: testnet
-      IP_IROHA_API: 172.20.101.201
-      PORT_IROHA_API: 19012
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
     volumes:
-      - type: volume
-        source: testnet-c.diva.i2p
-        target: /opt/iroha
+      - testnet-c.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.5
@@ -146,14 +139,15 @@ services:
     container_name: explorer.testnet.diva.i2p
     image: divax/iroha-explorer:latest
     restart: unless-stopped
+    depends_on:
+      - postgres.testnet.diva.i2p
+      - testnet-a.diva.i2p
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
-    ports:
-      - 3920:3920
     volumes:
-      - testnet-c.diva.i2p:/tmp/iroha/:ro
+      - testnet-a.diva.i2p:/tmp/iroha/:ro
       - explorer.testnet.diva.i2p:/home/node/
     networks:
       network.testnet.diva.i2p:

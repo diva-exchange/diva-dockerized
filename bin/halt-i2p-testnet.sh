@@ -29,5 +29,6 @@ docker-compose -f docker-compose/i2p-testnet.yml down
 
 # clean up, keep i2p, postgres, testnet volumes to preserve keys and data
 docker volume rm \
+  postgres.testnet.diva.i2p \
   node.testnet.diva.i2p \
   explorer.testnet.diva.i2p

@@ -28,9 +28,7 @@ services:
       POSTGRES_USER: iroha
       POSTGRES_PASSWORD: iroha
     volumes:
-      - type: volume
-        source: postgres.diva.local
-        target: /var/lib/postgresql/data/
+      - postgres.diva.local:/var/lib/postgresql/data/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.2
@@ -44,9 +42,7 @@ services:
       NAME_KEY: testnet-a
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - type: volume
-        source: testnet-a.diva.local
-        target: /opt/iroha
+      - testnet-a.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.3
@@ -64,9 +60,7 @@ services:
       NAME_KEY: testnet-b
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - type: volume
-        source: testnet-b.diva.local
-        target: /opt/iroha
+      - testnet-b.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.4
@@ -84,9 +78,7 @@ services:
       NAME_KEY: testnet-c
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - type: volume
-        source: testnet-c.diva.local
-        target: /opt/iroha
+      - testnet-c.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.5
@@ -104,7 +96,7 @@ services:
       PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
     ports:
-      - 3920:3920
+      - 3929:3920
     volumes:
       - testnet-c.diva.local:/tmp/iroha/:ro
       - explorer.diva.local:/home/node/
@@ -114,6 +106,7 @@ services:
 
 networks:
   network.diva.local:
+    internal: true
     name: network.diva.local
     ipam:
       driver: default
