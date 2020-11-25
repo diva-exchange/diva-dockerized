@@ -50,8 +50,6 @@ services:
     container_name: node.testnet.diva.i2p
     image: divax/iroha-node:dev
     restart: unless-stopped
-    depends_on:
-      - testnet-x.diva.i2p
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       IP_LISTEN: 172.20.101.201

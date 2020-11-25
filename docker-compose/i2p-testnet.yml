@@ -50,10 +50,6 @@ services:
     container_name: node.testnet.diva.i2p
     image: divax/iroha-node:dev
     restart: unless-stopped
-    depends_on:
-      - testnet-a.diva.i2p
-      - testnet-b.diva.i2p
-      - testnet-c.diva.i2p
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       TORII: 172.20.101.3:50051
