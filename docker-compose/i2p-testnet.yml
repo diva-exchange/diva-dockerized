@@ -146,6 +146,8 @@ services:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
+    ports:
+      - 3920:3920
     volumes:
       - testnet-a.diva.i2p:/tmp/iroha/:ro
     networks:
