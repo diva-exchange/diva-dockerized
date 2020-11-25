@@ -27,7 +27,7 @@ services:
       ENABLE_TUNNELS: 1
     volumes:
       - ../tunnels.conf.d/join:/home/i2pd/tunnels.source.conf.d/
-      - i2p.testnet.diva.i2p:/home/i2pd/
+      - i2p.testnet.diva.i2p:/home/i2pd/data/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.200
@@ -63,7 +63,7 @@ services:
       PATH_IROHA: ${PATH_IROHA:-/tmp/iroha/}
     volumes:
       - testnet-x.diva.i2p:/tmp/iroha/:ro
-      - node.testnet.diva.i2p:/home/node/
+      - node.testnet.diva.i2p:/home/node/data/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
@@ -99,7 +99,6 @@ services:
       PATH_IROHA: /tmp/iroha/
     volumes:
       - testnet-x.diva.i2p:/tmp/iroha/:ro
-      - explorer.testnet.diva.i2p:/home/node/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.100
@@ -121,5 +120,3 @@ volumes:
     name: node.testnet.diva.i2p
   testnet-x.diva.i2p:
     name: testnet-x.diva.i2p
-  explorer.testnet.diva.i2p:
-    name: explorer.testnet.diva.i2p
