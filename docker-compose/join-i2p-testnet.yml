@@ -55,14 +55,14 @@ services:
       IP_LISTEN: 172.20.101.201
       PORT_LISTEN: 19012
       TORII: 172.20.101.3:50051
-      CREATOR_ACCOUNT_ID: ${CREATOR_ACCOUNT_ID:-diva@testnet}
+      ACCOUNT_ID: ${ACCOUNT_ID:-}
       I2P_HOSTNAME: 172.20.101.200
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
       BOOTSTRAP_PEER: ${BOOTSTRAP_PEER:-}
       PATH_IROHA: ${PATH_IROHA:-/tmp/iroha/}
     volumes:
-      - testnet-x.diva.i2p:/tmp/iroha/:ro
+      - testnet-x.diva.i2p:/tmp/iroha/
       - node.testnet.diva.i2p:/home/node/data/
     networks:
       network.testnet.diva.i2p:
