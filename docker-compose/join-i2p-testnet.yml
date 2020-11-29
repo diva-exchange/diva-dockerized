@@ -34,7 +34,7 @@ services:
 
   postgres.testnet.diva.i2p:
     container_name: postgres.testnet.diva.i2p
-    image: postgres:10
+    image: postgres:alpine
     command: -c max_prepared_transactions=100
     restart: unless-stopped
     environment:
@@ -48,7 +48,7 @@ services:
 
   node.testnet.diva.i2p:
     container_name: node.testnet.diva.i2p
-    image: divax/iroha-node:latest
+    image: divax/iroha-node:api-ws
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
