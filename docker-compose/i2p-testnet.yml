@@ -66,7 +66,7 @@ services:
 
   testnet-a.diva.i2p:
     container_name: testnet-a.diva.i2p
-    image: divax/iroha:${TAG:-1.2.0}
+    image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:
@@ -90,7 +90,7 @@ services:
 
   testnet-b.diva.i2p:
     container_name: testnet-b.diva.i2p
-    image: divax/iroha:${TAG:-1.2.0}
+    image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:
@@ -114,7 +114,7 @@ services:
 
   testnet-c.diva.i2p:
     container_name: testnet-c.diva.i2p
-    image: divax/iroha:${TAG:-1.2.0}
+    image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:

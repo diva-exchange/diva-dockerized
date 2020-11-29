@@ -70,7 +70,7 @@ services:
 
   testnet-x.diva.i2p:
     container_name: testnet-x.diva.i2p
-    image: divax/iroha:${TAG:-1.2.0}
+    image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
     depends_on:
