@@ -62,14 +62,14 @@ services:
       BOOTSTRAP_PEER: ${BOOTSTRAP_PEER:-}
       PATH_IROHA: ${PATH_IROHA:-/tmp/iroha/}
     volumes:
-      - testnet-x.diva.i2p:/tmp/iroha/
+      - tnx.diva.i2p:/tmp/iroha/
       - node.testnet.diva.i2p:/home/node/data/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
 
-  testnet-x.diva.i2p:
-    container_name: testnet-x.diva.i2p
+  tnx.diva.i2p:
+    container_name: tnx.diva.i2p
     image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
@@ -81,7 +81,7 @@ services:
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
     volumes:
-      - testnet-x.diva.i2p:/opt/iroha/
+      - tnx.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
@@ -92,13 +92,13 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres.testnet.diva.i2p
-      - testnet-x.diva.i2p
+      - tnx.diva.i2p
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
       PATH_IROHA: /tmp/iroha/
     volumes:
-      - testnet-x.diva.i2p:/tmp/iroha/:ro
+      - tnx.diva.i2p:/tmp/iroha/:ro
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.100
@@ -118,5 +118,5 @@ volumes:
     name: postgres.testnet.diva.i2p
   node.testnet.diva.i2p:
     name: node.testnet.diva.i2p
-  testnet-x.diva.i2p:
-    name: testnet-x.diva.i2p
+  tnx.diva.i2p:
+    name: tnx.diva.i2p

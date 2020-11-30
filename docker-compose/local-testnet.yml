@@ -33,59 +33,59 @@ services:
       network.diva.local:
         ipv4_address: 172.29.101.2
 
-  testnet-a.diva.local:
-    container_name: testnet-a.diva.local
-    image: divax/iroha:${TAG:-1.2.0-rc2}
+  tn1.diva.local:
+    container_name: tn1.diva.local
+    image: divax/iroha:${TAG:-latest}
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: testnet-a
+      NAME_KEY: tn1
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - testnet-a.diva.local:/opt/iroha/
+      - tn1.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.3
     extra_hosts:
-      - testnet-a.diva.i2p:172.29.101.3
-      - testnet-b.diva.i2p:172.29.101.4
-      - testnet-c.diva.i2p:172.29.101.5
+      - tn1.diva.i2p:172.29.101.3
+      - tn2.diva.i2p:172.29.101.4
+      - tn3.diva.i2p:172.29.101.5
 
-  testnet-b.diva.local:
-    container_name: testnet-b.diva.local
-    image: divax/iroha:${TAG:-1.2.0-rc2}
+  tn2.diva.local:
+    container_name: tn2.diva.local
+    image: divax/iroha:${TAG:-latest}
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: testnet-b
+      NAME_KEY: tn2
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - testnet-b.diva.local:/opt/iroha/
+      - tn2.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.4
     extra_hosts:
-      - testnet-a.diva.i2p:172.29.101.3
-      - testnet-b.diva.i2p:172.29.101.4
-      - testnet-c.diva.i2p:172.29.101.5
+      - tn1.diva.i2p:172.29.101.3
+      - tn2.diva.i2p:172.29.101.4
+      - tn3.diva.i2p:172.29.101.5
 
-  testnet-c.diva.local:
-    container_name: testnet-c.diva.local
-    image: divax/iroha:${TAG:-1.2.0-rc2}
+  tn3.diva.local:
+    container_name: tn3.diva.local
+    image: divax/iroha:${TAG:-latest}
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: testnet-c
+      NAME_KEY: tn3
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
-      - testnet-c.diva.local:/opt/iroha/
+      - tn3.diva.local:/opt/iroha/
     networks:
       network.diva.local:
         ipv4_address: 172.29.101.5
     extra_hosts:
-      - testnet-a.diva.i2p:172.29.101.3
-      - testnet-b.diva.i2p:172.29.101.4
-      - testnet-c.diva.i2p:172.29.101.5
+      - tn1.diva.i2p:172.29.101.3
+      - tn2.diva.i2p:172.29.101.4
+      - tn3.diva.i2p:172.29.101.5
 
   explorer.diva.local:
     container_name: explorer.diva.local
@@ -98,7 +98,7 @@ services:
     ports:
       - 3929:3920
     volumes:
-      - testnet-c.diva.local:/tmp/iroha/:ro
+      - tn3.diva.local:/tmp/iroha/:ro
       - explorer.diva.local:/home/node/
     networks:
       network.diva.local:
@@ -114,12 +114,12 @@ networks:
         - subnet: 172.29.101.0/24
 
 volumes:
-  testnet-a.diva.local:
-    name: testnet-a.diva.local
-  testnet-b.diva.local:
-    name: testnet-b.diva.local
-  testnet-c.diva.local:
-    name: testnet-c.diva.local
+  tn1.diva.local:
+    name: tn1.diva.local
+  tn2.diva.local:
+    name: tn2.diva.local
+  tn3.diva.local:
+    name: tn3.diva.local
   postgres.diva.local:
     name: postgres.diva.local
   explorer.diva.local:

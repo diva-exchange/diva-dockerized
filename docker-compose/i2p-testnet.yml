@@ -58,14 +58,14 @@ services:
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
     volumes:
-      - testnet-a.diva.i2p:/tmp/iroha/:ro
+      - tn1.diva.i2p:/tmp/iroha/:ro
       - node.testnet.diva.i2p:/home/node/data/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.201
 
-  testnet-a.diva.i2p:
-    container_name: testnet-a.diva.i2p
+  tn1.diva.i2p:
+    container_name: tn1.diva.i2p
     image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
@@ -73,23 +73,23 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: testnet-a
+      NAME_KEY: tn1
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: tn1.diva.i2p,tn2.diva.i2p,tn3.diva.i2p
     volumes:
-      - testnet-a.diva.i2p:/opt/iroha/
+      - tn1.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.3
     extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
+      - tn1.diva.i2p:172.20.101.3
+      - tn2.diva.i2p:172.20.101.4
+      - tn3.diva.i2p:172.20.101.5
 
-  testnet-b.diva.i2p:
-    container_name: testnet-b.diva.i2p
+  tn2.diva.i2p:
+    container_name: tn2.diva.i2p
     image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
@@ -97,23 +97,23 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: testnet-b
+      NAME_KEY: tn2
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: tn1.diva.i2p,tn2.diva.i2p,tn3.diva.i2p
     volumes:
-      - testnet-b.diva.i2p:/opt/iroha/
+      - tn2.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.4
     extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
+      - tn1.diva.i2p:172.20.101.3
+      - tn2.diva.i2p:172.20.101.4
+      - tn3.diva.i2p:172.20.101.5
 
-  testnet-c.diva.i2p:
-    container_name: testnet-c.diva.i2p
+  tn3.diva.i2p:
+    container_name: tn3.diva.i2p
     image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
@@ -121,20 +121,20 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: testnet-c
+      NAME_KEY: tn3
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
-      NO_PROXY: testnet-a.diva.i2p,testnet-b.diva.i2p,testnet-c.diva.i2p
+      NO_PROXY: tn1.diva.i2p,tn2.diva.i2p,tn3.diva.i2p
     volumes:
-      - testnet-c.diva.i2p:/opt/iroha/
+      - tn3.diva.i2p:/opt/iroha/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.5
     extra_hosts:
-      - testnet-a.diva.i2p:172.20.101.3
-      - testnet-b.diva.i2p:172.20.101.4
-      - testnet-c.diva.i2p:172.20.101.5
+      - tn1.diva.i2p:172.20.101.3
+      - tn2.diva.i2p:172.20.101.4
+      - tn3.diva.i2p:172.20.101.5
 
   explorer.testnet.diva.i2p:
     container_name: explorer.testnet.diva.i2p
@@ -142,7 +142,7 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres.testnet.diva.i2p
-      - testnet-a.diva.i2p
+      - tn1.diva.i2p
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
@@ -150,7 +150,7 @@ services:
     ports:
       - 3920:3920
     volumes:
-      - testnet-a.diva.i2p:/tmp/iroha/:ro
+      - tn1.diva.i2p:/tmp/iroha/:ro
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.100
@@ -170,9 +170,9 @@ volumes:
     name: postgres.testnet.diva.i2p
   node.testnet.diva.i2p:
     name: node.testnet.diva.i2p
-  testnet-a.diva.i2p:
-    name: testnet-a.diva.i2p
-  testnet-b.diva.i2p:
-    name: testnet-b.diva.i2p
-  testnet-c.diva.i2p:
-    name: testnet-c.diva.i2p
+  tn1.diva.i2p:
+    name: tn1.diva.i2p
+  tn2.diva.i2p:
+    name: tn2.diva.i2p
+  tn3.diva.i2p:
+    name: tn3.diva.i2p
