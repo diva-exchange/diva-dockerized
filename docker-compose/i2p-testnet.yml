@@ -53,12 +53,12 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       TORII: 172.20.101.3:50051
-      ACCOUNT_ID: diva@testnet
+      CREATOR_ACCOUNT: diva@testnet
       I2P_HOSTNAME: 172.20.101.200
       I2P_HTTP_PROXY_PORT: 4444
       I2P_WEBCONSOLE_PORT: 7070
     volumes:
-      - tn1.diva.i2p:/tmp/iroha/:ro
+      - tn1.diva.i2p:/tmp/iroha/
       - node.testnet.diva.i2p:/home/node/data/
     networks:
       network.testnet.diva.i2p:
