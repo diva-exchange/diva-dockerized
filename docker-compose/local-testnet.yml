@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: tn1
+      NAME_PEER: tn1
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - tn1.diva.local:/opt/iroha/
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: tn2
+      NAME_PEER: tn2
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - tn2.diva.local:/opt/iroha/
@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
     environment:
       NAME_CONTAINER_POSTGRES: postgres.diva.local
-      NAME_KEY: tn3
+      NAME_PEER: tn3
       BLOCKCHAIN_NETWORK: diva-local
     volumes:
       - tn3.diva.local:/opt/iroha/

@@ -73,7 +73,7 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: tn1
+      NAME_PEER: tn1
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
@@ -97,7 +97,7 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: tn2
+      NAME_PEER: tn2
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
@@ -121,7 +121,7 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      NAME_KEY: tn3
+      NAME_PEER: tn3
       BLOCKCHAIN_NETWORK: testnet
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
