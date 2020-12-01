@@ -76,7 +76,7 @@ services:
       - postgres.testnet.diva.i2p
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
-      BLOCKCHAIN_NETWORK: testnet
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
     volumes:

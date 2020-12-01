@@ -74,7 +74,7 @@ services:
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_PEER: n1
-      BLOCKCHAIN_NETWORK: testnet
+      BLOCKCHAIN_NETWORK: ${BLOCKCHAIN_NETWORK:-testnet.diva.i2p}
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: n1.testnet.diva.i2p,n2.testnet.diva.i2p,n3.testnet.diva.i2p
@@ -98,7 +98,7 @@ services:
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_PEER: n2
-      BLOCKCHAIN_NETWORK: testnet
+      BLOCKCHAIN_NETWORK: ${BLOCKCHAIN_NETWORK:-testnet.diva.i2p}
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: n1.testnet.diva.i2p,n2.testnet.diva.i2p,n3.testnet.diva.i2p
@@ -122,7 +122,7 @@ services:
     environment:
       NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
       NAME_PEER: n3
-      BLOCKCHAIN_NETWORK: testnet
+      BLOCKCHAIN_NETWORK: ${BLOCKCHAIN_NETWORK:-testnet.diva.i2p}
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
       NO_PROXY: n1.testnet.diva.i2p,n2.testnet.diva.i2p,n3.testnet.diva.i2p
