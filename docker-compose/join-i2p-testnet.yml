@@ -35,9 +35,10 @@ services:
   postgres.testnet.diva.i2p:
     container_name: postgres.testnet.diva.i2p
     image: postgres:10-alpine
-    command: -c max_prepared_transactions=100
+#    command: -c max_prepared_transactions=100
     restart: unless-stopped
     environment:
+      POSTGRES_DATABASE: iroha
       POSTGRES_USER: iroha
       POSTGRES_PASSWORD: iroha
     volumes:
@@ -75,7 +76,8 @@ services:
     depends_on:
       - postgres.testnet.diva.i2p
     environment:
-      NAME_CONTAINER_POSTGRES: postgres.testnet.diva.i2p
+      IP_POSTGRES: 172.20.101.2
+      NAME_DATABASE: iroha
       BLOCKCHAIN_NETWORK: testnet.diva.i2p
       IP_HTTP_PROXY: 172.20.101.200
       PORT_HTTP_PROXY: 4444
