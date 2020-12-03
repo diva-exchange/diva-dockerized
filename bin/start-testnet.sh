@@ -147,6 +147,7 @@ docker run \
   --env IP_EXPLORER=0.0.0.0 \
   --env PORT_EXPLORER=3920 \
   --env PATH_IROHA=/tmp/iroha/ \
+  --publish 3920:3920 \
   --volume n1.${DOMAIN}:/tmp/iroha/:ro \
   divax/iroha-explorer:latest \
   >/dev/null
