@@ -34,7 +34,7 @@ services:
 
   postgres.testnet.diva.i2p:
     container_name: postgres.testnet.diva.i2p
-    image: postgres:alpine
+    image: postgres:10-alpine
     command: -c max_prepared_transactions=100
     restart: unless-stopped
     environment:
