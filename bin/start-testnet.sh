@@ -111,7 +111,7 @@ do
     --env IP_POSTGRES=${IP_POSTGRES} \
     --env NAME_DATABASE=iroha \
     --env NAME_PEER=n${t} \
-    --env BLOCKCHAIN_NETWORK=local \
+    --env BLOCKCHAIN_NETWORK=testnet.diva.i2p \
     --env IP_HTTP_PROXY=${IP_I2P} \
     --env PORT_HTTP_PROXY=4444 \
     --env NO_PROXY=${NO_PROXY} \
