@@ -38,9 +38,10 @@ echo "Stopping ${NAME_EXPLORER}..."
 [[ `docker ps -a | fgrep ${NAME_EXPLORER}` ]] && docker rm ${NAME_EXPLORER} >/dev/null
 
 # node
-echo "Stopping ${NAME_NODE}..."
+echo "Stopping node ${NAME_NODE}..."
 [[ `docker ps | fgrep ${NAME_NODE}` ]] && docker stop ${NAME_NODE} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_NODE}` ]] && docker rm ${NAME_NODE} >/dev/null
+echo "Removing node volume ${NAME_NODE}..."
 [[ `docker volume ls | fgrep ${NAME_NODE}` ]] && docker volume rm ${NAME_NODE} >/dev/null
 
 # postgres and iroha container
@@ -52,6 +53,7 @@ do
   [[ `docker ps | fgrep n${t}.db.${DOMAIN}` ]] && docker stop n${t}.db.${DOMAIN} >/dev/null
   [[ `docker ps -a | fgrep n${t}.${DOMAIN}` ]] && docker rm n${t}.${DOMAIN} >/dev/null
   [[ `docker ps -a | fgrep n${t}.db.${DOMAIN}` ]] && docker rm n${t}.db.${DOMAIN} >/dev/null
+  echo "Removing database volume n${t}.db.${DOMAIN}..."
   [[ `docker volume ls | fgrep n${t}.db.${DOMAIN}` ]] && docker volume rm n${t}.db.${DOMAIN} >/dev/null
 done
 

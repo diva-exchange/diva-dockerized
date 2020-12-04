@@ -27,7 +27,7 @@ cd ${PROJECT_PATH}
 
 docker-compose -f docker-compose/join-i2p-testnet.yml down
 
-# clean up, keep i2p, testnet and postgres volume to preserve keys and data
+# clean up, keep i2p and iroha volume to preserve keys and data
 docker volume rm \
-  postgres.testnet.diva.i2p \
+  nx.db.testnet.diva.i2p \
   node.testnet.diva.i2p
