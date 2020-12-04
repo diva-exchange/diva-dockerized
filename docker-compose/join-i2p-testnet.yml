@@ -32,8 +32,8 @@ services:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.200
 
-  postgres.testnet.diva.i2p:
-    container_name: postgres.testnet.diva.i2p
+  nx.db.testnet.diva.i2p:
+    container_name: nx.db.testnet.diva.i2p
     image: postgres:10-alpine
 #    command: -c max_prepared_transactions=100
     restart: unless-stopped
@@ -42,7 +42,7 @@ services:
       POSTGRES_USER: iroha
       POSTGRES_PASSWORD: iroha
     volumes:
-      - postgres.testnet.diva.i2p:/var/lib/postgresql/data/
+      - nx.db.testnet.diva.i2p:/var/lib/postgresql/data/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.20.101.2
@@ -73,8 +73,6 @@ services:
     image: divax/iroha:latest
     restart: unless-stopped
     stop_grace_period: 30s
-    depends_on:
-      - postgres.testnet.diva.i2p
     environment:
       IP_POSTGRES: 172.20.101.2
       NAME_DATABASE: iroha
@@ -91,9 +89,6 @@ services:
     container_name: explorer.testnet.diva.i2p
     image: divax/iroha-explorer:latest
     restart: unless-stopped
-    depends_on:
-      - postgres.testnet.diva.i2p
-      - nx.testnet.diva.i2p
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
@@ -115,8 +110,8 @@ networks:
 volumes:
   i2p.testnet.diva.i2p:
     name: i2p.testnet.diva.i2p
-  postgres.testnet.diva.i2p:
-    name: postgres.testnet.diva.i2p
+  nx.db.testnet.diva.i2p:
+    name: nx.db.testnet.diva.i2p
   node.testnet.diva.i2p:
     name: node.testnet.diva.i2p
   nx.testnet.diva.i2p:

@@ -112,6 +112,8 @@ do
     --env NAME_DATABASE=iroha \
     --env NAME_PEER=n${t} \
     --env BLOCKCHAIN_NETWORK=local \
+    --env IP_HTTP_PROXY=${IP_I2P} \
+    --env PORT_HTTP_PROXY=4444 \
     --env NO_PROXY=${NO_PROXY} \
     --volume n${t}.${DOMAIN}:/opt/iroha/ \
     divax/iroha:latest \
