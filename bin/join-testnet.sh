@@ -31,12 +31,14 @@ MAX_IP_RANGE=250
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
 
-if [[ ! -f ${PROJECT_PATH}data/instance ]]
+INSTANCE=${INSTANCE:-0}
+if [[ ${INSTANCE} -lt 1 && -f ${PROJECT_PATH}data/instance ]]
 then
-  INSTANCE=${INSTANCE:-1}
-else
   INSTANCE=$(<${PROJECT_PATH}data/instance)
   ((INSTANCE++))
+elif [[ ${INSTANCE} -lt 1 ]]
+then
+  INSTANCE=1
 fi
 echo ${INSTANCE} >${PROJECT_PATH}data/instance
 chown --reference ${PROJECT_PATH}data ${PROJECT_PATH}data/instance
