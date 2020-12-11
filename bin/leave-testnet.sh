@@ -27,7 +27,7 @@ PROJECT_PATH=`pwd`/
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
 
-INSTANCE=${INSTANCE:-1}
+INSTANCE=${INSTANCE:?err INSTANCE must be defined}
 IDENT=${IDENT:-nx${INSTANCE}}
 NAME_I2P=i2p.${DOMAIN}
 NAME_IROHA=${IDENT}.${DOMAIN}
@@ -35,22 +35,21 @@ NAME_DB=${IDENT}.db.${DOMAIN}
 NAME_API=${IDENT}.api.${DOMAIN}
 
 # node
-echo "Stopping ${NAME_API}..."
+echo "Stopping API ${NAME_API}..."
 [[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null
-echo "Removing volume ${NAME_API}..."
+echo "Removing API volume ${NAME_API}..."
 [[ `docker volume ls | fgrep ${NAME_API}` ]] && docker volume rm ${NAME_API} >/dev/null
 
 # postgres and iroha container
-echo "Stopping ${NAME_IROHA}..."
+echo "Stopping Iroha ${NAME_IROHA}..."
 [[ `docker ps | fgrep ${NAME_IROHA}` ]] && docker stop ${NAME_IROHA} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_IROHA}` ]] && docker rm ${NAME_IROHA} >/dev/null
 
-echo "Stopping ${NAME_DB}..."
+echo "Stopping DB ${NAME_DB}..."
 [[ `docker ps | fgrep ${NAME_DB}` ]] && docker stop ${NAME_DB} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_DB}` ]] && docker rm ${NAME_DB} >/dev/null
-
-echo "Removing volume ${NAME_DB}..."
+echo "Removing DB volume ${NAME_DB}..."
 [[ `docker volume ls | fgrep ${NAME_DB}` ]] && docker volume rm ${NAME_DB} >/dev/null
 
 # i2p
