@@ -24,17 +24,18 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-DOMAIN=${DOMAIN:-testnet.diva.i2p}
-NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
-
-INSTANCE=${INSTANCE:?err INSTANCE must be defined}
+INSTANCE=${INSTANCE:?Error - INSTANCE must be defined}
 IDENT=${IDENT:-nx${INSTANCE}}
-NAME_I2P=i2p.${DOMAIN}
+DOMAIN=${DOMAIN:-testnet.diva.i2p}
+IP_SUBNET=172.22.${INSTANCE}
+
+NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
+NAME_I2P=${IDENT}.i2p.${DOMAIN}
 NAME_IROHA=${IDENT}.${DOMAIN}
 NAME_DB=${IDENT}.db.${DOMAIN}
 NAME_API=${IDENT}.api.${DOMAIN}
 
-# node
+# api
 echo "Stopping API ${NAME_API}..."
 [[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null

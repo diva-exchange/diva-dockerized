@@ -24,15 +24,7 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-IP_SUBNET=172.20.101.
-T_IP=3
-MAX_IP_RANGE=250
-
-DOMAIN=${DOMAIN:-testnet.diva.i2p}
-NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
-
-INSTANCE=${INSTANCE:-0}
-if [[ ${INSTANCE} -lt 1 && -f ${PROJECT_PATH}data/instance ]]
+if [[ -f ${PROJECT_PATH}data/instance ]]
 then
   INSTANCE=$(<${PROJECT_PATH}data/instance)
   ((INSTANCE++))
@@ -44,66 +36,40 @@ echo ${INSTANCE} >${PROJECT_PATH}data/instance
 chown --reference ${PROJECT_PATH}data ${PROJECT_PATH}data/instance
 
 IDENT=${IDENT:-nx${INSTANCE}}
-NAME_I2P=i2p.${DOMAIN}
+DOMAIN=${DOMAIN:-testnet.diva.i2p}
+IP_SUBNET=172.22.${INSTANCE}
+
+NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
+NAME_I2P=${IDENT}.i2p.${DOMAIN}
+IP_I2P=${IP_SUBNET}.2
 NAME_IROHA=${IDENT}.${DOMAIN}
+IP_IROHA=${IP_SUBNET}.3
 NAME_DB=${IDENT}.db.${DOMAIN}
+IP_DB=${IP_SUBNET}.4
 NAME_API=${IDENT}.api.${DOMAIN}
+IP_API=${IP_SUBNET}.5
 
 # network
 echo "Creating network ${NAME_NETWORK}..."
-if [[ ! `docker network ls | fgrep ${NAME_NETWORK}` ]]
-then
-  docker network create \
-    --driver bridge \
-    --ipam-driver default \
-    --subnet ${IP_SUBNET}0/24 \
-    ${NAME_NETWORK} \
-    >/dev/null
-fi
+docker network create \
+  --driver bridge \
+  --ipam-driver default \
+  --subnet ${IP_SUBNET}.0/28 \
+  ${NAME_NETWORK} \
+  >/dev/null
 
-# get IP's
-if [[ ! `docker ps -a | fgrep ${NAME_I2P}` ]]
-then
-  while [[ `ping -c 1 -w 1 ${IP_SUBNET}${T_IP} >/dev/null ; echo $?` -eq 0 ]]; do ((T_IP++)); done
-  IP_I2P=${IP_SUBNET}${T_IP}
-  ((T_IP++))
-else
-  IP_I2P=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${NAME_I2P}`
-fi
-echo "IP I2P container, ${NAME_I2P}: ${IP_I2P}"
-
-while [[ `ping -c 1 -w 1 ${IP_SUBNET}${T_IP} >/dev/null ; echo $?` -eq 0 ]]; do ((T_IP++)); done
-IP_IROHA=${IP_SUBNET}${T_IP}
-((T_IP++))
-echo "IP Iroha container, ${NAME_IROHA}: ${IP_IROHA}"
-
-while [[ `ping -c 1 -w 1 ${IP_SUBNET}${T_IP} >/dev/null ; echo $?` -eq 0 ]]; do ((T_IP++)); done
-IP_DB=${IP_SUBNET}${T_IP}
-((T_IP++))
-echo "IP database container, ${NAME_DB}: ${IP_DB}"
-
-while [[ `ping -c 1 -w 1 ${IP_SUBNET}${T_IP} >/dev/null ; echo $?` -eq 0 ]]; do ((T_IP++)); done
-IP_API=${IP_SUBNET}${T_IP}
-((T_IP++))
-echo "API container, ${NAME_API}: ${IP_API}"
-
-[[ ${T_IP} -lt ${MAX_IP_RANGE} ]] || exit 128
-
-if [[ ! `docker ps | fgrep ${NAME_I2P}` ]]
-then
-  echo "Starting ${NAME_I2P} on ${IP_I2P}..."
-  docker run \
-    --detach \
-    --name ${NAME_I2P} \
-    --restart unless-stopped \
-    --network ${NAME_NETWORK} \
-    --ip ${IP_I2P} \
-    --env ENABLE_TUNNELS=1 \
-    --volume ${NAME_I2P}:/home/i2pd/data/ \
-    divax/i2p:latest \
-    >/dev/null
-  sleep 10
-fi
+echo "Starting ${NAME_I2P} on ${IP_I2P}..."
+docker run \
+  --detach \
+  --name ${NAME_I2P} \
+  --restart unless-stopped \
+  --network ${NAME_NETWORK} \
+  --ip ${IP_I2P} \
+  --env ENABLE_TUNNELS=1 \
+  --volume ${NAME_I2P}:/home/i2pd/data/ \
+  divax/i2p:latest \
+  >/dev/null
+sleep 10
 
 # add tunnel
 # replace variables in the tunnel file
@@ -121,31 +87,21 @@ NO_PROXY=""
 for nameFile in `docker exec ${NAME_I2P} ls -1 data/destinations/`
 do
   b32=$(basename "${nameFile}" .dat)".b32.i2p"
-  NO_PROXY="${NO_PROXY}${b32},"
-  if [[ ! -f ${PROJECT_PATH}data/${b32} ]]
-  then
-    # check if b32 address is valid: iroha requires a peer name to start with [a-z].
-    # the b32 address will be the peer name.
-    if [[ ${b32} =~ ^[^a-z] ]]
-    then
-      # remove the keys and the tunnel, restart i2p and then exit
-      docker exec ${NAME_I2P} rm /home/i2pd/data/${IDENT}.${DOMAIN}.dat
-      docker exec ${NAME_I2P} rm /home/i2pd/data/destinations/$(basename "${nameFile}")
-      docker exec ${NAME_I2P} rm /home/i2pd/tunnels.source.conf.d/${IDENT}.${DOMAIN}.conf
-      docker restart ${NAME_I2P}
-      exit 129
-    fi
 
-    ADD_HOSTS="${ADD_HOSTS}--add-host ${b32}:${IP_IROHA} "
-    echo ${IP_IROHA} >${PROJECT_PATH}data/${b32}
-    chown --reference ${PROJECT_PATH}data ${PROJECT_PATH}data/${b32}
-    echo ${NAME_IROHA} >${PROJECT_PATH}data/${b32}.name
-    chown --reference ${PROJECT_PATH}data ${PROJECT_PATH}data/${b32}.name
-  else
-    ADD_HOSTS="${ADD_HOSTS}--add-host ${b32}:$(<${PROJECT_PATH}data/${b32}) "
-    ADD_HOSTS="${ADD_HOSTS}--add-host $(<${PROJECT_PATH}data/${b32}.name):$(<${PROJECT_PATH}data/${b32}) "
-    NO_PROXY="${NO_PROXY}$(<${PROJECT_PATH}data/${b32}.name),"
+  # check if b32 address is valid: iroha requires a peer name to start with [a-z].
+  # the b32 address will be the peer name.
+  if [[ ${b32} =~ ^[^a-z] ]]
+  then
+    # stop and remove i2p and then exit
+    docker stop ${NAME_I2P}
+    docker rm ${NAME_I2P}
+    docker volume rm ${NAME_I2P}
+    docker network rm
+    exit 129
   fi
+
+  NO_PROXY="${NO_PROXY}${b32},"
+  ADD_HOSTS="${ADD_HOSTS}--add-host ${b32}:${IP_IROHA} "
 done
 ADD_HOSTS="${ADD_HOSTS}--add-host ${NAME_IROHA}:${IP_IROHA}"
 NO_PROXY="${NO_PROXY}${NAME_IROHA}"
