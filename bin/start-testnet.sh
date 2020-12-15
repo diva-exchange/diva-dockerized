@@ -35,8 +35,8 @@ IP_EXPLORER=172.20.101.3
 NAME_I2P=${NAME_I2P:-i2p.${DOMAIN}}
 IP_I2P=172.20.101.4
 
-NAME_NODE=${NAME_NODE:-node.${DOMAIN}}
-IP_NODE=172.20.101.5
+NAME_API=${NAME_API:-api.${DOMAIN}}
+IP_API=172.20.101.5
 
 # network
 echo "Creating network ${NAME_NETWORK}..."
@@ -51,7 +51,7 @@ then
 fi
 
 # i2p
-echo "Starting ${NAME_I2P}..."
+echo "Starting i2p ${NAME_I2P} on ${IP_I2P}..."
 docker run \
   --detach \
   --name ${NAME_I2P} \
@@ -82,8 +82,8 @@ echo "NO_PROXY: ${NO_PROXY}"
 IP_POSTGRES_START=20
 for (( t=1; t<=${NODES}; t++ ))
 do
-  echo "Starting n${t}.db.${DOMAIN}..."
   IP_POSTGRES=172.20.101.$(( ${IP_POSTGRES_START} + ${t} ))
+  echo "Starting database n${t}.db.${DOMAIN} on ${IP_POSTGRES}..."
   docker run \
     --detach \
     --name n${t}.db.${DOMAIN} \
@@ -98,8 +98,8 @@ do
     postgres:10-alpine \
     >/dev/null
 
-  echo "Starting n${t}.${DOMAIN}..."
   IP_IROHA=172.20.101.$(( ${IP_IROHA_START} + ${t} ))
+  echo "Starting Iroha n${t}.${DOMAIN} on ${IP_IROHA}..."
   docker run \
     ${ADD_HOSTS} \
     --detach \
@@ -120,26 +120,26 @@ do
     >/dev/null
 done
 
-echo "Starting ${NAME_NODE}..."
+echo "Starting API ${NAME_API} on ${IP_API}..."
 docker run \
   --detach \
-  --name ${NAME_NODE} \
+  --name ${NAME_API} \
   --restart unless-stopped \
   --network ${NAME_NETWORK} \
-  --ip ${IP_NODE} \
+  --ip ${IP_API} \
   --env NODE_ENV=development \
   --env TORII=172.20.101.121:50051 \
   --env CREATOR_ACCOUNT=diva@testnet.diva.i2p \
   --env I2P_HOSTNAME=${IP_I2P} \
   --env I2P_HTTP_PROXY_PORT=4444 \
   --env I2P_WEBCONSOLE_PORT=7070 \
-  --volume ${NAME_NODE}:/home/node/data/ \
+  --volume ${NAME_API}:/home/node/data/ \
   --volume n1.${DOMAIN}:/tmp/iroha/ \
   divax/iroha-node:api-ws \
   >/dev/null
 
 # explorer
-echo "Starting ${NAME_EXPLORER}..."
+echo "Starting Explorer ${NAME_EXPLORER} on ${IP_EXPLORER}..."
 docker run \
   --detach \
   --name ${NAME_EXPLORER} \

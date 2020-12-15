@@ -30,19 +30,19 @@ NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
 
 NAME_EXPLORER=${NAME_EXPLORER:-explorer.${DOMAIN}}
 NAME_I2P=${NAME_I2P:-i2p.${DOMAIN}}
-NAME_NODE=${NAME_NODE:-node.${DOMAIN}}
+NAME_API=${NAME_API:-api.${DOMAIN}}
 
 # explorer
 echo "Stopping ${NAME_EXPLORER}..."
 [[ `docker ps | fgrep ${NAME_EXPLORER}` ]] && docker stop ${NAME_EXPLORER} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_EXPLORER}` ]] && docker rm ${NAME_EXPLORER} >/dev/null
 
-# node
-echo "Stopping node ${NAME_NODE}..."
-[[ `docker ps | fgrep ${NAME_NODE}` ]] && docker stop ${NAME_NODE} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_NODE}` ]] && docker rm ${NAME_NODE} >/dev/null
-echo "Removing node volume ${NAME_NODE}..."
-[[ `docker volume ls | fgrep ${NAME_NODE}` ]] && docker volume rm ${NAME_NODE} >/dev/null
+# API
+echo "Stopping API ${NAME_API}..."
+[[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
+[[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null
+echo "Removing API volume ${NAME_API}..."
+[[ `docker volume ls | fgrep ${NAME_API}` ]] && docker volume rm ${NAME_API} >/dev/null
 
 # postgres and iroha container
 for (( t=1; t<=${NODES}; t++ ))
