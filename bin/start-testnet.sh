@@ -116,7 +116,7 @@ do
     --env PORT_HTTP_PROXY=4444 \
     --env NO_PROXY=${NO_PROXY} \
     --volume n${t}.${DOMAIN}:/opt/iroha/ \
-    divax/iroha:latest \
+    divax/iroha:1.2.0-prop-strategy \
     >/dev/null
 done
 
