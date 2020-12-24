@@ -96,6 +96,7 @@ do
     --env POSTGRES_PASSWORD=iroha \
     --volume n${t}.db.${DOMAIN}:/var/lib/postgresql/data/ \
     postgres:10-alpine \
+    --max_prepared_transactions=100 \
     >/dev/null
 
   IP_IROHA=172.20.101.$(( ${IP_IROHA_START} + ${t} ))

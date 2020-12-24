@@ -122,6 +122,7 @@ docker run \
   --env POSTGRES_PASSWORD=iroha \
   --volume ${NAME_DB}:/var/lib/postgresql/data/ \
   postgres:10-alpine \
+  --max_prepared_transactions=100 \
   >/dev/null
 
 # iroha
