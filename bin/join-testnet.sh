@@ -165,5 +165,5 @@ docker run \
   --env PATH_IROHA=/tmp/iroha/ \
   --volume ${NAME_API}:/home/node/data/ \
   --volume ${NAME_IROHA}:/tmp/iroha/ \
-  divax/iroha-node:api-ws \
+  divax/diva-api:latest \
   >/dev/null

@@ -48,7 +48,7 @@ services:
 
   node.testnet.diva.i2p:
     container_name: node.testnet.diva.i2p
-    image: divax/iroha-node:api-ws
+    image: divax/diva-api:latest
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}

@@ -136,7 +136,7 @@ docker run \
   --env I2P_WEBCONSOLE_PORT=7070 \
   --volume ${NAME_API}:/home/node/data/ \
   --volume n1.${DOMAIN}:/tmp/iroha/ \
-  divax/iroha-node:api-ws \
+  divax/diva-api:latest \
   >/dev/null
 
 # explorer
