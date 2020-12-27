@@ -41,7 +41,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.11
       NAME_PEER: n1
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n1.testnet.diva.local:/opt/iroha/
     networks:
@@ -78,7 +78,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.12
       NAME_PEER: n2
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n2.testnet.diva.local:/opt/iroha/
     networks:
@@ -115,7 +115,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.13
       NAME_PEER: n3
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n3.testnet.diva.local:/opt/iroha/
     networks:
@@ -152,7 +152,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.14
       NAME_PEER: n4
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n4.testnet.diva.local:/opt/iroha/
     networks:
@@ -189,7 +189,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.15
       NAME_PEER: n5
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n5.testnet.diva.local:/opt/iroha/
     networks:
@@ -226,7 +226,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.16
       NAME_PEER: n6
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n6.testnet.diva.local:/opt/iroha/
     networks:
@@ -263,7 +263,7 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.17
       NAME_PEER: n7
-      BLOCKCHAIN_NETWORK: diva-local
+      BLOCKCHAIN_NETWORK: testnet.diva.i2p
     volumes:
       - n7.testnet.diva.local:/opt/iroha/
     networks:
