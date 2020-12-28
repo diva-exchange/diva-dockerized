@@ -41,20 +41,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.11
       NAME_PEER: n1
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n1.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.21
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n2.db.testnet.diva.local:
     container_name: n2.db.testnet.diva.local
@@ -78,20 +78,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.12
       NAME_PEER: n2
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n2.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.22
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n3.db.testnet.diva.local:
     container_name: n3.db.testnet.diva.local
@@ -115,20 +115,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.13
       NAME_PEER: n3
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n3.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.23
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n4.db.testnet.diva.local:
     container_name: n4.db.testnet.diva.local
@@ -152,20 +152,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.14
       NAME_PEER: n4
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n4.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.24
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n5.db.testnet.diva.local:
     container_name: n5.db.testnet.diva.local
@@ -189,20 +189,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.15
       NAME_PEER: n5
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n5.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.25
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n6.db.testnet.diva.local:
     container_name: n6.db.testnet.diva.local
@@ -226,20 +226,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.16
       NAME_PEER: n6
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n6.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.26
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   n7.db.testnet.diva.local:
     container_name: n7.db.testnet.diva.local
@@ -263,20 +263,20 @@ services:
     environment:
       IP_POSTGRES: 172.29.101.17
       NAME_PEER: n7
-      BLOCKCHAIN_NETWORK: testnet.diva.i2p
+      BLOCKCHAIN_NETWORK: testnet.diva.local
     volumes:
       - n7.testnet.diva.local:/opt/iroha/
     networks:
       network.testnet.diva.local:
         ipv4_address: 172.29.101.27
     extra_hosts:
-      - n1.testnet.diva.i2p:172.29.101.21
-      - n2.testnet.diva.i2p:172.29.101.22
-      - n3.testnet.diva.i2p:172.29.101.23
-      - n4.testnet.diva.i2p:172.29.101.24
-      - n5.testnet.diva.i2p:172.29.101.25
-      - n6.testnet.diva.i2p:172.29.101.26
-      - n7.testnet.diva.i2p:172.29.101.27
+      - n1.testnet.diva.local:172.29.101.21
+      - n2.testnet.diva.local:172.29.101.22
+      - n3.testnet.diva.local:172.29.101.23
+      - n4.testnet.diva.local:172.29.101.24
+      - n5.testnet.diva.local:172.29.101.25
+      - n6.testnet.diva.local:172.29.101.26
+      - n7.testnet.diva.local:172.29.101.27
 
   explorer.testnet.diva.local:
     container_name: explorer.testnet.diva.local
