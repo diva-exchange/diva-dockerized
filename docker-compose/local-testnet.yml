@@ -278,10 +278,34 @@ services:
       - n6.testnet.diva.local:172.29.101.26
       - n7.testnet.diva.local:172.29.101.27
 
+  api.testnet.diva.local:
+    container_name: api.testnet.diva.local
+    image: divax/diva-api:latest
+    restart: unless-stopped
+    depends_on:
+      - n1.testnet.diva.local
+    environment:
+      NODE_ENV: development
+      IP_LISTEN: 172.29.101.30
+      PORT_LISTEN: 19012
+      TORII: ${TORII:-172.29.101.21:50051}
+      I2P_HOSTNAME: ${I2P_HOSTNAME:-127.0.0.1}
+      I2P_HTTP_PROXY_PORT: ${I2P_HTTP_PROXY_PORT:-4444}
+      I2P_WEBCONSOLE_PORT: ${I2P_WEBCONSOLE_PORT:-7070}
+      PATH_IROHA: /tmp/iroha/
+    volumes:
+      - api.testnet.diva.local:/home/node/data/
+      - n1.testnet.diva.local:/tmp/iroha/
+    networks:
+      network.testnet.diva.local:
+        ipv4_address: 172.29.101.30
+
   explorer.testnet.diva.local:
     container_name: explorer.testnet.diva.local
     image: divax/iroha-explorer:latest
     restart: unless-stopped
+    depends_on:
+      - n1.testnet.diva.local
     environment:
       IP_EXPLORER: 0.0.0.0
       PORT_EXPLORER: 3920
@@ -331,5 +355,7 @@ volumes:
     name: n6.db.testnet.diva.local
   n7.db.testnet.diva.local:
     name: n7.db.testnet.diva.local
+  api.testnet.diva.local:
+    name: api.testnet.diva.local
   explorer.testnet.diva.local:
     name: explorer.testnet.diva.local
