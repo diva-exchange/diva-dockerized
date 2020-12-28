@@ -286,8 +286,9 @@ services:
       - n1.testnet.diva.local
     environment:
       NODE_ENV: development
-      IP_LISTEN: 172.29.101.30
+      IP_LISTEN: 0.0.0.0
       PORT_LISTEN: 19012
+      API_ENDPOINT: 172.29.101.30:19012
       TORII: ${TORII:-172.29.101.21:50051}
       I2P_HOSTNAME: ${I2P_HOSTNAME:-127.0.0.1}
       I2P_HTTP_PROXY_PORT: ${I2P_HTTP_PROXY_PORT:-4444}
