@@ -29,7 +29,7 @@ Now one of the following Testnets can be started.
 
 To start the local testnet (3 nodes) execute:
 ```
-sudo docker-compose -f docker-compose/local-testnet.yml up -d
+sudo docker-compose -f docker-compose/local-testnet.yml pull && sudo docker-compose -f docker-compose/local-testnet.yml up -d
 ```
 
 To stop the local testnet execute:
@@ -37,7 +37,7 @@ To stop the local testnet execute:
 sudo docker-compose -f docker-compose/local-testnet.yml down --volumes
 ```
 
-Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://localhost:3920
+Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://localhost:3920 . Remark: it takes a few seconds to start the docker container which contains the explorer.
 
 ### Beta & Private: I2P based Testnet
 
