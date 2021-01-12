@@ -137,7 +137,7 @@ docker run \
   --ip ${IP_API} \
   --env NODE_ENV=development \
   --env TORII=172.20.101.121:50051 \
-  --env CREATOR_ACCOUNT=diva@testnet.diva.i2p \
+  --env CREATOR=diva@testnet.diva.i2p \
   --env I2P_HOSTNAME=${IP_I2P} \
   --env I2P_HTTP_PROXY_PORT=4444 \
   --env I2P_WEBCONSOLE_PORT=7070 \
