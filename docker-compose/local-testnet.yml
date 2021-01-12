@@ -36,7 +36,7 @@ services:
 
   n1.testnet.diva.local:
     container_name: n1.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.11
@@ -73,7 +73,7 @@ services:
 
   n2.testnet.diva.local:
     container_name: n2.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.12
@@ -110,7 +110,7 @@ services:
 
   n3.testnet.diva.local:
     container_name: n3.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.13
@@ -147,7 +147,7 @@ services:
 
   n4.testnet.diva.local:
     container_name: n4.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.14
@@ -184,7 +184,7 @@ services:
 
   n5.testnet.diva.local:
     container_name: n5.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.15
@@ -221,7 +221,7 @@ services:
 
   n6.testnet.diva.local:
     container_name: n6.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.16
@@ -258,7 +258,7 @@ services:
 
   n7.testnet.diva.local:
     container_name: n7.testnet.diva.local
-    image: divax/iroha:latest
+    image: divax/iroha:1.2.0-prop-strategy
     restart: unless-stopped
     environment:
       IP_POSTGRES: 172.29.101.17

@@ -38,6 +38,13 @@ IP_I2P=172.20.101.4
 NAME_API=${NAME_API:-api.${DOMAIN}}
 IP_API=172.20.101.5
 
+# pulling images
+docker pull divax/i2p:latest
+docker pull postgres:10-alpine
+docker pull divax/iroha:1.2.0-prop-strategy
+docker pull divax/diva-api:latest
+docker pull divax/iroha-explorer:latest
+
 # network
 echo "Creating network ${NAME_NETWORK}..."
 if [[ ! `docker network ls | fgrep ${NAME_NETWORK}` ]]
