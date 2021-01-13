@@ -27,7 +27,7 @@ Now one of the following Testnets can be started.
 
 ### Stable: Local Testnet
 
-To start the local testnet (3 nodes) execute:
+To start the local testnet (7 nodes) execute:
 ```
 sudo docker-compose -f docker-compose/local-testnet.yml pull && sudo docker-compose -f docker-compose/local-testnet.yml up -d
 ```

@@ -96,7 +96,7 @@ do
     docker stop ${NAME_I2P}
     docker rm ${NAME_I2P}
     docker volume rm ${NAME_I2P}
-    docker network rm
+    docker network rm ${NAME_NETWORK}
     exit 129
   fi
 
@@ -154,7 +154,7 @@ docker run \
   --restart unless-stopped \
   --network ${NAME_NETWORK} \
   --ip ${IP_API} \
-  --env NODE_ENV=development \
+  --env NODE_ENV=production \
   --env IP_LISTEN=${IP_API} \
   --env PORT_LISTEN=19012 \
   --env TORII=${IP_IROHA}:50051 \
