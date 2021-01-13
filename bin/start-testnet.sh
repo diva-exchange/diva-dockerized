@@ -135,7 +135,7 @@ docker run \
   --restart unless-stopped \
   --network ${NAME_NETWORK} \
   --ip ${IP_API} \
-  --env NODE_ENV=development \
+  --env NODE_ENV=production \
   --env TORII=172.20.101.121:50051 \
   --env CREATOR=diva@testnet.diva.i2p \
   --env I2P_HOSTNAME=${IP_I2P} \
