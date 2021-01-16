@@ -24,40 +24,46 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-INSTANCE=${INSTANCE:?Error - INSTANCE must be defined}
-IDENT=${IDENT:-nx${INSTANCE}}
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
-IP_SUBNET=172.22.${INSTANCE}
 
-NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
-NAME_I2P=${IDENT}.i2p.${DOMAIN}
-NAME_IROHA=${IDENT}.${DOMAIN}
-NAME_DB=${IDENT}.db.${DOMAIN}
-NAME_API=${IDENT}.api.${DOMAIN}
+for nameFile in `ls -1 ${PROJECT_PATH}data/ | grep nx | grep ${DOMAIN}`
+do
+  INSTANCE=$(<${PROJECT_PATH}data/${nameFile})
+  rm -f ${PROJECT_PATH}data/${nameFile}
+  IDENT=${IDENT:-nx${INSTANCE}}
+  IP_SUBNET=172.22.${INSTANCE}
 
-# api
-echo "Stopping API ${NAME_API}..."
-[[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null
-echo "Removing API volume ${NAME_API}..."
-[[ `docker volume ls | fgrep ${NAME_API}` ]] && docker volume rm ${NAME_API} >/dev/null
+  NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
+  NAME_I2P=${IDENT}.i2p.${DOMAIN}
+  NAME_IROHA=${IDENT}.${DOMAIN}
+  NAME_DB=${IDENT}.db.${DOMAIN}
+  NAME_API=${IDENT}.api.${DOMAIN}
 
-# postgres and iroha container
-echo "Stopping Iroha ${NAME_IROHA}..."
-[[ `docker ps | fgrep ${NAME_IROHA}` ]] && docker stop ${NAME_IROHA} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_IROHA}` ]] && docker rm ${NAME_IROHA} >/dev/null
+  # api
+  echo "Stopping API ${NAME_API}..."
+  [[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
+  [[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null
+  echo "Removing API volume ${NAME_API}..."
+  [[ `docker volume ls | fgrep ${NAME_API}` ]] && docker volume rm ${NAME_API} >/dev/null
 
-echo "Stopping DB ${NAME_DB}..."
-[[ `docker ps | fgrep ${NAME_DB}` ]] && docker stop ${NAME_DB} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_DB}` ]] && docker rm ${NAME_DB} >/dev/null
-echo "Removing DB volume ${NAME_DB}..."
-[[ `docker volume ls | fgrep ${NAME_DB}` ]] && docker volume rm ${NAME_DB} >/dev/null
+  # postgres and iroha container
+  echo "Stopping Iroha ${NAME_IROHA}..."
+  [[ `docker ps | fgrep ${NAME_IROHA}` ]] && docker stop ${NAME_IROHA} >/dev/null
+  [[ `docker ps -a | fgrep ${NAME_IROHA}` ]] && docker rm ${NAME_IROHA} >/dev/null
 
-# i2p
-echo "Stopping ${NAME_I2P}..."
-[[ `docker ps | fgrep ${NAME_I2P}` ]] && docker stop ${NAME_I2P} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_I2P}` ]] && docker rm ${NAME_I2P} >/dev/null
+  echo "Stopping DB ${NAME_DB}..."
+  [[ `docker ps | fgrep ${NAME_DB}` ]] && docker stop ${NAME_DB} >/dev/null
+  [[ `docker ps -a | fgrep ${NAME_DB}` ]] && docker rm ${NAME_DB} >/dev/null
+  echo "Removing DB volume ${NAME_DB}..."
+  [[ `docker volume ls | fgrep ${NAME_DB}` ]] && docker volume rm ${NAME_DB} >/dev/null
 
-#network
-echo "Removing network ${NAME_NETWORK}..."
-[[ `docker network ls | fgrep ${NAME_NETWORK}` ]] && docker network rm ${NAME_NETWORK} >/dev/null
+  # i2p
+  echo "Stopping ${NAME_I2P}..."
+  [[ `docker ps | fgrep ${NAME_I2P}` ]] && docker stop ${NAME_I2P} >/dev/null
+  [[ `docker ps -a | fgrep ${NAME_I2P}` ]] && docker rm ${NAME_I2P} >/dev/null
+
+  #network
+  echo "Removing network ${NAME_NETWORK}..."
+  [[ `docker network ls | fgrep ${NAME_NETWORK}` ]] && docker network rm ${NAME_NETWORK} >/dev/null
+
+done

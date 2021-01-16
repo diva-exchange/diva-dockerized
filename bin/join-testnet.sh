@@ -24,16 +24,12 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-if [[ -f ${PROJECT_PATH}data/instance ]]
-then
-  INSTANCE=$(<${PROJECT_PATH}data/instance)
+INSTANCE=1
+while [[ -f ${PROJECT_PATH}data/nx${INSTANCE}.testnet.diva.i2p ]]
+do
   ((INSTANCE++))
-elif [[ ${INSTANCE} -lt 1 ]]
-then
-  INSTANCE=1
-fi
-echo ${INSTANCE} >${PROJECT_PATH}data/instance
-chown --reference ${PROJECT_PATH}data ${PROJECT_PATH}data/instance
+done
+echo ${INSTANCE} >${PROJECT_PATH}data/nx${INSTANCE}.testnet.diva.i2p
 
 IDENT=${IDENT:-nx${INSTANCE}}
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
@@ -92,12 +88,13 @@ do
   # the b32 address will be the peer name.
   if [[ ${b32} =~ ^[^a-z] ]]
   then
-    # stop and remove i2p and then exit
+    # stop and remove i2p, restart the script and then exit
     docker stop ${NAME_I2P}
     docker rm ${NAME_I2P}
     docker volume rm ${NAME_I2P}
     docker network rm ${NAME_NETWORK}
-    exit 129
+    echo "Failed to start: invalid b32 - will retry..."
+    ${PROJECT_PATH}bin/$(basename $0) ; exit 129
   fi
 
   NO_PROXY="${NO_PROXY}${b32},"
