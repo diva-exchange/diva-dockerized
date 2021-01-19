@@ -26,14 +26,14 @@ PROJECT_PATH=`pwd`/
 
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 
-for nameFile in `ls -1 ${PROJECT_PATH}data/ | grep nx | grep ${DOMAIN}`
+for nameFile in `ls -1 ${PROJECT_PATH}data/ | fgrep ".${DOMAIN}"`
 do
   INSTANCE=$(<${PROJECT_PATH}data/${nameFile})
   rm -f ${PROJECT_PATH}data/${nameFile}
-  IDENT=${IDENT:-nx${INSTANCE}}
+  IDENT=nx${INSTANCE}
   IP_SUBNET=172.22.${INSTANCE}
 
-  NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
+  NAME_NETWORK=${IDENT}.net.${DOMAIN}
   NAME_I2P=${IDENT}.i2p.${DOMAIN}
   NAME_IROHA=${IDENT}.${DOMAIN}
   NAME_DB=${IDENT}.db.${DOMAIN}

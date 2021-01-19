@@ -24,16 +24,23 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
+# pulling images
+docker pull divax/i2p:latest
+docker pull postgres:10-alpine
+docker pull divax/iroha:1.2.0-prop-strategy
+docker pull divax/diva-api:latest
+docker pull divax/iroha-explorer:latest
+
 INSTANCE=1
 while [[ -f ${PROJECT_PATH}data/nx${INSTANCE}.testnet.diva.i2p ]]
 do
   ((INSTANCE++))
 done
-echo ${INSTANCE} >${PROJECT_PATH}data/nx${INSTANCE}.testnet.diva.i2p
 
 IDENT=${IDENT:-nx${INSTANCE}}
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 IP_SUBNET=172.22.${INSTANCE}
+echo ${INSTANCE} >${PROJECT_PATH}data/${IDENT}.${DOMAIN}
 
 NAME_NETWORK=${NAME_NETWORK:-${IDENT}.net.${DOMAIN}}
 NAME_I2P=${IDENT}.i2p.${DOMAIN}
