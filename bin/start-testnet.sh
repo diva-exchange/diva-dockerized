@@ -25,6 +25,7 @@ cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
 NODES=${NODES:-7}
+IROHA_TAG=${IROHA_TAG:-1.2.0-prop-strategy}
 
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
@@ -41,7 +42,7 @@ IP_API=172.20.101.5
 # pulling images
 docker pull divax/i2p:latest
 docker pull postgres:10-alpine
-docker pull divax/iroha:1.2.0-prop-strategy
+docker pull divax/iroha:${IROHA_TAG}
 docker pull divax/diva-api:latest
 docker pull divax/iroha-explorer:latest
 
