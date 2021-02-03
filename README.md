@@ -3,7 +3,7 @@
 This project has the following purpose: even if DIVA.EXCHANGE consists of several independent modules, it still should be easy to have the complete environment available.
 
 Online Demo and Test sites:
-* https://testnet.diva.exchange - The public DIVA.EXCHANGE testnet. Everybody can join. 
+* https://testnet.diva.exchange - The public DIVA.EXCHANGE testnet. Everybody can join.
 
 It's licenced under [AGPLv3](LICENSE).
 
@@ -44,14 +44,14 @@ Open your browser and take a look at your local testnet using the Iroha Blockcha
 
 ### Beta & Private: I2P based Testnet
 
-To start the I2P-based local testnet (3 nodes) execute:
+To start the I2P-based testnet (7 nodes) execute:
 ```
-sudo docker-compose -f docker-compose/i2p-testnet.yml up -d
+sudo bin/start-testnet.sh
 ```
 
 To stop the I2P-based testnet execute:
 ```
-sudo docker-compose -f docker-compose/i2p-testnet.yml down --volumes
+sudo bin/stop-testnet.sh
 ```
 
 Starting up the I2P testnet might take while - up to 5 minutes.
@@ -121,8 +121,8 @@ sudo docker logs -t -f nx1.api.testnet.diva.i2p
 
 Please note: the peer is on I2P - this is a slow P2P network. So just be patient. Questions: ask in the DIVA Telegram chat!
 
-IMPORTANT: `join-testnet.sh` might be executed multiple times. Every time a new node (4 new docker container) will be created and the whole process will be initiated. Sooner or later your host will run out of resources. 
- 
+IMPORTANT: `join-testnet.sh` might be executed multiple times. Every time a new node (4 new docker container) will be created and the whole process will be initiated. Sooner or later your host will run out of resources.
+
 #### Leaving the Network
 To leave the testnet, execute the script:
 ```
@@ -137,7 +137,7 @@ tbd.
 
 ## Contact the Developers
 
-On [DIVA.EXCHANGE](https://www.diva.exchange) you'll find various options to get in touch with the team. 
+On [DIVA.EXCHANGE](https://www.diva.exchange) you'll find various options to get in touch with the team.
 
 Talk to us via Telegram [https://t.me/diva_exchange_chat_de]() (English or German).
 
