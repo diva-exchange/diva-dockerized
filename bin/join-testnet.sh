@@ -113,6 +113,7 @@ echo "ADD_HOSTS: ${ADD_HOSTS}"
 echo "NO_PROXY: ${NO_PROXY}"
 
 # database
+#  --max_prepared_transactions=100
 echo "Starting ${NAME_DB} on ${IP_DB}..."
 docker run \
   --detach \
@@ -126,7 +127,7 @@ docker run \
   --env POSTGRES_PASSWORD=iroha \
   --volume ${NAME_DB}:/var/lib/postgresql/data/ \
   postgres:10-alpine \
-  --max_prepared_transactions=100 \
+  --max_prepared_transactions=0 \
   >/dev/null
 
 # iroha

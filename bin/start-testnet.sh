@@ -92,6 +92,7 @@ for (( t=1; t<=${NODES}; t++ ))
 do
   IP_POSTGRES=172.20.101.$(( ${IP_POSTGRES_START} + ${t} ))
   echo "Starting database n${t}.db.${DOMAIN} on ${IP_POSTGRES}..."
+  # --max_prepared_transactions=100
   docker run \
     --detach \
     --name n${t}.db.${DOMAIN} \
@@ -104,7 +105,7 @@ do
     --env POSTGRES_PASSWORD=iroha \
     --volume n${t}.db.${DOMAIN}:/var/lib/postgresql/data/ \
     postgres:10-alpine \
-    --max_prepared_transactions=100 \
+    --max_prepared_transactions=0 \
     >/dev/null
 
   IP_IROHA=172.20.101.$(( ${IP_IROHA_START} + ${t} ))
