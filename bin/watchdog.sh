@@ -17,36 +17,33 @@
 #
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
+# -e  Exit immediately if a simple command exits with a non-zero status
+set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
 NODE=${NODE:-0}
-if [[ `docker inspect ${NODE}.testnet.diva.i2p >/dev/null 2>&1 ; echo $?` -gt 0 ]]
+IDENT=${NODE}.testnet.diva.i2p
+if [[ `docker inspect ${IDENT} >/dev/null 2>&1 ; echo $?` -gt 0 ]]
 then
-  echo "Node ${NODE}.testnet.diva.i2p not running"
+  echo "Node ${IDENT} not running"
   exit 1
 fi
 
-IDENT=${NODE}
-DOMAIN=${DOMAIN:-testnet.diva.i2p}
-NAME_IROHA=${IDENT}.${DOMAIN}
-NAME_DB=${IDENT}.db.${DOMAIN}
-NAME_API=${IDENT}.api.${DOMAIN}
+echo "Watching ${IDENT}..."
+sleep 600
 
-# stopping Iroha
-echo "Stopping Iroha ${NAME_IROHA}..."
-docker stop ${NAME_IROHA}
-
-# removing prepared transactions from DB
-echo "Removing prepared transactions from ${NAME_DB}..."
-docker exec ${NAME_DB} psql -U iroha -d iroha -t -c "ROLLBACK PREPARED 'prepared_block_iroha'"
-
-# restarting database
-echo "Restarting database ${NAME_DB}..."
-docker restart ${NAME_DB}
-
-# starting Iroha
-echo "Starting Iroha ${NAME_IROHA}..."
-docker start ${NAME_IROHA}
+while [[ `docker inspect ${IDENT} >/dev/null 2>&1 ; echo $?` -eq 0 ]]
+do
+  sleep 60
+  DT=`stat -c %y /var/lib/docker/volumes/${IDENT}/_data/blockstore`
+  echo `date` : ${DT}
+  if [[ `date -d "${DT}" +%s` -lt $((`date +%s`-240)) ]]
+  then
+    echo "Restarting ${IDENT}..."
+    ${PROJECT_PATH}bin/restart-node.sh
+    sleep 600
+  fi
+done
