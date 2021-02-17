@@ -23,7 +23,7 @@ cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
 NODE=${NODE:-0}
-if [[ ! -f ${PROJECT_PATH}data/${NODE}.testnet.diva.i2p ]]
+if [[ `docker inspect ${NODE}.testnet.diva.i2p >/dev/null 2>&1 ; echo $?` -gt 0 ]]
 then
   echo "Node ${NODE}.testnet.diva.i2p not running"
   exit 1
