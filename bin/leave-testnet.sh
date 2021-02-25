@@ -28,6 +28,9 @@ DOMAIN=${DOMAIN:-testnet.diva.i2p}
 
 LEAVE_INSTANCE=${LEAVE_INSTANCE:0}
 
+# test for root rights
+docker ps -a >/dev/null 2>&1 || (echo "Run as root" ; exit 2)
+
 for nameFile in `ls -1 ${PROJECT_PATH}data/ | fgrep ".${DOMAIN}"`
 do
   INSTANCE=$(<${PROJECT_PATH}data/${nameFile})
