@@ -27,7 +27,7 @@ PROJECT_PATH=`pwd`/
 # pulling images
 docker pull divax/i2p:latest
 docker pull postgres:10-alpine
-docker pull divax/iroha:1.2.0-prop-strategy
+docker pull divax/iroha:1.2.1
 docker pull divax/diva-api:latest
 docker pull divax/iroha-explorer:latest
 
@@ -147,7 +147,7 @@ docker run \
   --env PORT_HTTP_PROXY=4444 \
   --env NO_PROXY=${NO_PROXY} \
   --volume ${NAME_IROHA}:/opt/iroha/ \
-  divax/iroha:1.2.0-prop-strategy \
+  divax/iroha:1.2.1 \
   >/dev/null
 
 # api

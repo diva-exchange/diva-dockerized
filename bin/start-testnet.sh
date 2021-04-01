@@ -25,7 +25,7 @@ cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
 NODES=${NODES:-7}
-IROHA_TAG=${IROHA_TAG:-1.2.0-prop-strategy}
+IROHA_TAG=${IROHA_TAG:-1.2.1}
 
 DOMAIN=${DOMAIN:-testnet.diva.i2p}
 NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
@@ -125,7 +125,7 @@ do
     --env PORT_HTTP_PROXY=4444 \
     --env NO_PROXY=${NO_PROXY} \
     --volume n${t}.${DOMAIN}:/opt/iroha/ \
-    divax/iroha:1.2.0-prop-strategy \
+    divax/iroha:1.2.1 \
     >/dev/null
 done
 

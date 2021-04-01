@@ -84,11 +84,11 @@ The script below (join-testnet.sh) will perform the following actions as root:
 
 Therefore four additional docker container will be running on your host, something like (`docker ps`):
 ```
-CONTAINER ID        IMAGE                             NAMES
-80a95b4440dc        divax/diva-api:latest             nx1.api.testnet.diva.i2p
-44528359ab1e        divax/iroha:1.2.0-prop-strategy   nx1.testnet.diva.i2p
-f9e4adb88ee9        postgres:10-alpine                nx1.db.testnet.diva.i2p
-5ecdde77dbc3        divax/i2p:latest                  nx1.i2p.testnet.diva.i2p
+CONTAINER ID        IMAGE                     NAMES
+80a95b4440dc        divax/diva-api:latest     nx1.api.testnet.diva.i2p
+44528359ab1e        divax/iroha:1.2.1         nx1.testnet.diva.i2p
+f9e4adb88ee9        postgres:10-alpine        nx1.db.testnet.diva.i2p
+5ecdde77dbc3        divax/i2p:latest          nx1.i2p.testnet.diva.i2p
 ```
 
 Additionally there will be a network created (so the container can talk to each other), like (`docker network ls`):
