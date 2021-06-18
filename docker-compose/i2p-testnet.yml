@@ -27,14 +27,13 @@ services:
       ENABLE_TUNNELS: 1
     volumes:
       - i2p.testnet.diva.i2p:/home/i2pd/
-      - ./tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
+      - ../tunnels.conf.d/testnet:/home/i2pd/tunnels.source.conf.d/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.10
 
 networks:
   network.testnet.diva.i2p:
-    internal: true
     name: network.testnet.diva.i2p
     ipam:
       driver: default

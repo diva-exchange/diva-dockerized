@@ -48,8 +48,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n1.testnet.diva.i2p:/
-      - ./keys/n1.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n1.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.21
@@ -78,8 +78,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n2.testnet.diva.i2p:/
-      - ./keys/n2.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n2.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.22
@@ -108,8 +108,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n3.testnet.diva.i2p:/
-      - ./keys/n3.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n3.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.23
@@ -138,8 +138,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n4.testnet.diva.i2p:/
-      - ./keys/n4.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n4.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.24
@@ -168,8 +168,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n5.testnet.diva.i2p:/
-      - ./keys/n5.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n5.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.25
@@ -198,8 +198,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n6.testnet.diva.i2p:/
-      - ./keys/n6.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n6.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.26
@@ -228,8 +228,8 @@ services:
       NETWORK_VERBOSE_LOGGING: 0
     volumes:
       - n7.testnet.diva.i2p:/
-      - ./keys/n7.testnet.diva.ip:/keys/
-      - ./genesis:/genesis/
+      - ../keys/n7.testnet.diva.ip:/keys/
+      - ../genesis:/genesis/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.29.101.27
@@ -256,7 +256,6 @@ services:
 
 networks:
   network.testnet.diva.i2p:
-    internal: true
     name: network.testnet.diva.i2p
     ipam:
       driver: default
