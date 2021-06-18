@@ -17,6 +17,7 @@
 #
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
+
 # -e  Exit immediately if a simple command exits with a non-zero status
 set -e
 
@@ -24,26 +25,8 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-NODE=${NODE:-0}
-IDENT=${NODE}.testnet.diva.i2p
-if [[ `docker inspect ${IDENT} >/dev/null 2>&1 ; echo $?` -gt 0 ]]
-then
-  echo "Node ${IDENT} not running"
-  exit 1
-fi
-
-echo "Watching ${IDENT}..."
-sleep 600
-
-while [[ `docker inspect ${IDENT} >/dev/null 2>&1 ; echo $?` -eq 0 ]]
-do
-  sleep 60
-  DT=`stat -c %y /var/lib/docker/volumes/${IDENT}/_data/blockstore`
-  echo `date` : ${DT}
-  if [[ `date -d "${DT}" +%s` -lt $((`date +%s`-240)) ]]
-  then
-    echo "Restarting ${IDENT}..."
-    ${PROJECT_PATH}bin/restart-node.sh
-    sleep 600
-  fi
-done
+rm -rf ${PROJECT_PATH}genesis/*
+rm -rf ${PROJECT_PATH}keys/*
+rm -rf ${PROJECT_PATH}tunnels.conf.d/*
+rm -rf ${PROJECT_PATH}i2p-b32/*
+rm -rf ${PROJECT_PATH}*.yml

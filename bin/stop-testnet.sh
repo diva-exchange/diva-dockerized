@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2020 diva.exchange
+# Copyright (C) 2021 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -30,31 +30,18 @@ NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
 
 NAME_EXPLORER=${NAME_EXPLORER:-explorer.${DOMAIN}}
 NAME_I2P=${NAME_I2P:-i2p.${DOMAIN}}
-NAME_API=${NAME_API:-api.${DOMAIN}}
 
 # explorer
 echo "Stopping ${NAME_EXPLORER}..."
 [[ `docker ps | fgrep ${NAME_EXPLORER}` ]] && docker stop ${NAME_EXPLORER} >/dev/null
 [[ `docker ps -a | fgrep ${NAME_EXPLORER}` ]] && docker rm ${NAME_EXPLORER} >/dev/null
 
-# API
-echo "Stopping API ${NAME_API}..."
-[[ `docker ps | fgrep ${NAME_API}` ]] && docker stop ${NAME_API} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_API}` ]] && docker rm ${NAME_API} >/dev/null
-echo "Removing API volume ${NAME_API}..."
-[[ `docker volume ls | fgrep ${NAME_API}` ]] && docker volume rm ${NAME_API} >/dev/null
-
-# postgres and iroha container
+# divachain
 for (( t=1; t<=${NODES}; t++ ))
 do
   echo "Stopping n${t}.${DOMAIN}..."
   [[ `docker ps | fgrep n${t}.${DOMAIN}` ]] && docker stop n${t}.${DOMAIN} >/dev/null
-  echo "Stopping n${t}.db.${DOMAIN}..."
-  [[ `docker ps | fgrep n${t}.db.${DOMAIN}` ]] && docker stop n${t}.db.${DOMAIN} >/dev/null
   [[ `docker ps -a | fgrep n${t}.${DOMAIN}` ]] && docker rm n${t}.${DOMAIN} >/dev/null
-  [[ `docker ps -a | fgrep n${t}.db.${DOMAIN}` ]] && docker rm n${t}.db.${DOMAIN} >/dev/null
-  echo "Removing database volume n${t}.db.${DOMAIN}..."
-  [[ `docker volume ls | fgrep n${t}.db.${DOMAIN}` ]] && docker volume rm n${t}.db.${DOMAIN} >/dev/null
 done
 
 # i2p
