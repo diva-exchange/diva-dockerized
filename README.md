@@ -47,7 +47,7 @@ To stop the local testnet execute:
 sudo docker-compose -f docker-compose/local-testnet.yml down --volumes
 ```
 
-Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://localhost:3920 . Remark: it takes a few seconds to start the docker container which contains the explorer.
+Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920 . Remark: it takes a few seconds to start the docker container which contains the explorer.
 
 ### I2P based Testnet
 
@@ -63,7 +63,7 @@ sudo bin/stop-testnet.sh
 
 Starting up the I2P testnet might take while - up to 5 minutes.
 
-Open your browser and take a look at your local testnet using the Iroha Blockchain Explorer: http://localhost:3920
+Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920
 
 ## Join the Testnet of DIVA.EXCHANGE
 
