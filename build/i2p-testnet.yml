@@ -25,9 +25,10 @@ services:
     restart: unless-stopped
     environment:
       ENABLE_TUNNELS: 1
+      TUNNELS_DIR_SOURCE: /home/tunnels/
     volumes:
-      - i2p.testnet.diva.i2p:/home/i2pd/data/
-      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d/
+      - i2p.testnet.diva.i2p:/home/i2pd/
+      - ./tunnels.conf.d:/home/tunnels/
     networks:
       network.testnet.diva.i2p:
         ipv4_address: 172.19.72.10
