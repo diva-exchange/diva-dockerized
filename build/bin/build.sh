@@ -18,9 +18,6 @@
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
 
-# -e  Exit immediately if a simple command exits with a non-zero status
-set -e
-
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
@@ -29,9 +26,9 @@ ${PROJECT_PATH}bin/clean.sh
 
 # reasonable defaults
 SIZE_NETWORK=${SIZE_NETWORK:-7}
-IS_NAME_BASED=${IS_NAME_BASED:-0}
+IS_NAME_BASED=${IS_NAME_BASED:-1}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
-BASE_IP=${BASE_IP:-172.20.72.}
+BASE_IP=${BASE_IP:-172.19.72.}
 PORT=${PORT:-17468}
 HAS_I2P=${HAS_I2P:-0}
 I2P_CONSOLE_PORT=${I2P_CONSOLE_PORT:-7070}
@@ -49,21 +46,9 @@ then
     ${PROJECT_PATH}../node_modules/.bin/ts-node ${PROJECT_PATH}main.ts
 
   sudo docker-compose -f ${PROJECT_PATH}i2p-testnet.yml up -d
-
-  rm -rf ${PROJECT_PATH}i2p-b32.lst
-  for (( t=1; t<=${SIZE_NETWORK}; t++ ))
-  do
-    sleep 2
-    IP=${BASE_IP}$((50 + t))
-    echo http://${IP}:${I2P_CONSOLE_PORT}
-    curl -s http://${IP}:${I2P_CONSOLE_PORT}/?page=i2p_tunnels | \
-      grep -Po "[a-z2-7]+\.b32\.i2p\:${PORT}" 2>&1 \
-      >${PROJECT_PATH}i2p-b32/n${t}.${BASE_DOMAIN}
-  done
-
+  sleep 10
+  curl -s http://${BASE_IP}10:${I2P_CONSOLE_PORT}/?page=i2p_tunnels >${PROJECT_PATH}b32/${BASE_DOMAIN}
   sudo docker-compose -f ${PROJECT_PATH}i2p-testnet.yml down
-
-  rm -rf ${PROJECT_PATH}i2p-testnet.yml
 fi
 
 SIZE_NETWORK=${SIZE_NETWORK} \
