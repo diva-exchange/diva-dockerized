@@ -26,7 +26,7 @@ services:
     environment:
       ENABLE_TUNNELS: 1
     volumes:
-      - i2p.testnet.diva.i2p:/home/i2pd/
+      - i2p.testnet.diva.i2p:/home/i2pd/data/
       - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d/
     networks:
       network.testnet.diva.i2p:
