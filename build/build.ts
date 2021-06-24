@@ -174,7 +174,7 @@ export class Build {
         '      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d\n' +
         '    networks:\n' +
         '      network.testnet.diva.i2p:\n' +
-        '        ipv4_address: 172.19.72.10\n\n';
+        `        ipv4_address: ${this.baseIP}10\n\n`;
       volumes = volumes + '  i2p.testnet.diva.i2p:\n    name: i2p.testnet.diva.i2p\n';
     }
 
@@ -186,12 +186,14 @@ export class Build {
         '    image: divax/explorer:latest\n' +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
-        '      HTTP_IP: 172.19.72.11\n' +
+        `      HTTP_IP: ${this.baseIP}11\n` +
         '      HTTP_PORT: 3920\n' +
         `      URL_API: http://${this.baseIP}21:${this.port}\n` +
+        '    ports:\n' +
+        '      - 3920:3920\n' +
         '    networks:\n' +
         '      network.testnet.diva.i2p:\n' +
-        '        ipv4_address: 172.19.72.11\n\n';
+        `        ipv4_address: ${this.baseIP}11\n\n`;
     }
 
     for (let seq = 1; seq <= this.sizeNetwork; seq++) {
@@ -206,7 +208,7 @@ export class Build {
           '      I2P_SOCKS_PROXY_PORT: 4445\n      I2P_SOCKS_PROXY_CONSOLE_PORT: 7070\n';
       }
 
-      const address = (this.mapB32.get(hostChain) || `${this.baseIP}${20 + seq}`) + `:${this.port}`;
+      const address = this.mapB32.get(hostChain) || `${this.baseIP}${20 + seq}` + `:${this.port}`;
       yml =
         yml +
         `  ${nameChain}:\n` +
@@ -223,10 +225,10 @@ export class Build {
         `      NETWORK_SIZE: ${this.sizeNetwork}\n` +
         `      NETWORK_VERBOSE_LOGGING: ${this.networkVerboseLogging}\n` +
         '    volumes:\n' +
-        `      - ${nameChain}-blockstore:/blockstore/\n` +
-        `      - ${nameChain}-state:/state/\n` +
-        `      - ./keys/${hostChain}:/keys/\n` +
-        '      - ./genesis:/genesis/\n' +
+        `      - ${nameChain}-blockstore:/blockstore\n` +
+        `      - ${nameChain}-state:/state\n` +
+        `      - ./keys/${hostChain}:/keys\n` +
+        '      - ./genesis:/genesis\n' +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}${20 + seq}\n\n`;
