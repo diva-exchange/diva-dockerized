@@ -170,8 +170,8 @@ export class Build {
         '    environment:\n' +
         '      ENABLE_TUNNELS: 1\n' +
         '    volumes:\n' +
-        '      - i2p.testnet.diva.i2p:/home/i2pd/\n' +
-        '      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d/\n' +
+        '      - i2p.testnet.diva.i2p:/home/i2pd/data\n' +
+        '      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d\n' +
         '    networks:\n' +
         '      network.testnet.diva.i2p:\n' +
         '        ipv4_address: 172.19.72.10\n\n';
