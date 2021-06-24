@@ -32,15 +32,22 @@ FORCE=${FORCE:-0}
 source "${PROJECT_PATH}bin/echos.sh"
 source "${PROJECT_PATH}bin/helpers.sh"
 
+if ! command_exists npm; then
+  error "npm not available. Please install it first.";
+  exit 1
+fi
+
 if ! command_exists docker; then
   error "docker not available. Please install it first.";
-  exit 1
+  exit 2
 fi
 
 if ! command_exists docker-compose; then
   error "docker-compose not available. Please install it first.";
-  exit 2
+  exit 3
 fi
+
+npm ci
 
 if [[ ${FORCE} = 1 ]]
 then
