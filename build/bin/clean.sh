@@ -29,3 +29,4 @@ rm -rf ${PROJECT_PATH}genesis/*
 rm -rf ${PROJECT_PATH}keys/*
 rm -rf ${PROJECT_PATH}tunnels.conf.d/*
 rm -rf ${PROJECT_PATH}b32/*
+rm -rf ${PROJECT_PATH}testnet.yml

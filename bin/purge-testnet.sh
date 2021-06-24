@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2020 diva.exchange
+# Copyright (C) 2021 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -17,36 +17,33 @@
 #
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
+# -e  Exit immediately if a simple command exits with a non-zero status
+set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-NODE=${NODE:-0}
-if [[ `docker inspect ${NODE}.testnet.diva.i2p >/dev/null 2>&1 ; echo $?` -gt 0 ]]
-then
-  echo "Node ${NODE}.testnet.diva.i2p not running"
+# env vars
+HAS_I2P=${HAS_I2P:-0}
+
+# load helpers
+source "${PROJECT_PATH}bin/echos.sh"
+source "${PROJECT_PATH}bin/helpers.sh"
+
+if ! command_exists docker; then
+  error "docker not available. Please install it first.";
   exit 1
 fi
 
-IDENT=${NODE}
-DOMAIN=${DOMAIN:-testnet.diva.i2p}
-NAME_IROHA=${IDENT}.${DOMAIN}
-NAME_DB=${IDENT}.db.${DOMAIN}
-NAME_API=${IDENT}.api.${DOMAIN}
+if ! command_exists docker-compose; then
+  error "docker-compose not available. Please install it first.";
+  exit 2
+fi
 
-# stopping Iroha
-echo "Stopping Iroha ${NAME_IROHA}..."
-docker stop ${NAME_IROHA}
-
-# removing prepared transactions from DB
-echo "Removing prepared transactions from ${NAME_DB}..."
-docker exec ${NAME_DB} psql -U iroha -d iroha -t -c "ROLLBACK PREPARED 'prepared_block_iroha'"
-
-# restarting database
-echo "Restarting database ${NAME_DB}..."
-docker restart ${NAME_DB}
-
-# starting Iroha
-echo "Starting Iroha ${NAME_IROHA}..."
-docker start ${NAME_IROHA}
+info "Purging testnet..."
+if [[ -f build/testnet.yml ]]
+then
+  sudo docker-compose -f build/testnet.yml down --volumes
+fi
+build/bin/clean.sh

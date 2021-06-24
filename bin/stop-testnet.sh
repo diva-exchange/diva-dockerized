@@ -24,31 +24,15 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-NODES=${NODES:-7}
-DOMAIN=${DOMAIN:-testnet.diva.i2p}
-NAME_NETWORK=${NAME_NETWORK:-network.${DOMAIN}}
+# load helpers
+source "${PROJECT_PATH}bin/echos.sh"
+source "${PROJECT_PATH}bin/helpers.sh"
 
-NAME_EXPLORER=${NAME_EXPLORER:-explorer.${DOMAIN}}
-NAME_I2P=${NAME_I2P:-i2p.${DOMAIN}}
+if [[ ! -f build/testnet.yml ]]
+then
+  error "${PROJECT_PATH}build/testnet.yml not found"
+  exit 1
+fi
 
-# explorer
-echo "Stopping ${NAME_EXPLORER}..."
-[[ `docker ps | fgrep ${NAME_EXPLORER}` ]] && docker stop ${NAME_EXPLORER} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_EXPLORER}` ]] && docker rm ${NAME_EXPLORER} >/dev/null
+sudo docker-compose -f build/testnet.yml down
 
-# divachain
-for (( t=1; t<=${NODES}; t++ ))
-do
-  echo "Stopping n${t}.${DOMAIN}..."
-  [[ `docker ps | fgrep n${t}.${DOMAIN}` ]] && docker stop n${t}.${DOMAIN} >/dev/null
-  [[ `docker ps -a | fgrep n${t}.${DOMAIN}` ]] && docker rm n${t}.${DOMAIN} >/dev/null
-done
-
-# i2p
-echo "Stopping ${NAME_I2P}..."
-[[ `docker ps | fgrep ${NAME_I2P}` ]] && docker stop ${NAME_I2P} >/dev/null
-[[ `docker ps -a | fgrep ${NAME_I2P}` ]] && docker rm ${NAME_I2P} >/dev/null
-
-#network
-echo "Removing network ${NAME_NETWORK}..."
-[[ `docker network ls | fgrep ${NAME_NETWORK}` ]] && docker network rm ${NAME_NETWORK} >/dev/null

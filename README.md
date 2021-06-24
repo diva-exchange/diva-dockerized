@@ -1,10 +1,3 @@
-
-**DOCUMENT STATUS: DRAFT!**
- 
-**DOCUMENT STATUS: DRAFT!**
-
-**DOCUMENT STATUS: DRAFT!**
-
 # DIVA.EXCHANGE "Dockerized"
 
 This project has the following purpose: even if DIVA.EXCHANGE consists of several independent modules, it still should be easy to have the complete environment available.
@@ -17,11 +10,11 @@ It's licenced under [AGPLv3](LICENSE).
 
 ## Get Started
 
-There are two different flavours of testnets available: a simple local one and an I2P based one.
+There are two different flavours of testnets available: a simple local one and an I2P-based one.
 
-**Stable:** the local testnet runs on your local network. It's fast and available on your local network only. Use it for application development.
+**Local:** the local testnet runs on your local network. It's fast and available on your local network only. Use it for application development.
 
-**Beta & Private:** the I2P based testnet routes all traffic between the DIVACHAIN nodes through the private network I2P. The DIVACHAIN nodes itself remain private. The I2P network might have quite some latency.
+**Private (I2P):** the I2P based testnet routes all traffic between the DIVACHAIN nodes through the private network I2P. The DIVACHAIN nodes itself remain private. The I2P network might have quite some latency.
 
 ### Docker Compose & Clone the Code
 
@@ -29,7 +22,7 @@ There are two different flavours of testnets available: a simple local one and a
 
 Clone the code repository from the public repository:
 ```
-git clone -b master https://codeberg.org/diva.exchange/diva-dockerized.git
+git clone -b divachain https://codeberg.org/diva.exchange/diva-dockerized.git
 cd diva-dockerized
 ```
 
@@ -37,14 +30,14 @@ Now one of the following Testnets can be started.
 
 ### Local Testnet
 
-To start the local testnet (7 nodes) execute:
+To start the local testnet (7 nodes) execute (it will ask for the root password, since it has to access docker):
 ```
-sudo docker-compose -f docker-compose/local-testnet.yml pull && sudo docker-compose -f docker-compose/local-testnet.yml up -d
+bin/start-testnet.sh
 ```
 
 To stop the local testnet execute:
 ```
-sudo docker-compose -f docker-compose/local-testnet.yml down --volumes
+bin/stop-testnet.sh
 ```
 
 Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920 . Remark: it takes a few seconds to start the docker container which contains the explorer.
@@ -53,82 +46,24 @@ Open your browser and take a look at your local testnet using the Blockchain Exp
 
 To start the I2P-based testnet (7 nodes) execute:
 ```
-sudo bin/start-testnet.sh
+HAS_I2P=1 bin/start-testnet.sh
 ```
 
 To stop the I2P-based testnet execute:
 ```
-sudo bin/stop-testnet.sh
+bin/stop-testnet.sh
 ```
 
 Starting up the I2P testnet might take while - up to 5 minutes.
 
 Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920
 
-## Join the Testnet of DIVA.EXCHANGE
+### Purge your DIVACHAIN Network
 
-### *nix Environment
-
-#### Joining the Network
-The testnet is publicly available. The explorer is found here: https://testnet.diva.exchange
-
-We assume you are using some debian flavour (like ubuntu). First, make sure you have docker available:
+To purge all data of your testnet (7 nodes - local or I2P-based) execute:
 ```
-sudo apt-get install docker.io
+bin/purge-testnet.sh
 ```
-
-Clone diva-dockerized (develop branch):
-```
-git clone -b develop https://codeberg.org/diva.exchange/diva-dockerized.git
-cd diva-dockerized
-```
-
-The script below (join-testnet.sh) will perform the following actions as root:
-* Create an I2P node, as a docker container
-* Create a DIVACHAIN node, as a docker container
-
-Therefore four additional docker container will be running on your host, something like (`docker ps`):
-```
-CONTAINER ID        IMAGE                     NAMES
-44528359ab1e        divax/divachain:latest    nx1.testnet.diva.i2p
-5ecdde77dbc3        divax/i2p:latest          nx1.i2p.testnet.diva.i2p
-```
-
-Additionally there will be a network created (so the container can talk to each other), like (`docker network ls`):
-```
-NETWORK ID          NAME                       DRIVER              SCOPE
-f01cb4d30a08        nx1.net.testnet.diva.i2p   bridge              local
-```
-
-And some volumes will be available too, like (`docker volume ls`):
-```
-DRIVER              VOLUME NAME
-local               nx1.i2p.testnet.diva.i2p
-local               nx1.testnet.diva.i2p
-```
-
-Now, join the network by launching the following script (as root, since it accesses docker):
-```
-sudo bin/join-testnet.sh
-```
-
-Your DIVACHAIN node will now start to integrate into the testnet. The integration will also register as a new peer on the blockchain.
-
-Please note: the peer is on I2P - this is a slow P2P network. So just be patient. Questions: ask in the DIVA Telegram chat!
-
-IMPORTANT: `join-testnet.sh` might be executed multiple times. Every time a new node (2 new docker container) will be created and the whole process will be initiated. Sooner or later your host will run out of resources.
-
-#### Leaving the Network
-To leave the testnet, execute the script:
-```
-sudo bin/leave-testnet.sh
-```
-
-It will shut down **all** your local nodes (nx1..nxN) and remove all local docker containers related to the testnet. The volumes of I2P will persist. Therefore re-joining the testnet will be quicker. To completely remove all data, remove the volumes manually (like `sudo docker volume rm nx1.testnet.diva.i2p`).
-
-
-### Windows Environment
-tbd.
 
 ## Contact the Developers
 
