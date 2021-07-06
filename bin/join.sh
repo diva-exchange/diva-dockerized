@@ -27,6 +27,7 @@ PROJECT_PATH=`pwd`/
 # env vars
 HAS_I2P=${HAS_I2P:-0}
 FORCE=${FORCE:-0}
+JOIN_NETWORK=${JOIN_NETWORK:-diva.i2p/testnet}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 BASE_IP=${BASE_IP:-172.19.72.}
 
@@ -64,7 +65,7 @@ fi
 if [[ ! -f build/${BASE_DOMAIN}.yml ]]
 then
   info "Building..."
-  HAS_I2P=${HAS_I2P} BASE_DOMAIN=${BASE_DOMAIN} BASE_IP=${BASE_IP} build/bin/build.sh
+  HAS_I2P=${HAS_I2P} JOIN_NETWORK=${JOIN_NETWORK} BASE_DOMAIN=${BASE_DOMAIN} BASE_IP=${BASE_IP} build/bin/build.sh
 fi
 
 info "Pulling..."

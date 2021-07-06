@@ -28,7 +28,35 @@ cd diva-dockerized
 
 Now one of the following Testnets can be started.
 
-### Local Testnet
+### Join the DIVACHAIN Test Network
+
+To join the DIVACHAIN testnet execute (it will ask for the root password, since it has to access docker):
+```
+HAS_I2P=1 BASE_DOMAIN=testnet.diva.i2p bin/join.sh
+```
+
+### Leave the DIVACHAIN Test Network
+
+To leave the DIVACHAIN testnet execute (it will ask for the root password, since it has to access docker):
+```
+BASE_DOMAIN=testnet.diva.i2p bin/leave.sh
+```
+
+### Join the DIVACHAIN Network
+
+To join the DIVACHAIN network execute (it will ask for the root password, since it has to access docker):
+```
+HAS_I2P=1 BASE_DOMAIN=diva.i2p bin/join.sh
+```
+
+### Leave the DIVACHAIN Network
+
+To leave the DIVACHAIN network execute (it will ask for the root password, since it has to access docker):
+```
+BASE_DOMAIN=diva.i2p bin/leave.sh
+```
+
+### Local DIVACHAIN Testnet
 
 To start the local testnet (7 nodes) execute (it will ask for the root password, since it has to access docker):
 ```
@@ -42,7 +70,7 @@ bin/stop-testnet.sh
 
 Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920 . Remark: it takes a few seconds to start the docker container which contains the explorer.
 
-### I2P based Testnet
+### I2P based DIVACHAIN Testnet
 
 To start the I2P-based testnet (7 nodes) execute:
 ```
@@ -58,7 +86,7 @@ Starting up the I2P testnet might take while - up to 5 minutes.
 
 Open your browser and take a look at your local testnet using the Blockchain Explorer: http://localhost:3920
 
-### Purge your DIVACHAIN Network
+### Purge your local DIVACHAIN Network
 
 To purge all data of your testnet (7 nodes - local or I2P-based) execute:
 ```

@@ -18,9 +18,10 @@
  */
 
 import base64url from 'base64-url';
-import sodium from 'sodium-native';
 import fs, { readFileSync } from 'fs';
 import path from 'path';
+import sodium from 'sodium-native';
+
 import {
   DEFAULT_NETWORK_SIZE,
   MAX_NETWORK_SIZE,
@@ -30,10 +31,10 @@ import {
 } from './main';
 
 export class Build {
+  private readonly joinNetwork: string;
   private readonly sizeNetwork: number = DEFAULT_NETWORK_SIZE;
   private readonly pathGenesis: string;
   private readonly pathKeys: string;
-  private readonly pathYml: string;
   private readonly baseDomain: string;
   private readonly baseIP: string;
   private readonly port: number;
@@ -45,13 +46,16 @@ export class Build {
   private readonly hasExplorer: boolean;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
-    this.sizeNetwork =
-      Math.floor(sizeNetwork) > 0 && Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
-        ? Math.floor(sizeNetwork)
-        : DEFAULT_NETWORK_SIZE;
+    this.joinNetwork = process.env.JOIN_NETWORK || '';
+
+    this.sizeNetwork = this.joinNetwork
+      ? 1
+      : Math.floor(sizeNetwork) > 0 &&
+        Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
+      ? Math.floor(sizeNetwork)
+      : DEFAULT_NETWORK_SIZE;
     this.pathGenesis = path.join(__dirname, 'genesis/block.json');
     this.pathKeys = path.join(__dirname, 'keys');
-    this.pathYml = path.join(__dirname, 'testnet.yml');
 
     this.baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
     this.baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
@@ -59,7 +63,8 @@ export class Build {
       Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
         ? Number(process.env.PORT)
         : DEFAULT_PORT;
-    this.networkVerboseLogging = Number(process.env.NETWORK_VERBOSE_LOGGING) > 0 ? 1 : 0;
+    this.networkVerboseLogging =
+      Number(process.env.NETWORK_VERBOSE_LOGGING) > 0 ? 1 : 0;
     this.envNode =
       this.networkVerboseLogging > 0 || process.env.NODE_ENV === 'development'
         ? 'development'
@@ -102,8 +107,9 @@ export class Build {
         ? `n${t}.${this.baseDomain}`
         : `${this.baseIP}${20 + t}`;
       const port = this.port.toString();
-      const ident = (this.mapB32.get(host) || `${this.baseIP}${20 + t}:${port}`)
-        .replace(/[^a-z0-9_-]+/gi, '-');
+      const ident = (
+        this.mapB32.get(host) || `${this.baseIP}${20 + t}:${port}`
+      ).replace(/[^a-z0-9_-]+/gi, '-');
 
       fs.mkdirSync(path.join(this.pathKeys, host));
 
@@ -126,7 +132,10 @@ export class Build {
       }
 
       const publicKey = base64url.escape(_publicKey.toString('base64'));
-      fs.writeFileSync(path.join(this.pathKeys, host, ident + '.public'), publicKey);
+      fs.writeFileSync(
+        path.join(this.pathKeys, host, ident + '.public'),
+        publicKey
+      );
 
       commands.push({
         seq: seq,
@@ -163,26 +172,27 @@ export class Build {
     if (this.hasI2P) {
       yml =
         yml +
-        '  i2p.testnet.diva.i2p:\n' +
-        '    container_name: i2p.testnet.diva.i2p\n' +
+        `  i2p.${this.baseDomain}:\n` +
+        `    container_name: i2p.${this.baseDomain}\n` +
         '    image: divax/i2p:latest\n' +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         '      ENABLE_TUNNELS: 1\n' +
         '    volumes:\n' +
-        '      - i2p.testnet.diva.i2p:/home/i2pd/data\n' +
+        `      - i2p.${this.baseDomain}:/home/i2pd/data\n` +
         '      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d\n' +
         '    networks:\n' +
-        '      network.testnet.diva.i2p:\n' +
+        `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}10\n\n`;
-      volumes = volumes + '  i2p.testnet.diva.i2p:\n    name: i2p.testnet.diva.i2p\n';
+      volumes =
+        volumes + `  i2p.${this.baseDomain}:\n    name: i2p.${this.baseDomain}\n`;
     }
 
     if (this.hasExplorer) {
       yml =
         yml +
-        '  explorer.testnet.diva.i2p:\n' +
-        '    container_name: explorer.testnet.diva.i2p\n' +
+        `  explorer.${this.baseDomain}:\n` +
+        `    container_name: explorer.${this.baseDomain}\n` +
         '    image: divax/explorer:latest\n' +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
@@ -192,7 +202,7 @@ export class Build {
         '    ports:\n' +
         '      - 3920:3920\n' +
         '    networks:\n' +
-        '      network.testnet.diva.i2p:\n' +
+        `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}11\n\n`;
     }
 
@@ -208,7 +218,9 @@ export class Build {
           '      I2P_SOCKS_PROXY_PORT: 4445\n      I2P_SOCKS_PROXY_CONSOLE_PORT: 7070\n';
       }
 
-      const address = this.mapB32.get(hostChain) || `${this.baseIP}${20 + seq}` + `:${this.port}`;
+      const address =
+        this.mapB32.get(hostChain) ||
+        `${this.baseIP}${20 + seq}`;
       yml =
         yml +
         `  ${nameChain}:\n` +
@@ -220,8 +232,9 @@ export class Build {
         `      LOG_LEVEL: ${this.levelLog}\n` +
         `      IP: ${this.baseIP}${20 + seq}\n` +
         `      PORT: ${this.port}\n` +
-        `      ADDRESS: ${address}\n` +
+        `      ADDRESS: ${address}:${this.port}\n` +
         proxy +
+        `      BOOTSTRAP: ${this.joinNetwork ? 'http://' + this.joinNetwork : ''}\n` +
         `      NETWORK_SIZE: ${this.sizeNetwork}\n` +
         `      NETWORK_VERBOSE_LOGGING: ${this.networkVerboseLogging}\n` +
         '    volumes:\n' +
@@ -232,7 +245,9 @@ export class Build {
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}${20 + seq}\n\n`;
-      volumes = volumes + `  ${nameChain}-blockstore:\n    name: ${nameChain}-blockstore\n` +
+      volumes =
+        volumes +
+        `  ${nameChain}-blockstore:\n    name: ${nameChain}-blockstore\n` +
         `  ${nameChain}-state:\n    name: ${nameChain}-state\n`;
     }
 
@@ -247,6 +262,7 @@ export class Build {
       `        - subnet: ${this.baseIP}0/24\n\n` +
       (volumes ? 'volumes:\n' + volumes : '');
 
-    fs.writeFileSync(this.pathYml, yml);
+    const pathYml = path.join(__dirname, this.baseDomain + '.yml');
+    fs.writeFileSync(pathYml, yml);
   }
 }

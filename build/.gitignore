@@ -1,1 +1,2 @@
-testnet.yml
+*.yml
+!i2p-testnet.yml

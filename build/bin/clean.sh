@@ -25,8 +25,10 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
+
 rm -rf ${PROJECT_PATH}genesis/*
 rm -rf ${PROJECT_PATH}keys/*
 rm -rf ${PROJECT_PATH}tunnels.conf.d/*
 rm -rf ${PROJECT_PATH}b32/*
-rm -rf ${PROJECT_PATH}testnet.yml
+rm -rf ${PROJECT_PATH}${BASE_DOMAIN}.yml

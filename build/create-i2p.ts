@@ -18,6 +18,7 @@
  */
 
 import fs from 'fs';
+
 import {
   DEFAULT_NETWORK_SIZE,
   MAX_NETWORK_SIZE,
@@ -27,16 +28,22 @@ import {
 } from './main';
 
 export class CreateI2P {
+  private readonly joinNetwork: string;
   private readonly sizeNetwork: number = DEFAULT_NETWORK_SIZE;
+  private readonly baseDomain: string;
   private readonly baseIP: string;
   private readonly port: number;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
-    this.sizeNetwork =
-      Math.floor(sizeNetwork) > 0 && Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
-        ? Math.floor(sizeNetwork)
-        : DEFAULT_NETWORK_SIZE;
+    this.joinNetwork = process.env.JOIN_NETWORK || '';
+    this.sizeNetwork = this.joinNetwork
+      ? 1
+      : Math.floor(sizeNetwork) > 0 &&
+        Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
+      ? Math.floor(sizeNetwork)
+      : DEFAULT_NETWORK_SIZE;
 
+    this.baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
     this.baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
     this.port =
       Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
@@ -60,6 +67,6 @@ export class CreateI2P {
         `keys = ${nameI2P}.p2p-api.dat\n\n`;
     }
 
-    fs.writeFileSync(__dirname + '/tunnels.conf.d/testnet.conf', sTunnels);
+    fs.writeFileSync(__dirname + `/tunnels.conf.d/${this.baseDomain}.conf`, sTunnels);
   }
 }

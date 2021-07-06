@@ -25,6 +25,7 @@ PROJECT_PATH=`pwd`/
 ${PROJECT_PATH}bin/clean.sh
 
 # reasonable defaults
+JOIN_NETWORK=${JOIN_NETWORK:-0}
 SIZE_NETWORK=${SIZE_NETWORK:-7}
 IS_NAME_BASED=${IS_NAME_BASED:-1}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
