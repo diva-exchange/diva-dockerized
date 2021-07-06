@@ -37,4 +37,4 @@ if ! command_exists docker-compose; then
 fi
 
 info "Stopping..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml down -d
+sudo docker-compose -f build/${BASE_DOMAIN}.yml down
