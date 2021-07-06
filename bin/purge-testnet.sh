@@ -26,6 +26,7 @@ PROJECT_PATH=`pwd`/
 
 # env vars
 HAS_I2P=${HAS_I2P:-0}
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 
 # load helpers
 source "${PROJECT_PATH}bin/echos.sh"
@@ -42,8 +43,8 @@ if ! command_exists docker-compose; then
 fi
 
 info "Purging testnet..."
-if [[ -f build/testnet.yml ]]
+if [[ -f build/${BASE_DOMAIN}.yml ]]
 then
-  sudo docker-compose -f build/testnet.yml down --volumes
+  sudo docker-compose -f build/${BASE_DOMAIN}.yml down --volumes
 fi
-build/bin/clean.sh
+BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh
