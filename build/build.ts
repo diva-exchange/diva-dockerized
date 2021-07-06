@@ -108,7 +108,7 @@ export class Build {
         : `${this.baseIP}${20 + t}`;
       const port = this.port.toString();
       const ident = (
-        this.mapB32.get(host) || `${this.baseIP}${20 + t}:${port}`
+        (this.mapB32.get(host) || `${this.baseIP}${20 + t}`) + `:${port}`
       ).replace(/[^a-z0-9_-]+/gi, '-');
 
       fs.mkdirSync(path.join(this.pathKeys, host));
@@ -185,7 +185,8 @@ export class Build {
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}10\n\n`;
       volumes =
-        volumes + `  i2p.${this.baseDomain}:\n    name: i2p.${this.baseDomain}\n`;
+        volumes +
+        `  i2p.${this.baseDomain}:\n    name: i2p.${this.baseDomain}\n`;
     }
 
     if (this.hasExplorer) {
@@ -218,9 +219,7 @@ export class Build {
           '      I2P_SOCKS_PROXY_PORT: 4445\n      I2P_SOCKS_PROXY_CONSOLE_PORT: 7070\n';
       }
 
-      const address =
-        this.mapB32.get(hostChain) ||
-        `${this.baseIP}${20 + seq}`;
+      const address = this.mapB32.get(hostChain) || `${this.baseIP}${20 + seq}`;
       yml =
         yml +
         `  ${nameChain}:\n` +
@@ -234,7 +233,9 @@ export class Build {
         `      PORT: ${this.port}\n` +
         `      ADDRESS: ${address}:${this.port}\n` +
         proxy +
-        `      BOOTSTRAP: ${this.joinNetwork ? 'http://' + this.joinNetwork : ''}\n` +
+        `      BOOTSTRAP: ${
+          this.joinNetwork ? 'http://' + this.joinNetwork : ''
+        }\n` +
         `      NETWORK_SIZE: ${this.sizeNetwork}\n` +
         `      NETWORK_VERBOSE_LOGGING: ${this.networkVerboseLogging}\n` +
         '    volumes:\n' +

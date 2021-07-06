@@ -67,6 +67,9 @@ export class CreateI2P {
         `keys = ${nameI2P}.p2p-api.dat\n\n`;
     }
 
-    fs.writeFileSync(__dirname + `/tunnels.conf.d/${this.baseDomain}.conf`, sTunnels);
+    fs.writeFileSync(
+      __dirname + `/tunnels.conf.d/${this.baseDomain}.conf`,
+      sTunnels
+    );
   }
 }
