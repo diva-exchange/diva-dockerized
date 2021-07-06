@@ -50,8 +50,6 @@ if ! command_exists docker-compose; then
   exit 3
 fi
 
-npm ci
-
 if [[ ${FORCE} = 1 ]]
 then
   info "Forcing rebuild..."
@@ -65,6 +63,7 @@ fi
 if [[ ! -f build/${BASE_DOMAIN}.yml ]]
 then
   info "Building..."
+  npm i
   HAS_I2P=${HAS_I2P} JOIN_NETWORK=${JOIN_NETWORK} BASE_DOMAIN=${BASE_DOMAIN} BASE_IP=${BASE_IP} build/bin/build.sh
 fi
 
