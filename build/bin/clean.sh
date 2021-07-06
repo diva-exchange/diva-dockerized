@@ -27,8 +27,8 @@ PROJECT_PATH=`pwd`/
 
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 
-rm -rf ${PROJECT_PATH}genesis/*
-rm -rf ${PROJECT_PATH}keys/*
-rm -rf ${PROJECT_PATH}tunnels.conf.d/*
-rm -rf ${PROJECT_PATH}b32/*
-rm -rf ${PROJECT_PATH}${BASE_DOMAIN}.yml
+sudo rm -rf ${PROJECT_PATH}genesis/*
+sudo rm -rf ${PROJECT_PATH}keys/*
+sudo rm -rf ${PROJECT_PATH}tunnels.conf.d/*
+sudo rm -rf ${PROJECT_PATH}b32/*
+sudo rm -rf ${PROJECT_PATH}${BASE_DOMAIN}.yml
