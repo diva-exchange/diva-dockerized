@@ -27,7 +27,6 @@ ${PROJECT_PATH}bin/clean.sh
 # reasonable defaults
 JOIN_NETWORK=${JOIN_NETWORK:-0}
 SIZE_NETWORK=${SIZE_NETWORK:-7}
-IS_NAME_BASED=${IS_NAME_BASED:-1}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 BASE_IP=${BASE_IP:-172.19.72.}
 PORT=${PORT:-17468}
@@ -46,14 +45,13 @@ then
     CREATE_I2P=1 \
     ${PROJECT_PATH}../node_modules/.bin/ts-node ${PROJECT_PATH}main.ts
 
-  sudo docker-compose -f ${PROJECT_PATH}i2p-testnet.yml up -d
+  sudo docker-compose -f ${PROJECT_PATH}i2p.${BASE_DOMAIN}.yml up -d
   sleep 10
   curl -s http://${BASE_IP}10:${I2P_CONSOLE_PORT}/?page=i2p_tunnels >${PROJECT_PATH}b32/${BASE_DOMAIN}
-  sudo docker-compose -f ${PROJECT_PATH}i2p-testnet.yml down
+  sudo docker-compose -f ${PROJECT_PATH}i2p.${BASE_DOMAIN}.yml down
 fi
 
 SIZE_NETWORK=${SIZE_NETWORK} \
-  IS_NAME_BASED=${IS_NAME_BASED} \
   BASE_DOMAIN=${BASE_DOMAIN} \
   BASE_IP=${BASE_IP} \
   PORT=${PORT} \
@@ -62,5 +60,3 @@ SIZE_NETWORK=${SIZE_NETWORK} \
   LOG_LEVEL=${LOG_LEVEL} \
   NETWORK_VERBOSE_LOGGING=${NETWORK_VERBOSE_LOGGING} \
   ${PROJECT_PATH}../node_modules/.bin/ts-node ${PROJECT_PATH}main.ts
-
-chown -R --reference ${PROJECT_PATH} ${PROJECT_PATH}

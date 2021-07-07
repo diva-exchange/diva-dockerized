@@ -33,6 +33,7 @@ import {
 export class Build {
   private readonly joinNetwork: string;
   private readonly sizeNetwork: number = DEFAULT_NETWORK_SIZE;
+  private readonly numberInstances: number = DEFAULT_NETWORK_SIZE;
   private readonly pathGenesis: string;
   private readonly pathKeys: string;
   private readonly baseDomain: string;
@@ -48,14 +49,12 @@ export class Build {
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
     this.joinNetwork = process.env.JOIN_NETWORK || '';
 
-    this.sizeNetwork = this.joinNetwork
-      ? 1
-      : Math.floor(sizeNetwork) > 0 &&
-        Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
-      ? Math.floor(sizeNetwork)
-      : DEFAULT_NETWORK_SIZE;
-    this.pathGenesis = path.join(__dirname, 'genesis/block.json');
-    this.pathKeys = path.join(__dirname, 'keys');
+    this.sizeNetwork =
+      Math.floor(sizeNetwork) > 0 && Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
+        ? Math.floor(sizeNetwork)
+        : DEFAULT_NETWORK_SIZE;
+
+    this.numberInstances = this.joinNetwork ? 1 : this.sizeNetwork;
 
     this.baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
     this.baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
@@ -70,6 +69,9 @@ export class Build {
         ? 'development'
         : 'production';
     this.levelLog = process.env.LOG_LEVEL || 'warn';
+
+    this.pathGenesis = path.join(__dirname, `genesis/${this.baseDomain}.json`);
+    this.pathKeys = path.join(__dirname, 'keys');
 
     this.hasI2P = Number(process.env.HAS_I2P) > 0;
     this.mapB32 = new Map();
@@ -102,7 +104,10 @@ export class Build {
     );
     const commands: Array<object> = [];
     let seq = 1;
-    for (let t = 1; t <= this.sizeNetwork; t++) {
+
+    fs.mkdirSync(path.join(this.pathKeys, this.baseDomain));
+
+    for (let t = 1; t <= this.numberInstances; t++) {
       const host = this.hasI2P
         ? `n${t}.${this.baseDomain}`
         : `${this.baseIP}${20 + t}`;
@@ -110,8 +115,6 @@ export class Build {
       const ident = (
         (this.mapB32.get(host) || `${this.baseIP}${20 + t}`) + `:${port}`
       ).replace(/[^a-z0-9_-]+/gi, '-');
-
-      fs.mkdirSync(path.join(this.pathKeys, host));
 
       const _publicKey: Buffer = sodium.sodium_malloc(
         sodium.crypto_sign_PUBLICKEYBYTES
@@ -123,7 +126,7 @@ export class Build {
       try {
         sodium.crypto_sign_keypair(_publicKey, _secretKey);
         fs.writeFileSync(
-          path.join(this.pathKeys, host, ident + '.secret'),
+          path.join(this.pathKeys, this.baseDomain, ident + '.secret'),
           _secretKey,
           { mode: '0600' }
         );
@@ -133,7 +136,7 @@ export class Build {
 
       const publicKey = base64url.escape(_publicKey.toString('base64'));
       fs.writeFileSync(
-        path.join(this.pathKeys, host, ident + '.public'),
+        path.join(this.pathKeys, this.baseDomain, ident + '.public'),
         publicKey
       );
 
@@ -180,7 +183,7 @@ export class Build {
         '      ENABLE_TUNNELS: 1\n' +
         '    volumes:\n' +
         `      - i2p.${this.baseDomain}:/home/i2pd/data\n` +
-        '      - ./tunnels.conf.d:/home/i2pd/tunnels.source.conf.d\n' +
+        `      - ./tunnels.conf.d/${this.baseDomain}:/home/i2pd/tunnels.source.conf.d\n` +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}10\n\n`;
@@ -200,14 +203,12 @@ export class Build {
         `      HTTP_IP: ${this.baseIP}11\n` +
         '      HTTP_PORT: 3920\n' +
         `      URL_API: http://${this.baseIP}21:${this.port}\n` +
-        '    ports:\n' +
-        '      - 3920:3920\n' +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}11\n\n`;
     }
 
-    for (let seq = 1; seq <= this.sizeNetwork; seq++) {
+    for (let seq = 1; seq <= this.numberInstances; seq++) {
       const hostChain = this.hasI2P
         ? `n${seq}.${this.baseDomain}`
         : `${this.baseIP}${20 + seq}`;
@@ -227,6 +228,7 @@ export class Build {
         '    image: divax/divachain:latest\n' +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
+        `      NAME_BLOCK_GENESIS: ${this.baseDomain}\n` +
         `      NODE_ENV: ${this.envNode}\n` +
         `      LOG_LEVEL: ${this.levelLog}\n` +
         `      IP: ${this.baseIP}${20 + seq}\n` +
@@ -241,7 +243,7 @@ export class Build {
         '    volumes:\n' +
         `      - ${nameChain}-blockstore:/blockstore\n` +
         `      - ${nameChain}-state:/state\n` +
-        `      - ./keys/${hostChain}:/keys\n` +
+        `      - ./keys/${this.baseDomain}:/keys\n` +
         '      - ./genesis:/genesis\n' +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
