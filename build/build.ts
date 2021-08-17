@@ -207,6 +207,8 @@ export class Build {
         `      HTTP_IP: ${this.baseIP}11\n` +
         '      HTTP_PORT: 3920\n' +
         `      URL_API: http://${this.baseIP}21:${this.port}\n` +
+        '    ports:\n' +
+        '      - 3920:3920\n' +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}11\n\n`;
