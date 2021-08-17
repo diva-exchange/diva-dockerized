@@ -32,7 +32,7 @@ Now one of the following Testnets can be started.
 
 To join the DIVACHAIN testnet execute (it will ask for the root password, since it has to access docker):
 ```
-HAS_I2P=1 BASE_DOMAIN=testnet.diva.i2p bin/join.sh
+HAS_I2P=1 BASE_DOMAIN=a.testnet.diva.i2p BASE_IP=172.19.72. bin/join.sh
 ```
 
 ### Leave the DIVACHAIN Test Network
