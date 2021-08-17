@@ -70,11 +70,11 @@ export class Build {
         : 'production';
     this.levelLog = process.env.LOG_LEVEL || 'warn';
 
-    this.baseDomain = this.baseDomain.replace(
+    const genesisFileName = this.baseDomain.replace(
         /[^a-z0-9_-]/gi,
         ''
     );
-    this.pathGenesis = path.join(__dirname, `genesis/${this.baseDomain}.json`);
+    this.pathGenesis = path.join(__dirname, `genesis/${genesisFileName}.json`);
     this.pathKeys = path.join(__dirname, 'keys');
 
     this.hasI2P = Number(process.env.HAS_I2P) > 0;
