@@ -71,7 +71,7 @@ export class Build {
     this.levelLog = process.env.LOG_LEVEL || 'warn';
 
     const genesisFileName = this.baseDomain.replace(
-        /[^a-z0-9_-]/gi,
+        /[^a-z0-9\._-]|^[\._-]+|[\._-]+$/gi,
         ''
     );
     this.pathGenesis = path.join(__dirname, `genesis/${genesisFileName}.json`);
