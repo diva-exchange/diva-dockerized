@@ -39,10 +39,10 @@ export class CreateI2P {
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
     this.joinNetwork = process.env.JOIN_NETWORK || '';
-    this.sizeNetwork = Math.floor(sizeNetwork) > 0 &&
-        Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
-      ? Math.floor(sizeNetwork)
-      : DEFAULT_NETWORK_SIZE;
+    this.sizeNetwork =
+      Math.floor(sizeNetwork) > 0 && Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
+        ? Math.floor(sizeNetwork)
+        : DEFAULT_NETWORK_SIZE;
 
     this.numberInstances = this.joinNetwork ? 1 : this.sizeNetwork;
 

@@ -28,6 +28,8 @@ import {
   DEFAULT_BASE_DOMAIN,
   DEFAULT_BASE_IP,
   DEFAULT_PORT,
+  DEFAULT_BLOCK_FEED_PORT,
+  DEFAULT_UI_PORT,
 } from './main';
 
 export class Build {
@@ -39,6 +41,8 @@ export class Build {
   private readonly baseDomain: string;
   private readonly baseIP: string;
   private readonly port: number;
+  private readonly port_block_feed: number;
+  private readonly port_ui: number;
   private readonly envNode: string;
   private readonly levelLog: string;
   private readonly networkVerboseLogging: number;
@@ -62,6 +66,15 @@ export class Build {
       Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
         ? Number(process.env.PORT)
         : DEFAULT_PORT;
+    this.port_block_feed =
+      Number(process.env.BLOCK_FFED_PORT) > 1024 &&
+      Number(process.env.BLOCK_FFED_PORT) < 48000
+        ? Number(process.env.BLOCK_FFED_PORT)
+        : DEFAULT_BLOCK_FEED_PORT;
+    this.port_ui =
+      Number(process.env.UI_PORT) > 1024 && Number(process.env.UI_PORT) < 48000
+        ? Number(process.env.UI_PORT)
+        : DEFAULT_UI_PORT;
     this.networkVerboseLogging =
       Number(process.env.NETWORK_VERBOSE_LOGGING) > 0 ? 1 : 0;
     this.envNode =
@@ -71,8 +84,8 @@ export class Build {
     this.levelLog = process.env.LOG_LEVEL || 'warn';
 
     const genesisFileName = this.baseDomain.replace(
-        /[^a-z0-9\._-]|^[\._-]+|[\._-]+$/gi,
-        ''
+      /[^a-z0-9._-]|^[._-]+|[._-]+$/gi,
+      ''
     );
     this.pathGenesis = path.join(__dirname, `genesis/${genesisFileName}.json`);
     this.pathKeys = path.join(__dirname, 'keys');
@@ -205,10 +218,11 @@ export class Build {
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      HTTP_IP: ${this.baseIP}11\n` +
-        '      HTTP_PORT: 3920\n' +
+        `      HTTP_PORT: ${this.port_ui}\n` +
         `      URL_API: http://${this.baseIP}21:${this.port}\n` +
+        `      URL_FEED: http://${this.baseIP}21:${this.port_block_feed}\n` +
         '    ports:\n' +
-        '      - 3920:3920\n' +
+        `      - ${this.port_ui}:${this.port_ui}\n` +
         '    networks:\n' +
         `      network.${this.baseDomain}:\n` +
         `        ipv4_address: ${this.baseIP}11\n\n`;
