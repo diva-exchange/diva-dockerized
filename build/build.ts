@@ -220,7 +220,7 @@ export class Build {
         `      HTTP_IP: ${this.baseIP}11\n` +
         `      HTTP_PORT: ${this.port_ui}\n` +
         `      URL_API: http://${this.baseIP}21:${this.port}\n` +
-        `      URL_FEED: http://${this.baseIP}21:${this.port_block_feed}\n` +
+        `      URL_FEED: ws://${this.baseIP}21:${this.port_block_feed}\n` +
         '    ports:\n' +
         `      - ${this.port_ui}:${this.port_ui}\n` +
         '    networks:\n' +
