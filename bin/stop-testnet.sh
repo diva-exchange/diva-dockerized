@@ -24,12 +24,12 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
+# load helpers
+source "${PROJECT_PATH}bin/util/echos.sh"
+source "${PROJECT_PATH}bin/util/helpers.sh"
+
 # env vars
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
-
-# load helpers
-source "${PROJECT_PATH}bin/echos.sh"
-source "${PROJECT_PATH}bin/helpers.sh"
 
 if [[ ! -f build/${BASE_DOMAIN}.yml ]]
 then

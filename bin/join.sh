@@ -24,16 +24,16 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
+# load helpers
+source "${PROJECT_PATH}bin/util/echos.sh"
+source "${PROJECT_PATH}bin/util/helpers.sh"
+
 # env vars
 HAS_I2P=${HAS_I2P:-0}
 FORCE=${FORCE:-0}
 JOIN_NETWORK=${JOIN_NETWORK:-diva.i2p/testnet}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 BASE_IP=${BASE_IP:-172.19.72.}
-
-# load helpers
-source "${PROJECT_PATH}bin/echos.sh"
-source "${PROJECT_PATH}bin/helpers.sh"
 
 if ! command_exists npm; then
   error "npm not available. Please install it first.";
