@@ -29,46 +29,13 @@ source "${PROJECT_PATH}bin/util/echos.sh"
 source "${PROJECT_PATH}bin/util/helpers.sh"
 
 # env vars
-HAS_I2P=${HAS_I2P:-0}
-FORCE=${FORCE:-0}
-JOIN_NETWORK=${JOIN_NETWORK:-diva.i2p/testnet}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
-BASE_IP=${BASE_IP:-172.19.72.}
-
-if ! command_exists npm; then
-  error "npm not available. Please install it first.";
-  exit 1
-fi
-
-if ! command_exists docker; then
-  error "docker not available. Please install it first.";
-  exit 2
-fi
-
-if ! command_exists docker-compose; then
-  error "docker-compose not available. Please install it first.";
-  exit 3
-fi
-
-if [[ ${FORCE} = 1 ]]
-then
-  info "Forcing rebuild..."
-  if [[ -f build/${BASE_DOMAIN}.yml ]]
-  then
-    sudo docker-compose -f build/${BASE_DOMAIN}.yml down --volumes
-  fi
-  BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh
-fi
 
 if [[ ! -f build/${BASE_DOMAIN}.yml ]]
 then
-  info "Building..."
-  npm i
-  HAS_I2P=${HAS_I2P} JOIN_NETWORK=${JOIN_NETWORK} BASE_DOMAIN=${BASE_DOMAIN} BASE_IP=${BASE_IP} build/bin/build.sh
+  error "File not found: ${PROJECT_PATH}build/${BASE_DOMAIN}.yml";
+  exit 3
 fi
 
-info "Pulling..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml pull
+sudo docker-compose -f build/${BASE_DOMAIN}.yml down
 
-info "Starting..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml up -d

@@ -1,6 +1,6 @@
 {
   "name": "@diva.exchange/diva-dockerized",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "diva - Distributed value exchange upholding security, reliability and privacy",
   "keywords": [
     "blockchain",
@@ -22,14 +22,14 @@
   },
   "devDependencies": {
     "@types/base64-url": "^2.2.0",
-    "@types/node": "^16.6.2",
+    "@types/node": "^16.7.1",
     "@types/sodium-native": "^2.3.5",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "base64-url": "^2.3.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.3.2",
     "sodium-native": "^3.2.1",
     "ts-node": "^10.2.1",

@@ -29,46 +29,28 @@ source "${PROJECT_PATH}bin/util/echos.sh"
 source "${PROJECT_PATH}bin/util/helpers.sh"
 
 # env vars
-HAS_I2P=${HAS_I2P:-0}
-FORCE=${FORCE:-0}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
-BASE_IP=${BASE_IP:-172.19.72.}
-
-if ! command_exists npm; then
-  error "npm not available. Please install it first.";
-  exit 1
-fi
 
 if ! command_exists docker; then
   error "docker not available. Please install it first.";
-  exit 2
+  exit 1
 fi
 
 if ! command_exists docker-compose; then
   error "docker-compose not available. Please install it first.";
-  exit 3
-fi
-
-npm ci
-
-if [[ ${FORCE} = 1 ]]
-then
-  info "Forcing rebuild..."
-  if [[ -f build/${BASE_DOMAIN}.yml ]]
-  then
-    sudo docker-compose -f build/${BASE_DOMAIN}.yml down --volumes
-  fi
-  BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh
+  exit 2
 fi
 
 if [[ ! -f build/${BASE_DOMAIN}.yml ]]
 then
-  info "Building..."
-  HAS_I2P=${HAS_I2P} BASE_DOMAIN=${BASE_DOMAIN} BASE_IP=${BASE_IP} build/bin/build.sh
+  error "File not found: ${PROJECT_PATH}build/${BASE_DOMAIN}.yml";
+  exit 3
 fi
 
-info "Pulling..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml pull
+warn "The confirmation of this action will lead to DATA LOSS!"
+warn "If you want to keep the data, run a backup first."
+confirm "Do you want to DELETE all local data (y/N)?" || exit 4
 
-info "Starting..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml up -d
+info "Deleting..."
+sudo docker-compose -f build/${BASE_DOMAIN}.yml down --volumes
+BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh

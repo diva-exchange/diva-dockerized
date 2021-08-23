@@ -31,10 +31,24 @@ source "${PROJECT_PATH}bin/util/helpers.sh"
 # env vars
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 
+if ! command_exists docker; then
+  error "docker not available. Please install it first.";
+  exit 1
+fi
+
 if ! command_exists docker-compose; then
   error "docker-compose not available. Please install it first.";
+  exit 2
+fi
+
+if [[ ! -f build/${BASE_DOMAIN}.yml ]]
+then
+  error "File not found: ${PROJECT_PATH}build/${BASE_DOMAIN}.yml";
   exit 3
 fi
 
-info "Stopping..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml down
+info "Pulling..."
+sudo docker-compose -f build/${BASE_DOMAIN}.yml pull
+
+info "Starting..."
+sudo docker-compose -f build/${BASE_DOMAIN}.yml up -d

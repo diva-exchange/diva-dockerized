@@ -24,18 +24,4 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-# load helpers
-source "${PROJECT_PATH}bin/util/echos.sh"
-source "${PROJECT_PATH}bin/util/helpers.sh"
-
-# env vars
-BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
-
-if [[ ! -f build/${BASE_DOMAIN}.yml ]]
-then
-  error "${PROJECT_PATH}build/${BASE_DOMAIN}.yml not found"
-  exit 1
-fi
-
-sudo docker-compose -f build/${BASE_DOMAIN}.yml down
-
+bin/stop.sh && bin/start.sh
