@@ -32,7 +32,7 @@ Either build your own local testnet or join the existing [DIVACHAIN testnet](htt
 
 To join the DIVACHAIN test network, build a local docker compose file first. This is an automated process. Here is an example on how to join the DIVACHAIN test network via I2P (it will ask for the root password, since it has to access docker):
 ```
-HAS_I2P=1 JOIN_NETWORK=diva.i2p/testnet BASE_IP=172.19.72. bin/build.sh
+HAS_I2P=1 JOIN_NETWORK=diva.i2p/testnet bin/build.sh
 ```
 
 After building the docker compose file, the containers can be **started**:
