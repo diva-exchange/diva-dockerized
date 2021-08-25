@@ -44,7 +44,7 @@ It is now possible to explore the local docker environment using docker commands
 
 To **stop** locally running DIVACHAIN Test Network containers, execute:
 ```
-bin/stop.sh
+bin/halt.sh
 ```
 
 ### Leave the DIVACHAIN Network
