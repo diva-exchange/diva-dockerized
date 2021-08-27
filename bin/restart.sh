@@ -24,4 +24,4 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`/
 
-bin/stop.sh && bin/start.sh
+bin/halt.sh && bin/start.sh
