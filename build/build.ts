@@ -159,17 +159,17 @@ export class Build {
 
       commands.push({
         seq: seq,
-        command: 'addPeer',
+        cmd: 'addPeer',
         host: this.mapB32.get(host) || host,
         port: Number(port),
-        publicKey: publicKey,
+        pk: publicKey,
       });
       seq++;
       commands.push({
         seq: seq,
-        command: 'modifyStake',
-        publicKey: publicKey,
-        stake: 1000,
+        cmd: 'modifyStake',
+        pk: publicKey,
+        stk: 1000,
       });
       seq++;
     }
@@ -177,9 +177,9 @@ export class Build {
     genesis.tx = [
       {
         ident: 'genesis',
-        origin: '0000000000000000000000000000000000000000000',
-        timestamp: 88355100000,
-        commands: commands,
+        orgn: '0000000000000000000000000000000000000000000',
+        ts: 88355100000,
+        cmds: commands,
         sig: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       },
     ];
