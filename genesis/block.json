@@ -1,108 +1,108 @@
 {
-  "v": 1,
-  "ph": "0000000000000000000000000000000000000000000",
-  "h": "0000000000000000000000000000000000000000000",
+  "version": 1,
+  "previousHash": "0000000000000000000000000000000000000000000",
+  "hash": "0000000000000000000000000000000000000000000",
   "tx": [
     {
       "ident": "genesis",
-      "orgn": "0000000000000000000000000000000000000000000",
-      "ts": 88355100000,
-      "cmds": [
+      "origin": "0000000000000000000000000000000000000000000",
+      "timestamp": 88355100000,
+      "commands": [
         {
           "seq": 1,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n1.testnet.diva.i2p",
           "port": 17468,
-          "pk": "S_MjqNrUov81cH3TpDnGB_2vjJwVwQb9OgWsn9KCBx0"
+          "publicKey": "S_MjqNrUov81cH3TpDnGB_2vjJwVwQb9OgWsn9KCBx0"
         },
         {
           "seq": 2,
-          "cmd": "modifyStake",
-          "pk": "S_MjqNrUov81cH3TpDnGB_2vjJwVwQb9OgWsn9KCBx0",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "S_MjqNrUov81cH3TpDnGB_2vjJwVwQb9OgWsn9KCBx0",
+          "stake": 1000
         },
         {
           "seq": 3,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n2.testnet.diva.i2p",
           "port": 17468,
-          "pk": "U-ieyp4fATjXEfsud-zwbg_JHqi33tDVvE4zmzdRQzA"
+          "publicKey": "U-ieyp4fATjXEfsud-zwbg_JHqi33tDVvE4zmzdRQzA"
         },
         {
           "seq": 4,
-          "cmd": "modifyStake",
-          "pk": "U-ieyp4fATjXEfsud-zwbg_JHqi33tDVvE4zmzdRQzA",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "U-ieyp4fATjXEfsud-zwbg_JHqi33tDVvE4zmzdRQzA",
+          "stake": 1000
         },
         {
           "seq": 5,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n3.testnet.diva.i2p",
           "port": 17468,
-          "pk": "wPtbp3m05yRas3QtYQA8qjMni48RG5qlF-7KLNxy_eg"
+          "publicKey": "wPtbp3m05yRas3QtYQA8qjMni48RG5qlF-7KLNxy_eg"
         },
         {
           "seq": 6,
-          "cmd": "modifyStake",
-          "pk": "wPtbp3m05yRas3QtYQA8qjMni48RG5qlF-7KLNxy_eg",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "wPtbp3m05yRas3QtYQA8qjMni48RG5qlF-7KLNxy_eg",
+          "stake": 1000
         },
         {
           "seq": 7,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n4.testnet.diva.i2p",
           "port": 17468,
-          "pk": "9mkilgxIa9yWjwuKb4aXrP6P5G6zpf9DFLuEbFVXn90"
+          "publicKey": "9mkilgxIa9yWjwuKb4aXrP6P5G6zpf9DFLuEbFVXn90"
         },
         {
           "seq": 8,
-          "cmd": "modifyStake",
-          "pk": "9mkilgxIa9yWjwuKb4aXrP6P5G6zpf9DFLuEbFVXn90",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "9mkilgxIa9yWjwuKb4aXrP6P5G6zpf9DFLuEbFVXn90",
+          "stake": 1000
         },
         {
           "seq": 9,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n5.testnet.diva.i2p",
           "port": 17468,
-          "pk": "f21YgG2t0tEAWIN_uzUxk7kEejHc9jsGZJqNPTtIgzQ"
+          "publicKey": "f21YgG2t0tEAWIN_uzUxk7kEejHc9jsGZJqNPTtIgzQ"
         },
         {
           "seq": 10,
-          "cmd": "modifyStake",
-          "pk": "f21YgG2t0tEAWIN_uzUxk7kEejHc9jsGZJqNPTtIgzQ",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "f21YgG2t0tEAWIN_uzUxk7kEejHc9jsGZJqNPTtIgzQ",
+          "stake": 1000
         },
         {
           "seq": 11,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n6.testnet.diva.i2p",
           "port": 17468,
-          "pk": "G82D4db0yIUc9oDcAbvZ61I8BanFs392KwX-EV84JKQ"
+          "publicKey": "G82D4db0yIUc9oDcAbvZ61I8BanFs392KwX-EV84JKQ"
         },
         {
           "seq": 12,
-          "cmd": "modifyStake",
-          "pk": "G82D4db0yIUc9oDcAbvZ61I8BanFs392KwX-EV84JKQ",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "G82D4db0yIUc9oDcAbvZ61I8BanFs392KwX-EV84JKQ",
+          "stake": 1000
         },
         {
           "seq": 13,
-          "cmd": "addPeer",
+          "command": "addPeer",
           "host": "n7.testnet.diva.i2p",
           "port": 17468,
-          "pk": "cEppkGejf3hmIjBvx2kkJTwqFBbH-9sn2c5emnTJWWk"
+          "publicKey": "cEppkGejf3hmIjBvx2kkJTwqFBbH-9sn2c5emnTJWWk"
         },
         {
           "seq": 14,
-          "cmd": "modifyStake",
-          "pk": "cEppkGejf3hmIjBvx2kkJTwqFBbH-9sn2c5emnTJWWk",
-          "stk": 1000
+          "command": "modifyStake",
+          "publicKey": "cEppkGejf3hmIjBvx2kkJTwqFBbH-9sn2c5emnTJWWk",
+          "stake": 1000
         }
       ],
       "sig": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
     }
   ],
-  "hght": 1,
-  "vts": []
+  "height": 1,
+  "votes": []
 }
