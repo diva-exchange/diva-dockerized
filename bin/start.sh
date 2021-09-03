@@ -30,6 +30,7 @@ source "${PROJECT_PATH}bin/util/helpers.sh"
 
 # env vars
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
+NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:-0}
 
 if ! command_exists docker; then
   error "docker not available. Please install it first.";
@@ -51,4 +52,4 @@ info "Pulling..."
 sudo docker-compose -f build/${BASE_DOMAIN}.yml pull
 
 info "Starting..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml up -d
+sudo NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING} docker-compose -f build/${BASE_DOMAIN}.yml up -d
