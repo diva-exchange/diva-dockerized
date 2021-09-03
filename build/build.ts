@@ -255,7 +255,7 @@ export class Build {
         `      PORT: ${this.port}\n` +
         `      ADDRESS: ${address}:${this.port}\n` +
         proxy +
-        '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING}\n' +
+        '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n' +
         `      BOOTSTRAP: ${
           this.joinNetwork ? 'http://' + this.joinNetwork : ''
         }\n` +
