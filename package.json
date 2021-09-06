@@ -1,6 +1,6 @@
 {
   "name": "@diva.exchange/diva-dockerized",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "diva - Distributed value exchange upholding security, reliability and privacy",
   "keywords": [
     "blockchain",
