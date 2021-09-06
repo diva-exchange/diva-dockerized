@@ -255,9 +255,10 @@ export class Build {
         `      PORT: ${this.port}\n` +
         `      ADDRESS: ${address}:${this.port}\n` +
         proxy +
-        `      BOOTSTRAP: ${
-          this.joinNetwork ? 'http://' + this.joinNetwork : ''
-        }\n` +
+        (this.joinNetwork
+          ? `      BOOTSTRAP: http://${+this.joinNetwork}\n` +
+            '      NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:-0}\n'
+          : '') +
         `      NETWORK_SIZE: ${this.sizeNetwork}\n` +
         `      NETWORK_VERBOSE_LOGGING: ${this.networkVerboseLogging}\n` +
         '    volumes:\n' +
