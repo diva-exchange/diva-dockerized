@@ -178,7 +178,6 @@ export class Build {
       {
         ident: 'genesis',
         origin: '0000000000000000000000000000000000000000000',
-        timestamp: 88355100000,
         commands: commands,
         sig: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       },
@@ -257,7 +256,7 @@ export class Build {
         proxy +
         (this.joinNetwork
           ? `      BOOTSTRAP: http://${this.joinNetwork}\n` +
-            '      NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:-0}\n'
+            '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n'
           : '') +
         `      NETWORK_SIZE: ${this.sizeNetwork}\n` +
         `      NETWORK_VERBOSE_LOGGING: ${this.networkVerboseLogging}\n` +
