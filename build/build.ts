@@ -49,6 +49,7 @@ export class Build {
   private readonly hasI2P: boolean;
   private readonly mapB32: Map<string, string>;
   private readonly hasExplorer: boolean;
+  private readonly hasProtocol: boolean;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
     this.joinNetwork = process.env.JOIN_NETWORK || '';
@@ -97,6 +98,7 @@ export class Build {
     }
 
     this.hasExplorer = Number(process.env.HAS_EXPLORER || 1) > 0;
+    this.hasProtocol = Number(process.env.HAS_PROTOCOL || 1) > 0;
 
     this.createFiles();
   }
@@ -115,75 +117,79 @@ export class Build {
   }
 
   private createFiles() {
-    // genesis block
-    const genesis: any = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../genesis/block.json')).toString()
-    );
-    const commands: Array<object> = [];
-    let seq = 1;
-
-    fs.mkdirSync(path.join(this.pathKeys, this.baseDomain));
-
-    for (let t = 1; t <= this.numberInstances; t++) {
-      const host = this.hasI2P
-        ? `n${t}.${this.baseDomain}`
-        : `${this.baseIP}${20 + t}`;
-      const port = this.port.toString();
-      const ident = (
-        (this.mapB32.get(host) || `${this.baseIP}${20 + t}`) + `:${port}`
-      ).replace(/[^a-z0-9_-]+/gi, '-');
-
-      const _publicKey: Buffer = sodium.sodium_malloc(
-        sodium.crypto_sign_PUBLICKEYBYTES
+    if (!fs.existsSync(this.pathGenesis)) {
+      // genesis block
+      const genesis: any = JSON.parse(
+        fs
+          .readFileSync(path.join(__dirname, '../genesis/block.json'))
+          .toString()
       );
-      const _secretKey: Buffer = sodium.sodium_malloc(
-        sodium.crypto_sign_SECRETKEYBYTES
-      );
-      sodium.sodium_mlock(_secretKey);
-      try {
-        sodium.crypto_sign_keypair(_publicKey, _secretKey);
-        fs.writeFileSync(
-          path.join(this.pathKeys, this.baseDomain, ident + '.secret'),
-          _secretKey,
-          { mode: '0600' }
+      const commands: Array<object> = [];
+      let seq = 1;
+
+      fs.mkdirSync(path.join(this.pathKeys, this.baseDomain));
+
+      for (let t = 1; t <= this.numberInstances; t++) {
+        const host = this.hasI2P
+          ? `n${t}.${this.baseDomain}`
+          : `${this.baseIP}${20 + t}`;
+        const port = this.port.toString();
+        const ident = (
+          (this.mapB32.get(host) || `${this.baseIP}${20 + t}`) + `:${port}`
+        ).replace(/[^a-z0-9_-]+/gi, '-');
+
+        const _publicKey: Buffer = sodium.sodium_malloc(
+          sodium.crypto_sign_PUBLICKEYBYTES
         );
-      } finally {
-        sodium.sodium_munlock(_secretKey);
+        const _secretKey: Buffer = sodium.sodium_malloc(
+          sodium.crypto_sign_SECRETKEYBYTES
+        );
+        sodium.sodium_mlock(_secretKey);
+        try {
+          sodium.crypto_sign_keypair(_publicKey, _secretKey);
+          fs.writeFileSync(
+            path.join(this.pathKeys, this.baseDomain, ident + '.secret'),
+            _secretKey,
+            { mode: '0600' }
+          );
+        } finally {
+          sodium.sodium_munlock(_secretKey);
+        }
+
+        const publicKey = base64url.escape(_publicKey.toString('base64'));
+        fs.writeFileSync(
+          path.join(this.pathKeys, this.baseDomain, ident + '.public'),
+          publicKey
+        );
+
+        commands.push({
+          seq: seq,
+          command: 'addPeer',
+          host: this.mapB32.get(host) || host,
+          port: Number(port),
+          publicKey: publicKey,
+        });
+        seq++;
+        commands.push({
+          seq: seq,
+          command: 'modifyStake',
+          publicKey: publicKey,
+          stake: 1000,
+        });
+        seq++;
       }
 
-      const publicKey = base64url.escape(_publicKey.toString('base64'));
-      fs.writeFileSync(
-        path.join(this.pathKeys, this.baseDomain, ident + '.public'),
-        publicKey
-      );
+      genesis.tx = [
+        {
+          ident: 'genesis',
+          origin: '0000000000000000000000000000000000000000000',
+          commands: commands,
+          sig: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ];
 
-      commands.push({
-        seq: seq,
-        command: 'addPeer',
-        host: this.mapB32.get(host) || host,
-        port: Number(port),
-        publicKey: publicKey,
-      });
-      seq++;
-      commands.push({
-        seq: seq,
-        command: 'modifyStake',
-        publicKey: publicKey,
-        stake: 1000,
-      });
-      seq++;
+      fs.writeFileSync(this.pathGenesis, JSON.stringify(genesis));
     }
-
-    genesis.tx = [
-      {
-        ident: 'genesis',
-        origin: '0000000000000000000000000000000000000000000',
-        commands: commands,
-        sig: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-      },
-    ];
-
-    fs.writeFileSync(this.pathGenesis, JSON.stringify(genesis));
 
     // docker compose Yml file
     let yml = 'version: "3.7"\nservices:\n';
@@ -233,11 +239,13 @@ export class Build {
         ? `n${seq}.${this.baseDomain}`
         : `${this.baseIP}${20 + seq}`;
       const nameChain = `n${seq}.chain.${this.baseDomain}`;
+
       let proxy = '';
       if (this.hasI2P) {
         proxy =
           `      I2P_SOCKS_PROXY_HOST: ${this.baseIP}10\n` +
-          '      I2P_SOCKS_PROXY_PORT: 4445\n      I2P_SOCKS_PROXY_CONSOLE_PORT: 7070\n';
+          '      I2P_SOCKS_PROXY_PORT: 4445\n' +
+          '      I2P_SOCKS_PROXY_CONSOLE_PORT: 7070\n';
       }
 
       const address = this.mapB32.get(hostChain) || `${this.baseIP}${20 + seq}`;
@@ -273,6 +281,30 @@ export class Build {
         volumes +
         `  ${nameChain}-blockstore:\n    name: ${nameChain}-blockstore\n` +
         `  ${nameChain}-state:\n    name: ${nameChain}-state\n`;
+
+      // protocol
+      if (this.hasProtocol) {
+        const nameProtocol = `n${seq}.protocol.${this.baseDomain}`;
+
+        yml =
+          yml +
+          `  ${nameProtocol}:\n` +
+          `    container_name: ${nameProtocol}\n` +
+          '    image: divax/divaprotocol:latest\n' +
+          '    restart: unless-stopped\n' +
+          '    environment:\n' +
+          `      NODE_ENV: ${this.envNode}\n` +
+          `      LOG_LEVEL: ${this.levelLog}\n` +
+          `      URL_API_CHAIN: http://${this.baseIP}${20 + seq}:${
+            this.port
+          }\n` +
+          `      URL_BLOCK_FEED: ws://${this.baseIP}${20 + seq}:${
+            this.port_block_feed
+          }\n` +
+          '    networks:\n' +
+          `      network.${this.baseDomain}:\n` +
+          `        ipv4_address: ${this.baseIP}${120 + seq}\n\n`;
+      }
     }
 
     yml =

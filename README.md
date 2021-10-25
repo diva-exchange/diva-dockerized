@@ -128,6 +128,16 @@ Boolean: 1 (true) or 0
 
 Default: `0`
 
+### HAS_EXPLORER
+Boolean: 1 (true) or 0
+
+Default: `1`
+
+### HAS_PROTOCOL
+Boolean: 1 (true) or 0
+
+Default: `1`
+
 ### NODE_ENV
 String: production, development
 
@@ -139,6 +149,11 @@ String: trace, info, warn, error, critical
 Default: `trace`
 
 ### NETWORK_VERBOSE_LOGGING
+Boolean: 1 (true) or 0
+
+Default: `0`
+
+### PURGE
 Boolean: 1 (true) or 0
 
 Default: `0`

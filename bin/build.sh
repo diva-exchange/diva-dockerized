@@ -29,6 +29,7 @@ source "${PROJECT_PATH}bin/util/echos.sh"
 source "${PROJECT_PATH}bin/util/helpers.sh"
 
 # env vars
+PURGE=${PURGE:-0}
 JOIN_NETWORK=${JOIN_NETWORK:-}
 SIZE_NETWORK=${SIZE_NETWORK:-7}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
@@ -55,15 +56,22 @@ if ! command_exists docker-compose; then
   exit 3
 fi
 
-warn "The confirmation of this action will lead to DATA LOSS!"
-warn "If you want to keep the data, run a backup first."
-confirm "Do you want to DELETE all local data and re-create your environment (y/N)?" || exit 4
-
 if [[ -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml ]]
 then
-  sudo docker-compose -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml down --volumes
-  BASE_DOMAIN=${BASE_DOMAIN} \
-    ${PROJECT_PATH}build/bin/clean.sh
+  sudo docker-compose -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml down
+fi
+
+if [[ ${PURGE} > 0 ]]
+then
+  warn "The confirmation of this action will lead to DATA LOSS!"
+  warn "If you want to keep the data, run a backup first."
+  confirm "Do you want to DELETE all local data and re-create your environment (y/N)?" || exit 4
+  if [[ -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml ]]
+  then
+    sudo docker-compose -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml down --volumes
+    BASE_DOMAIN=${BASE_DOMAIN} \
+      ${PROJECT_PATH}build/bin/clean.sh
+  fi
 fi
 
 info "Rebuilding..."

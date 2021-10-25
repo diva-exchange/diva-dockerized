@@ -73,7 +73,8 @@ export class CreateI2P {
 
     const pathTunnelConf = __dirname + `/tunnels.conf.d/${this.baseDomain}/`;
     !fs.existsSync(pathTunnelConf) && fs.mkdirSync(pathTunnelConf);
-    fs.existsSync(pathTunnelConf + 'tunnels.conf') && fs.unlinkSync(pathTunnelConf + 'tunnels.conf');
+    fs.existsSync(pathTunnelConf + 'tunnels.conf') &&
+      fs.unlinkSync(pathTunnelConf + 'tunnels.conf');
     fs.writeFileSync(pathTunnelConf + 'tunnels.conf', sTunnels);
   }
 
