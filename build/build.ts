@@ -30,6 +30,7 @@ import {
   DEFAULT_PORT,
   DEFAULT_BLOCK_FEED_PORT,
   DEFAULT_UI_PORT,
+  DEFAULT_PROTOCOL_PORT,
 } from './main';
 
 export class Build {
@@ -43,6 +44,7 @@ export class Build {
   private readonly port: number;
   private readonly port_block_feed: number;
   private readonly port_ui: number;
+  private readonly port_protocol: number;
   private readonly envNode: string;
   private readonly levelLog: string;
   private readonly networkVerboseLogging: number;
@@ -76,6 +78,10 @@ export class Build {
       Number(process.env.UI_PORT) > 1024 && Number(process.env.UI_PORT) < 48000
         ? Number(process.env.UI_PORT)
         : DEFAULT_UI_PORT;
+    this.port_protocol =
+      Number(process.env.PORT_PROTOCOL) > 1024 && Number(process.env.PORT_PROTOCOL) < 48000
+        ? Number(process.env.PORT_PROTOCOL)
+        : DEFAULT_PROTOCOL_PORT;
     this.networkVerboseLogging =
       Number(process.env.NETWORK_VERBOSE_LOGGING) > 0 ? 1 : 0;
     this.envNode =
@@ -295,6 +301,8 @@ export class Build {
           '    environment:\n' +
           `      NODE_ENV: ${this.envNode}\n` +
           `      LOG_LEVEL: ${this.levelLog}\n` +
+          `      IP: ${this.baseIP}${120 + seq}\n` +
+          `      PORT: ${this.port_protocol}\n` +
           `      URL_API_CHAIN: http://${this.baseIP}${20 + seq}:${
             this.port
           }\n` +

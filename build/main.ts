@@ -28,6 +28,7 @@ export const DEFAULT_BASE_IP = '172.19.72.';
 export const DEFAULT_PORT = 17468;
 export const DEFAULT_BLOCK_FEED_PORT = 17469;
 export const DEFAULT_UI_PORT = 3920;
+export const DEFAULT_PROTOCOL_PORT = 19720;
 
 if ((process.env.CREATE_I2P || 0) > 0) {
   new CreateI2P(Number(process.env.SIZE_NETWORK) || DEFAULT_NETWORK_SIZE);
