@@ -17,11 +17,9 @@
  * Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
  */
 
-import base64url from 'base64-url';
-import fs, { readFileSync } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import sodium from 'sodium-native';
-
 import {
   DEFAULT_NETWORK_SIZE,
   MAX_NETWORK_SIZE,
@@ -32,6 +30,7 @@ import {
   DEFAULT_UI_PORT,
   DEFAULT_PROTOCOL_PORT,
 } from './main';
+import base64url from 'base64url';
 
 export class Build {
   private readonly image_i2p: string;
@@ -59,10 +58,10 @@ export class Build {
   private readonly hasProtocol: boolean;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
-
     this.image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
     this.image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
-    this.image_protocol = process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
+    this.image_protocol =
+      process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
     this.image_explorer = process.env.IMAGE_EXPLORER || 'divax/explorer:latest';
 
     this.joinNetwork = process.env.JOIN_NETWORK || '';
@@ -122,9 +121,9 @@ export class Build {
   }
 
   private createB32Map() {
-    const s = readFileSync(
-      path.join(__dirname, 'b32', this.baseDomain)
-    ).toString();
+    const s = fs
+      .readFileSync(path.join(__dirname, 'b32', this.baseDomain))
+      .toString();
     const re = new RegExp(
       'b32=([a-z2-7]+)">([^.]+.' + this.baseDomain + ')',
       'g'
@@ -174,10 +173,10 @@ export class Build {
           sodium.sodium_munlock(_secretKey);
         }
 
-        const publicKey = base64url.escape(_publicKey.toString('base64'));
         fs.writeFileSync(
           path.join(this.pathKeys, this.baseDomain, ident + '.public'),
-          publicKey
+          _publicKey,
+          { encoding: 'binary', mode: '0644' }
         );
 
         commands.push({
@@ -185,13 +184,13 @@ export class Build {
           command: 'addPeer',
           host: this.mapB32.get(host) || host,
           port: Number(port),
-          publicKey: publicKey,
+          publicKey: base64url.encode(_publicKey.toString('binary'), 'binary'),
         });
         seq++;
         commands.push({
           seq: seq,
           command: 'modifyStake',
-          publicKey: publicKey,
+          publicKey: base64url.encode(_publicKey.toString('binary'), 'binary'),
           stake: 1000,
         });
         seq++;

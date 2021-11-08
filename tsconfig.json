@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "modeResolution": "node",
     "strictNullChecks": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
