@@ -96,6 +96,17 @@ To purge all local data, execute:
 bin/purge.sh
 ```
 
+### Development: Use of Specific Docker Images
+It is possible to specify docker images to build the .yml file used by docker compose.
+Use the environment variables IMAGE_I2P, IMAGE_CHAIN, IMAGE_PROTOCOL and IMAGE_EXPLORER to pass specific image 
+names to the build process. Here is an example:
+
+```
+HAS_I2P=1 JOIN_NETWORK=diva.i2p/testnet IMAGE_CHAIN=divax/divachain:develop bin/build.sh
+```
+
+This will build a .yml file using a specific docker image as divachain.
+
 ## Environment Variables
 
 ### JOIN_NETWORK

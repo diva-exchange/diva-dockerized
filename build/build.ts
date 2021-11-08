@@ -34,6 +34,11 @@ import {
 } from './main';
 
 export class Build {
+  private readonly image_i2p: string;
+  private readonly image_chain: string;
+  private readonly image_protocol: string;
+  private readonly image_explorer: string;
+
   private readonly joinNetwork: string;
   private readonly sizeNetwork: number = DEFAULT_NETWORK_SIZE;
   private readonly numberInstances: number = DEFAULT_NETWORK_SIZE;
@@ -54,6 +59,12 @@ export class Build {
   private readonly hasProtocol: boolean;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
+
+    this.image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
+    this.image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
+    this.image_protocol = process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
+    this.image_explorer = process.env.IMAGE_EXPLORER || 'divax/explorer:latest';
+
     this.joinNetwork = process.env.JOIN_NETWORK || '';
 
     this.sizeNetwork =
@@ -79,7 +90,8 @@ export class Build {
         ? Number(process.env.UI_PORT)
         : DEFAULT_UI_PORT;
     this.port_protocol =
-      Number(process.env.PORT_PROTOCOL) > 1024 && Number(process.env.PORT_PROTOCOL) < 48000
+      Number(process.env.PORT_PROTOCOL) > 1024 &&
+      Number(process.env.PORT_PROTOCOL) < 48000
         ? Number(process.env.PORT_PROTOCOL)
         : DEFAULT_PROTOCOL_PORT;
     this.networkVerboseLogging =
@@ -205,7 +217,7 @@ export class Build {
         yml +
         `  i2p.${this.baseDomain}:\n` +
         `    container_name: i2p.${this.baseDomain}\n` +
-        '    image: divax/i2p:latest\n' +
+        `    image: ${this.image_i2p}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         '      ENABLE_TUNNELS: 1\n' +
@@ -226,7 +238,7 @@ export class Build {
         yml +
         `  explorer.${this.baseDomain}:\n` +
         `    container_name: explorer.${this.baseDomain}\n` +
-        '    image: divax/explorer:latest\n' +
+        `    image: ${this.image_explorer}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      HTTP_IP: ${this.baseIP}11\n` +
@@ -259,7 +271,7 @@ export class Build {
         yml +
         `  ${nameChain}:\n` +
         `    container_name: ${nameChain}\n` +
-        '    image: divax/divachain:latest\n' +
+        `    image: ${this.image_chain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      NAME_BLOCK_GENESIS: ${this.baseDomain}\n` +
@@ -296,7 +308,7 @@ export class Build {
           yml +
           `  ${nameProtocol}:\n` +
           `    container_name: ${nameProtocol}\n` +
-          '    image: divax/divaprotocol:latest\n' +
+          `    image: ${this.image_protocol}\n` +
           '    restart: unless-stopped\n' +
           '    environment:\n' +
           `      NODE_ENV: ${this.envNode}\n` +

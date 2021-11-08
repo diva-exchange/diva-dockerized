@@ -30,6 +30,7 @@ import {
 import path from 'path';
 
 export class CreateI2P {
+  private readonly image_i2p: string;
   private readonly joinNetwork: string;
   private readonly sizeNetwork: number = DEFAULT_NETWORK_SIZE;
   private readonly numberInstances: number = DEFAULT_NETWORK_SIZE;
@@ -38,6 +39,7 @@ export class CreateI2P {
   private readonly port: number;
 
   constructor(sizeNetwork: number = DEFAULT_NETWORK_SIZE) {
+    this.image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
     this.joinNetwork = process.env.JOIN_NETWORK || '';
     this.sizeNetwork =
       Math.floor(sizeNetwork) > 0 && Math.floor(sizeNetwork) <= MAX_NETWORK_SIZE
@@ -84,7 +86,7 @@ export class CreateI2P {
       'version: "3.7"\nservices:\n' +
       `  i2p.${this.baseDomain}:\n` +
       `    container_name: i2p.${this.baseDomain}\n` +
-      '    image: divax/i2p:latest\n' +
+      `    image: ${this.image_i2p}\n` +
       '    restart: unless-stopped\n' +
       '    environment:\n' +
       '      ENABLE_TUNNELS: 1\n' +
