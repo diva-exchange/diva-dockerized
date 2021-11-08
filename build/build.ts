@@ -176,7 +176,7 @@ export class Build {
         fs.writeFileSync(
           path.join(this.pathKeys, this.baseDomain, ident + '.public'),
           _publicKey,
-          { encoding: 'binary', mode: '0644' }
+          { mode: '0644' }
         );
 
         commands.push({
@@ -184,13 +184,13 @@ export class Build {
           command: 'addPeer',
           host: this.mapB32.get(host) || host,
           port: Number(port),
-          publicKey: base64url.encode(_publicKey.toString('binary'), 'binary'),
+          publicKey: base64url.encode(_publicKey),
         });
         seq++;
         commands.push({
           seq: seq,
           command: 'modifyStake',
-          publicKey: base64url.encode(_publicKey.toString('binary'), 'binary'),
+          publicKey: base64url.encode(_publicKey),
           stake: 1000,
         });
         seq++;
