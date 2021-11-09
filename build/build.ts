@@ -220,6 +220,7 @@ export class Build {
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         '      ENABLE_TUNNELS: 1\n' +
+        '      BANDWIDTH: "P"\n' +
         '    volumes:\n' +
         `      - i2p.${this.baseDomain}:/home/i2pd/data\n` +
         `      - ./tunnels.conf.d/${this.baseDomain}:/home/i2pd/tunnels.source.conf.d\n` +
