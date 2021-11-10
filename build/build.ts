@@ -219,6 +219,7 @@ export class Build {
         `    image: ${this.image_i2p}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
+        '      ENABLE_SOCKSPROXY: 1\n' +
         '      ENABLE_TUNNELS: 1\n' +
         '      BANDWIDTH: "P"\n' +
         '    volumes:\n' +
