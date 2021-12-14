@@ -41,9 +41,9 @@ if ! command_exists docker-compose; then
   exit 2
 fi
 
-if [[ ! -f build/${BASE_DOMAIN}.yml ]]
+if [[ ! -f build/yml/${BASE_DOMAIN}.yml ]]
 then
-  error "File not found: ${PROJECT_PATH}build/${BASE_DOMAIN}.yml";
+  error "File not found: ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml";
   exit 3
 fi
 
@@ -52,5 +52,5 @@ warn "If you want to keep the data, run a backup first."
 confirm "Do you want to DELETE all local data (y/N)?" || exit 4
 
 info "Deleting..."
-sudo docker-compose -f build/${BASE_DOMAIN}.yml down --volumes
+sudo docker-compose -f build/yml/${BASE_DOMAIN}.yml down --volumes
 BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh

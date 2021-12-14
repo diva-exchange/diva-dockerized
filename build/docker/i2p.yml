@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
 #
-# Copyright (C) 2020 diva.exchange
+# Copyright (C) 2021 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +17,33 @@
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
 
-# -e  Exit immediately if a simple command exits with a non-zero status
-set -e
+version: "3.7"
+services:
+  genesis-i2p-http:
+    container_name: genesis-i2p-http
+    image: divax/i2p:latest
+    environment:
+      ENABLE_SOCKSPROXY: 1
+      ENABLE_SAM: 1
+      BANDWIDTH: P
+    networks:
+      network.genesis-i2p:
+        ipv4_address: 172.19.77.11
 
-PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
-cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
+  genesis-i2p-udp:
+    container_name: genesis-i2p-udp
+    image: divax/i2p:latest
+    environment:
+      ENABLE_SAM: 1
+      BANDWIDTH: P
+    networks:
+      network.genesis-i2p:
+        ipv4_address: 172.19.77.12
 
-sudo rm -rf ${PROJECT_PATH}genesis/*
-sudo rm -rf ${PROJECT_PATH}keys/*
-sudo rm -rf ${PROJECT_PATH}yml/*
+networks:
+  network.genesis-i2p:
+    name: network.genesis-i2p
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.77.0/24

@@ -39,7 +39,6 @@ HAS_I2P=${HAS_I2P:-0}
 I2P_CONSOLE_PORT=${I2P_CONSOLE_PORT:-7070}
 NODE_ENV=${NODE_ENV:-production}
 LOG_LEVEL=${LOG_LEVEL:-trace}
-NETWORK_VERBOSE_LOGGING=${NETWORK_VERBOSE_LOGGING:-0}
 
 if ! command_exists npm; then
   error "npm not available. Please install it first.";
@@ -56,9 +55,9 @@ if ! command_exists docker-compose; then
   exit 3
 fi
 
-if [[ -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml ]]
+if [[ -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml ]]
 then
-  sudo docker-compose -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml down
+  sudo docker-compose -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml down
 fi
 
 if [[ ${PURGE} > 0 ]]
@@ -66,9 +65,9 @@ then
   warn "The confirmation of this action will lead to DATA LOSS!"
   warn "If you want to keep the data, run a backup first."
   confirm "Do you want to DELETE all local data and re-create your environment (y/N)?" || exit 4
-  if [[ -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml ]]
+  if [[ -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml ]]
   then
-    sudo docker-compose -f ${PROJECT_PATH}build/${BASE_DOMAIN}.yml down --volumes
+    sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml down --volumes
     BASE_DOMAIN=${BASE_DOMAIN} \
       ${PROJECT_PATH}build/bin/clean.sh
   fi
@@ -81,19 +80,27 @@ rm -rf ${PROJECT_PATH}package-lock.json
 
 npm i
 
-if [[ ${HAS_I2P} > 0 ]]
+if [[ ! -f ${PROJECT_PATH}build/genesis/block.v3.json ]]
 then
-  SIZE_NETWORK=${SIZE_NETWORK} \
-    BASE_DOMAIN=${BASE_DOMAIN} \
-    BASE_IP=${BASE_IP} \
-    PORT=${PORT} \
-    CREATE_I2P=1 \
-    ${PROJECT_PATH}node_modules/.bin/ts-node ${PROJECT_PATH}build/main.ts
+  if [[ ${HAS_I2P} > 0 ]]
+  then
+    info "Creating Genesis Block using I2P..."
+    sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml up -d
+    # wait for I2P to become responsive
+    sleep 10
 
-  sudo docker-compose -f ${PROJECT_PATH}build/i2p.${BASE_DOMAIN}.yml up -d
-  sleep 10
-  curl -s http://${BASE_IP}10:${I2P_CONSOLE_PORT}/?page=i2p_tunnels >${PROJECT_PATH}build/b32/${BASE_DOMAIN}
-  sudo docker-compose -f ${PROJECT_PATH}build/i2p.${BASE_DOMAIN}.yml down
+    sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml up -d
+    # wait for key and genesis block generation
+    sleep 10
+    sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml down --remove-orphans --volumes
+    sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml down --volumes
+  else
+    info "Creating Genesis Block..."
+    sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose -f ${PROJECT_PATH}build/docker/genesis.yml up -d
+    # wait for key and genesis block generation
+    sleep 5
+    sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis.yml down --volumes
+  fi
 fi
 
 JOIN_NETWORK=${JOIN_NETWORK} \
@@ -104,5 +111,4 @@ JOIN_NETWORK=${JOIN_NETWORK} \
   HAS_I2P=${HAS_I2P} \
   NODE_ENV=${NODE_ENV} \
   LOG_LEVEL=${LOG_LEVEL} \
-  NETWORK_VERBOSE_LOGGING=${NETWORK_VERBOSE_LOGGING} \
   ${PROJECT_PATH}node_modules/.bin/ts-node ${PROJECT_PATH}build/main.ts

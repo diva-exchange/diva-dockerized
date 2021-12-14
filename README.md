@@ -115,7 +115,7 @@ String: network entrypoint (bootstrap)
 Default: `(empty)` 
 
 ### SIZE_NETWORK
-Integer, >=7, <=64
+Integer, >=7, <=15
 
 Default: `7`
 
@@ -158,11 +158,6 @@ Default: `production`
 String: trace, info, warn, error, critical
 
 Default: `trace`
-
-### NETWORK_VERBOSE_LOGGING
-Boolean: 1 (true) or 0
-
-Default: `0`
 
 ### PURGE
 Boolean: 1 (true) or 0

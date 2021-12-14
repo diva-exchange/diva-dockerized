@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
 #
-# Copyright (C) 2020 diva.exchange
+# Copyright (C) 2021 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +17,31 @@
 # Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
 #
 
-# -e  Exit immediately if a simple command exits with a non-zero status
-set -e
+version: "3.7"
+services:
+  genesis-chain:
+    container_name: genesis-chain
+    image: divax/divachain:develop
+    environment:
+      GENESIS: 1
+      GENESIS_PATH: /genesis/block.v3.json
+      SIZE_NETWORK: ${SIZE_NETWORK}
+      NODE_ENV: development
+      LOG_LEVEL: trace
+      IP: 172.19.78.21
+      PORT: 17468
+      BLOCK_FEED_PORT: 17469
+    volumes:
+      - ../keys:/keys
+      - ../genesis:/genesis
+    networks:
+      network.genesis:
+        ipv4_address: 172.19.78.21
 
-PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
-cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
-
-sudo rm -rf ${PROJECT_PATH}genesis/*
-sudo rm -rf ${PROJECT_PATH}keys/*
-sudo rm -rf ${PROJECT_PATH}yml/*
+networks:
+  network.genesis:
+    name: network.genesis
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.78.0/24
