@@ -19,9 +19,6 @@
 
 import { Build } from './build';
 
-export const DEFAULT_SIZE_NETWORK = 7;
-export const MAX_SIZE_NETWORK = 15;
-
 export const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
 export const DEFAULT_BASE_IP = '172.19.72.';
 export const DEFAULT_PORT = 17468;
@@ -29,4 +26,4 @@ export const DEFAULT_BLOCK_FEED_PORT = 17469;
 export const DEFAULT_UI_PORT = 3920;
 export const DEFAULT_PROTOCOL_PORT = 19720;
 
-Build.make(Number(process.env.SIZE_NETWORK) || DEFAULT_SIZE_NETWORK);
+Build.make();

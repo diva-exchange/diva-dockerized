@@ -68,8 +68,7 @@ then
   if [[ -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml ]]
   then
     sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml down --volumes
-    BASE_DOMAIN=${BASE_DOMAIN} \
-      ${PROJECT_PATH}build/bin/clean.sh
+    ${PROJECT_PATH}build/bin/clean.sh
   fi
 fi
 
@@ -87,7 +86,7 @@ then
     info "Creating Genesis Block using I2P..."
     sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml up -d
     # wait for I2P to become responsive
-    sleep 10
+    sleep 30
 
     sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml up -d
     # wait for key and genesis block generation
@@ -103,6 +102,7 @@ then
   fi
 fi
 
+
 JOIN_NETWORK=${JOIN_NETWORK} \
   SIZE_NETWORK=${SIZE_NETWORK} \
   BASE_DOMAIN=${BASE_DOMAIN} \
@@ -112,3 +112,7 @@ JOIN_NETWORK=${JOIN_NETWORK} \
   NODE_ENV=${NODE_ENV} \
   LOG_LEVEL=${LOG_LEVEL} \
   ${PROJECT_PATH}node_modules/.bin/ts-node ${PROJECT_PATH}build/main.ts
+
+
+#info "Cleaning up..."
+#sudo rm -rf ${PROJECT_PATH}build/genesis/*.config

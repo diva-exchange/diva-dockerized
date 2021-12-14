@@ -30,5 +30,8 @@
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "@diva.exchange/i2p-sam": "^4.0.1"
   }
 }

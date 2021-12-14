@@ -20,8 +20,6 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  DEFAULT_SIZE_NETWORK,
-  MAX_SIZE_NETWORK,
   DEFAULT_BASE_DOMAIN,
   DEFAULT_BASE_IP,
   DEFAULT_PORT,
@@ -29,23 +27,18 @@ import {
   DEFAULT_UI_PORT,
   DEFAULT_PROTOCOL_PORT,
 } from './main';
+import { toB32 } from '@diva.exchange/i2p-sam';
 
 export class Build {
-  static make (size: number = DEFAULT_SIZE_NETWORK) {
+  static make() {
     const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
     const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
     const image_protocol =
       process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
-    const image_explorer = process.env.IMAGE_EXPLORER || 'divax/explorer:latest';
+    const image_explorer =
+      process.env.IMAGE_EXPLORER || 'divax/explorer:latest';
 
     const joinNetwork = process.env.JOIN_NETWORK || '';
-
-    const sizeNetwork =
-      Math.floor(size) > 0 && Math.floor(size) <= MAX_SIZE_NETWORK
-        ? Math.floor(size)
-        : DEFAULT_SIZE_NETWORK;
-
-    const numberInstances = joinNetwork ? 1 : sizeNetwork;
 
     const baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
     const baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
@@ -68,9 +61,7 @@ export class Build {
         ? Number(process.env.PORT_PROTOCOL)
         : DEFAULT_PROTOCOL_PORT;
     const envNode =
-      process.env.NODE_ENV === 'development'
-        ? 'development'
-        : 'production';
+      process.env.NODE_ENV === 'development' ? 'development' : 'production';
     const levelLog = process.env.LOG_LEVEL || 'warn';
 
     const hasI2P = Number(process.env.HAS_I2P) > 0;
@@ -118,8 +109,7 @@ export class Build {
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}12\n\n`;
       volumes =
-        volumes +
-        `  i2p.udp.${baseDomain}:\n    name: i2p.udp.${baseDomain}\n`;
+        volumes + `  i2p.udp.${baseDomain}:\n    name: i2p.udp.${baseDomain}\n`;
     }
 
     if (hasExplorer) {
@@ -141,8 +131,17 @@ export class Build {
         `        ipv4_address: ${baseIP}200\n\n`;
     }
 
-    for (let seq = 1; seq <= numberInstances; seq++) {
+    const pathConfig = path.join(__dirname, 'genesis', 'local.config');
+    const mapConfig = new Map(
+      JSON.parse(fs.readFileSync(pathConfig).toString())
+    );
+
+    let seq = 1;
+    mapConfig.forEach((config: any) => {
       const nameChain = `n${seq}.chain.${baseDomain}`;
+
+      let http = '';
+      let udp = '';
 
       let proxy = '';
       if (hasI2P) {
@@ -155,8 +154,15 @@ export class Build {
           `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
           `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
           `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
-          `      I2P_SAM_FORWARD_HOST_UDP: ${baseIP}${20 + seq}\n` +
-          `      I2P_SAM_FORWARD_PORT_UDP: ${port + 2}\n`;
+          `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
+          `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n`;
+
+        http = toB32(config.http) + '.b32.i2p';
+        udp = toB32(config.udp) + '.b32.i2p';
+      } else {
+        http = `${baseIP}${20 + seq}:${port}`;
+        //@FIXME there is no Non-I2P version implemented
+        udp = `${baseIP}${20 + seq}:${port + 2}`;
       }
 
       yml =
@@ -171,6 +177,8 @@ export class Build {
         `      IP: ${baseIP}${20 + seq}\n` +
         `      PORT: ${port}\n` +
         `      BLOCK_FEED_PORT: ${port + 1}\n` +
+        `      HTTP: ${http}\n` +
+        `      UDP: ${udp}\n` +
         proxy +
         (joinNetwork
           ? `      BOOTSTRAP: http://${joinNetwork}\n` +
@@ -179,7 +187,7 @@ export class Build {
         '    volumes:\n' +
         `      - ${nameChain}-blockstore:/blockstore\n` +
         `      - ${nameChain}-state:/state\n` +
-        `      - ../keys:/keys\n` +
+        '      - ../keys:/keys\n' +
         '      - ../genesis:/genesis\n' +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
@@ -204,17 +212,17 @@ export class Build {
           `      LOG_LEVEL: ${levelLog}\n` +
           `      IP: ${baseIP}${120 + seq}\n` +
           `      PORT: ${port_protocol}\n` +
-          `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${
-            port
-          }\n` +
-          `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${
-            port_block_feed
-          }\n` +
+          `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
+          `      URL_BLOCK_FEED: ws://${baseIP}${
+            20 + seq
+          }:${port_block_feed}\n` +
           '    networks:\n' +
           `      network.${baseDomain}:\n` +
           `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
       }
-    }
+
+      seq++;
+    });
 
     yml =
       yml +
