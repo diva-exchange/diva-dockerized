@@ -31,11 +31,11 @@ source "${PROJECT_PATH}bin/util/helpers.sh"
 # env vars
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 
-if [[ ! -f build/${BASE_DOMAIN}.yml ]]
+if [[ ! -f build/yml/${BASE_DOMAIN}.yml ]]
 then
-  error "File not found: ${PROJECT_PATH}build/${BASE_DOMAIN}.yml";
+  error "File not found: ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml";
   exit 3
 fi
 
-sudo docker-compose -f build/${BASE_DOMAIN}.yml down
+sudo docker-compose -f build/yml/${BASE_DOMAIN}.yml down
 
