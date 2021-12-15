@@ -32,6 +32,8 @@ services:
       PORT: 17468
       BLOCK_FEED_PORT: 17469
     volumes:
+      - genesis-blockstore:/blockstore
+      - genesis-state:/state
       - ../keys:/keys
       - ../genesis:/genesis
     networks:
@@ -45,3 +47,9 @@ networks:
       driver: default
       config:
         - subnet: 172.19.78.0/24
+
+volumes:
+  genesis-blockstore:
+    name: genesis-blockstore
+  genesis-state:
+    name: genesis-state

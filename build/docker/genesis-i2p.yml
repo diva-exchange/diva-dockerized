@@ -43,6 +43,8 @@ services:
       I2P_SAM_FORWARD_HOST_UDP: 172.19.77.21
       I2P_SAM_FORWARD_PORT_UDP: 17470
     volumes:
+      - genesis-blockstore:/blockstore
+      - genesis-state:/state
       - ../keys:/keys
       - ../genesis:/genesis
     networks:
@@ -56,3 +58,9 @@ networks:
       driver: default
       config:
         - subnet: 172.19.77.0/24
+
+volumes:
+  genesis-blockstore:
+    name: genesis-blockstore
+  genesis-state:
+    name: genesis-state
