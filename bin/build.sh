@@ -35,8 +35,6 @@ SIZE_NETWORK=${SIZE_NETWORK:-7}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
 BASE_IP=${BASE_IP:-172.19.72.}
 PORT=${PORT:-17468}
-HAS_I2P=${HAS_I2P:-0}
-I2P_CONSOLE_PORT=${I2P_CONSOLE_PORT:-7070}
 NODE_ENV=${NODE_ENV:-production}
 LOG_LEVEL=${LOG_LEVEL:-trace}
 
@@ -81,25 +79,16 @@ npm i
 
 if [[ ! -f ${PROJECT_PATH}build/genesis/block.v3.json ]]
 then
-  if [[ ${HAS_I2P} > 0 ]]
-  then
-    info "Creating Genesis Block using I2P..."
-    sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml up -d
-    # wait for I2P to become responsive
-    sleep 30
+  info "Creating Genesis Block using I2P..."
+  sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml up -d
+  # wait for I2P to become responsive
+  sleep 30
 
-    sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml up -d
-    # wait for key and genesis block generation
-    sleep 10
-    sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml down --remove-orphans --volumes
-    sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml down --volumes
-  else
-    info "Creating Genesis Block..."
-    sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose -f ${PROJECT_PATH}build/docker/genesis.yml up -d
-    # wait for key and genesis block generation
-    sleep 5
-    sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis.yml down --volumes
-  fi
+  sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml up -d
+  # wait for key and genesis block generation
+  sleep 10
+  sudo docker-compose -f ${PROJECT_PATH}build/docker/i2p.yml down --remove-orphans --volumes
+  sudo docker-compose --log-level ERROR -f ${PROJECT_PATH}build/docker/genesis-i2p.yml down --volumes
 fi
 
 
@@ -108,11 +97,10 @@ JOIN_NETWORK=${JOIN_NETWORK} \
   BASE_DOMAIN=${BASE_DOMAIN} \
   BASE_IP=${BASE_IP} \
   PORT=${PORT} \
-  HAS_I2P=${HAS_I2P} \
   NODE_ENV=${NODE_ENV} \
   LOG_LEVEL=${LOG_LEVEL} \
   ${PROJECT_PATH}node_modules/.bin/ts-node ${PROJECT_PATH}build/main.ts
 
 
-#info "Cleaning up..."
-#sudo rm -rf ${PROJECT_PATH}build/genesis/*.config
+info "Cleaning up..."
+sudo rm -rf ${PROJECT_PATH}build/genesis/*.config

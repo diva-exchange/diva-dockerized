@@ -64,53 +64,49 @@ export class Build {
       process.env.NODE_ENV === 'development' ? 'development' : 'production';
     const levelLog = process.env.LOG_LEVEL || 'warn';
 
-    const hasI2P = Number(process.env.HAS_I2P) > 0;
-
     const hasExplorer = Number(process.env.HAS_EXPLORER || 1) > 0;
     const hasProtocol = Number(process.env.HAS_PROTOCOL || 1) > 0;
 
     // docker compose Yml file
     let yml = 'version: "3.7"\nservices:\n';
     let volumes = '';
-    if (hasI2P) {
-      // http
-      yml =
-        yml +
-        `  i2p.http.${baseDomain}:\n` +
-        `    container_name: i2p.http.${baseDomain}\n` +
-        `    image: ${image_i2p}\n` +
-        '    restart: unless-stopped\n' +
-        '    environment:\n' +
-        '      ENABLE_SOCKSPROXY: 1\n' +
-        '      ENABLE_SAM: 1\n' +
-        '      BANDWIDTH: P\n' +
-        '    volumes:\n' +
-        `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
-        '    networks:\n' +
-        `      network.${baseDomain}:\n` +
-        `        ipv4_address: ${baseIP}11\n\n`;
-      volumes =
-        volumes +
-        `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
+    // http
+    yml =
+      yml +
+      `  i2p.http.${baseDomain}:\n` +
+      `    container_name: i2p.http.${baseDomain}\n` +
+      `    image: ${image_i2p}\n` +
+      '    restart: unless-stopped\n' +
+      '    environment:\n' +
+      '      ENABLE_SOCKSPROXY: 1\n' +
+      '      ENABLE_SAM: 1\n' +
+      '      BANDWIDTH: P\n' +
+      '    volumes:\n' +
+      `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
+      '    networks:\n' +
+      `      network.${baseDomain}:\n` +
+      `        ipv4_address: ${baseIP}11\n\n`;
+    volumes =
+      volumes +
+      `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
 
-      // udp
-      yml =
-        yml +
-        `  i2p.udp.${baseDomain}:\n` +
-        `    container_name: i2p.udp.${baseDomain}\n` +
-        `    image: ${image_i2p}\n` +
-        '    restart: unless-stopped\n' +
-        '    environment:\n' +
-        '      ENABLE_SAM: 1\n' +
-        '      BANDWIDTH: P\n' +
-        '    volumes:\n' +
-        `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
-        '    networks:\n' +
-        `      network.${baseDomain}:\n` +
-        `        ipv4_address: ${baseIP}12\n\n`;
-      volumes =
-        volumes + `  i2p.udp.${baseDomain}:\n    name: i2p.udp.${baseDomain}\n`;
-    }
+    // udp
+    yml =
+      yml +
+      `  i2p.udp.${baseDomain}:\n` +
+      `    container_name: i2p.udp.${baseDomain}\n` +
+      `    image: ${image_i2p}\n` +
+      '    restart: unless-stopped\n' +
+      '    environment:\n' +
+      '      ENABLE_SAM: 1\n' +
+      '      BANDWIDTH: P\n' +
+      '    volumes:\n' +
+      `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
+      '    networks:\n' +
+      `      network.${baseDomain}:\n` +
+      `        ipv4_address: ${baseIP}12\n\n`;
+    volumes =
+      volumes + `  i2p.udp.${baseDomain}:\n    name: i2p.udp.${baseDomain}\n`;
 
     if (hasExplorer) {
       yml =
@@ -140,30 +136,19 @@ export class Build {
     mapConfig.forEach((config: any) => {
       const nameChain = `n${seq}.chain.${baseDomain}`;
 
-      let http = '';
-      let udp = '';
+      const proxy =
+        `      I2P_SOCKS_HOST: ${baseIP}11\n` +
+        `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
+        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
+        `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
+        `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
+        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n`;
 
-      let proxy = '';
-      if (hasI2P) {
-        proxy =
-          `      I2P_SOCKS_HOST: ${baseIP}11\n` +
-          '      I2P_SOCKS_PORT: 4445\n' +
-          `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
-          `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
-          `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
-          `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
-          `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
-          `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
-          `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
-          `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n`;
-
-        http = toB32(config.http) + '.b32.i2p';
-        udp = toB32(config.udp) + '.b32.i2p';
-      } else {
-        http = `${baseIP}${20 + seq}:${port}`;
-        //@FIXME there is no Non-I2P version implemented
-        udp = `${baseIP}${20 + seq}:${port + 2}`;
-      }
+      const http = toB32(config.http) + '.b32.i2p';
+      const udp = toB32(config.udp) + '.b32.i2p';
 
       yml =
         yml +
