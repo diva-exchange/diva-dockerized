@@ -18,18 +18,16 @@
  */
 
 import fs from 'fs';
-import path from 'path';
-import {
-  DEFAULT_BASE_DOMAIN,
-  DEFAULT_BASE_IP,
-  DEFAULT_PORT,
-  DEFAULT_BLOCK_FEED_PORT,
-  DEFAULT_UI_PORT,
-  DEFAULT_PROTOCOL_PORT,
-} from './main';
 import { toB32 } from '@diva.exchange/i2p-sam';
 
-export class Build {
+const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
+const DEFAULT_BASE_IP = '172.19.72.';
+const DEFAULT_PORT = 17468;
+const DEFAULT_BLOCK_FEED_PORT = 17469;
+const DEFAULT_UI_PORT = 3920;
+const DEFAULT_PROTOCOL_PORT = 19720;
+
+class Build {
   static make() {
     const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
     const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
@@ -114,6 +112,8 @@ export class Build {
         `  explorer.${baseDomain}:\n` +
         `    container_name: explorer.${baseDomain}\n` +
         `    image: ${image_explorer}\n` +
+        '    depends_on:\n' +
+        `      - n1.chain.${baseDomain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      HTTP_IP: ${baseIP}200\n` +
@@ -127,25 +127,13 @@ export class Build {
         `        ipv4_address: ${baseIP}200\n\n`;
     }
 
-    const pathConfig = path.join(__dirname, 'genesis', 'local.config');
     const mapConfig = new Map(
-      JSON.parse(fs.readFileSync(pathConfig).toString())
+      JSON.parse(fs.readFileSync('genesis/local.config').toString())
     );
 
     let seq = 1;
     mapConfig.forEach((config: any) => {
       const nameChain = `n${seq}.chain.${baseDomain}`;
-
-      const proxy =
-        `      I2P_SOCKS_HOST: ${baseIP}11\n` +
-        `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
-        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
-        `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
-        `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
-        `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
-        `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
-        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
-        `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n`;
 
       const http = toB32(config.http) + '.b32.i2p';
       const udp = toB32(config.udp) + '.b32.i2p';
@@ -155,6 +143,9 @@ export class Build {
         `  ${nameChain}:\n` +
         `    container_name: ${nameChain}\n` +
         `    image: ${image_chain}\n` +
+        '    depends_on:\n' +
+        `      - i2p.http.${baseDomain}\n` +
+        `      - i2p.udp.${baseDomain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      NODE_ENV: ${envNode}\n` +
@@ -164,23 +155,27 @@ export class Build {
         `      BLOCK_FEED_PORT: ${port + 1}\n` +
         `      HTTP: ${http}\n` +
         `      UDP: ${udp}\n` +
-        proxy +
+        `      I2P_SOCKS_HOST: ${baseIP}11\n` +
+        `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
+        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
+        `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
+        `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
+        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n` +
         (joinNetwork
           ? `      BOOTSTRAP: http://${joinNetwork}\n` +
             '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n'
           : '') +
         '    volumes:\n' +
-        `      - ${nameChain}-blockstore:/blockstore\n` +
-        `      - ${nameChain}-state:/state\n` +
-        '      - ../keys:/keys\n' +
-        '      - ../genesis:/genesis\n' +
+        '      - ./blockstore:/blockstore\n' +
+        '      - ./state:/state\n' +
+        '      - ./keys:/keys\n' +
+        '      - ./genesis:/genesis\n' +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}${20 + seq}\n\n`;
-      volumes =
-        volumes +
-        `  ${nameChain}-blockstore:\n    name: ${nameChain}-blockstore\n` +
-        `  ${nameChain}-state:\n    name: ${nameChain}-state\n`;
 
       // protocol
       if (hasProtocol) {
@@ -191,6 +186,8 @@ export class Build {
           `  ${nameProtocol}:\n` +
           `    container_name: ${nameProtocol}\n` +
           `    image: ${image_protocol}\n` +
+          '    depends_on:\n' +
+          `      - ${nameChain}\n` +
           '    restart: unless-stopped\n' +
           '    environment:\n' +
           `      NODE_ENV: ${envNode}\n` +
@@ -198,9 +195,7 @@ export class Build {
           `      IP: ${baseIP}${120 + seq}\n` +
           `      PORT: ${port_protocol}\n` +
           `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
-          `      URL_BLOCK_FEED: ws://${baseIP}${
-            20 + seq
-          }:${port_block_feed}\n` +
+          `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${port_block_feed}\n` +
           '    networks:\n' +
           `      network.${baseDomain}:\n` +
           `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
@@ -220,7 +215,8 @@ export class Build {
       `        - subnet: ${baseIP}0/24\n\n` +
       (volumes ? 'volumes:\n' + volumes : '');
 
-    const pathYml = path.join(__dirname, 'yml', baseDomain + '.yml');
-    fs.writeFileSync(pathYml, yml);
+    fs.writeFileSync('diva.yml', yml);
   }
 }
+
+Build.make();

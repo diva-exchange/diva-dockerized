@@ -23,8 +23,23 @@ set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
+PROJECT_PATH=`pwd`
 
-sudo rm -rf ${PROJECT_PATH}genesis/*
-sudo rm -rf ${PROJECT_PATH}keys/*
-sudo rm -rf ${PROJECT_PATH}yml/*
+# load helpers
+source "${PROJECT_PATH}/bin/util/echos.sh"
+source "${PROJECT_PATH}/bin/util/helpers.sh"
+
+BASE_DOMAIN=${BASE_DOMAIN:-}
+
+if [[ ${BASE_DOMAIN} = "*" ]]
+then
+  info "Removing ${PROJECT_PATH}/build/domains/*"
+  sudo rm -rf ${PROJECT_PATH}/build/domains/*
+elif [[ -n ${BASE_DOMAIN} && -d ${PROJECT_PATH}/build/domains/${BASE_DOMAIN} ]]
+then
+  info "Removing ${PROJECT_PATH}/build/domains/${BASE_DOMAIN}"
+  sudo rm -rf ${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
+else
+  warn "Set BASE_DOMAIN to a existing directory name (see domains directory)"
+  exit 1
+fi

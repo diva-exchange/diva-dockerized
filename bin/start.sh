@@ -22,14 +22,14 @@ set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
+PROJECT_PATH=`pwd`
 
 # load helpers
-source "${PROJECT_PATH}bin/util/echos.sh"
-source "${PROJECT_PATH}bin/util/helpers.sh"
+source "${PROJECT_PATH}/bin/util/echos.sh"
+source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 # env vars
-BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:-0}
 
 if ! command_exists docker; then
@@ -42,14 +42,23 @@ if ! command_exists docker-compose; then
   exit 2
 fi
 
-if [[ ! -f build/yml/${BASE_DOMAIN}.yml ]]
+PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
+if [[ ! -d ${PATH_DOMAIN} ]]
 then
-  error "File not found: ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml";
+  error "Path not found: ${PATH_DOMAIN}";
   exit 3
 fi
+cd ${PATH_DOMAIN}
 
-info "Pulling..."
-sudo docker-compose -f build/yml/${BASE_DOMAIN}.yml pull
+if [[ ! -f ./diva.yml ]]
+then
+  error "File not found: ${PATH_DOMAIN}/diva.yml";
+  exit 4
+fi
 
-info "Starting..."
-sudo NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING} docker-compose -f build/yml/${BASE_DOMAIN}.yml up -d
+running "Pulling ${PATH_DOMAIN}"
+sudo docker-compose -f ./diva.yml pull
+
+running "Starting ${PATH_DOMAIN}"
+sudo NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING} docker-compose -f ./diva.yml up -d
+ok "Started ${PATH_DOMAIN}"

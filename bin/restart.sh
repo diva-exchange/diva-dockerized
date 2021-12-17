@@ -22,6 +22,6 @@ set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
+PROJECT_PATH=`pwd`
 
 bin/halt.sh && NO_BOOTSTRAPPING=1 bin/start.sh

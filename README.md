@@ -10,12 +10,8 @@ It's licenced under [AGPLv3](LICENSE).
 
 ## Get Started
 
-There are two different flavours of testnets available: a simple local one and an I2P-based one.
-
-**Local:** the local testnet runs on your local network. It's fast and available on your local network only. Use it for application development.
-
-**Private (I2P):** the I2P based testnet routes all traffic between the DIVACHAIN nodes through the I2P network. The DIVACHAIN nodes itself remain private. The I2P network might have quite some latency.
-
+Basically there are two options: either join an existing network or create your own.
+  
 ### Docker Compose & Clone the Code
 
 **IMPORTANT**: To start a local DIVA testnet, make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker-compose --version` in a terminal.
@@ -24,27 +20,28 @@ Clone the code repository from the public repository:
 ```
 git clone https://codeberg.org/diva.exchange/diva-dockerized.git
 cd diva-dockerized
+npm i
 ```
 
-Either build your own local testnet or join the existing [DIVACHAIN testnet](https://testnet.diva.exchange). 
+Now, either build your own local testnet or join the existing [DIVACHAIN testnet](https://testnet.diva.exchange). 
 
 ### Join the public DIVACHAIN Test Network
 
 To join the DIVACHAIN test network, build a local docker compose file first. This is an automated process. Here is an example on how to join the DIVACHAIN test network via I2P (it will ask for the root password, since it has to access docker):
 ```
-JOIN_NETWORK=diva.i2p/testnet bin/build.sh
+JOIN_DIVA_TESTNET=1 bin/build.sh
 ```
 
 After building the docker compose file, the containers can be **started**:
 ```
-bin/start.sh
+BASE_DOMAIN=join.testnet.diva.i2p bin/start.sh
 ```  
 
 It is now possible to explore the local docker environment using docker commands, like `docker ps -a`.
 
 To **stop** locally running DIVACHAIN Test Network containers, execute:
 ```
-bin/halt.sh
+BASE_DOMAIN=join.testnet.diva.i2p bin/halt.sh
 ```
 
 ### Leave the DIVACHAIN Network
@@ -55,26 +52,26 @@ tbd.
 
 To create an I2P-based DIVACHAIN test network, build a local docker compose file first. This is an automated process. Here is an example:
 ```
-BASE_IP=172.19.73. bin/build.sh
+BASE_IP=172.19.73. BASE_DOMAIN=testnet.local bin/build.sh
 ```
 
 After building the docker compose file, the containers can be **started**:
 ```
-bin/start.sh
+BASE_DOMAIN=testnet.local bin/start.sh
 ```  
 
 It is now possible to explore the local docker environment using docker commands, like `docker ps -a`.
 
 To **stop** locally running DIVACHAIN Test Network containers, execute:
 ```
-bin/stop.sh
+BASE_DOMAIN=testnet.local bin/halt.sh
 ```
 
 ### Purge local DIVACHAIN data
 
 To purge all local data, execute:
 ```
-bin/purge.sh
+BASE_DOMAIN=testnet.local bin/purge.sh
 ```
 
 ### Development: Use of Specific Docker Images
@@ -83,12 +80,17 @@ Use the environment variables IMAGE_I2P, IMAGE_CHAIN, IMAGE_PROTOCOL and IMAGE_E
 names to the build process. Here is an example:
 
 ```
-JOIN_NETWORK=diva.i2p/testnet IMAGE_CHAIN=divax/divachain:develop bin/build.sh
+JOIN_DIVA_TESTNET=1 IMAGE_CHAIN=divax/divachain:develop bin/build.sh
 ```
 
 This will build a .yml file using a specific docker image as divachain.
 
 ## Environment Variables
+
+### JOIN_DIVA_TESTNET
+Boolean: 1 (true) or 0
+
+Default: `0`
 
 ### JOIN_NETWORK
 String: network entrypoint (bootstrap)
@@ -114,11 +116,6 @@ Default: `172.19.72.`
 Integer: >1024, < 48000
 
 Default: `17468`
-
-### HAS_I2P
-Boolean: 1 (true) or 0
-
-Default: `0`
 
 ### HAS_EXPLORER
 Boolean: 1 (true) or 0

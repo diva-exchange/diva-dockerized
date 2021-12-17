@@ -22,14 +22,14 @@ set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
 cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`/
+PROJECT_PATH=`pwd`
 
 # load helpers
-source "${PROJECT_PATH}bin/util/echos.sh"
-source "${PROJECT_PATH}bin/util/helpers.sh"
+source "${PROJECT_PATH}/bin/util/echos.sh"
+source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 # env vars
-BASE_DOMAIN=${BASE_DOMAIN:-testnet.diva.i2p}
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 
 if ! command_exists docker; then
   error "docker not available. Please install it first.";
@@ -41,16 +41,25 @@ if ! command_exists docker-compose; then
   exit 2
 fi
 
-if [[ ! -f build/yml/${BASE_DOMAIN}.yml ]]
+PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
+if [[ ! -d ${PATH_DOMAIN} ]]
 then
-  error "File not found: ${PROJECT_PATH}build/yml/${BASE_DOMAIN}.yml";
+  error "Path not found: ${PATH_DOMAIN}";
   exit 3
+fi
+cd ${PATH_DOMAIN}
+
+if [[ ! -f ./diva.yml ]]
+then
+  error "File not found: ${PATH_DOMAIN}/diva.yml";
+  exit 4
 fi
 
 warn "The confirmation of this action will lead to DATA LOSS!"
 warn "If you want to keep the data, run a backup first."
-confirm "Do you want to DELETE all local data (y/N)?" || exit 4
+confirm "Do you want to DELETE all local data (y/N)?" || exit 5
 
-info "Deleting..."
-sudo docker-compose -f build/yml/${BASE_DOMAIN}.yml down --volumes
-BASE_DOMAIN=${BASE_DOMAIN} build/bin/clean.sh
+running "Purging ${PATH_DOMAIN}"
+sudo docker-compose -f ./diva.yml down --volumes
+BASE_DOMAIN=${BASE_DOMAIN} ${PROJECT_PATH}/bin/clean.sh
+ok "Purged ${PATH_DOMAIN}"

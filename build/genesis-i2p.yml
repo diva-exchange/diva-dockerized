@@ -19,9 +19,33 @@
 
 version: "3.7"
 services:
+  genesis-i2p-http:
+    container_name: genesis-i2p-http
+    image: divax/i2p:latest
+    environment:
+      ENABLE_SOCKSPROXY: 1
+      ENABLE_SAM: 1
+      BANDWIDTH: P
+    networks:
+      network.genesis-i2p:
+        ipv4_address: 172.19.77.11
+
+  genesis-i2p-udp:
+    container_name: genesis-i2p-udp
+    image: divax/i2p:latest
+    environment:
+      ENABLE_SAM: 1
+      BANDWIDTH: P
+    networks:
+      network.genesis-i2p:
+        ipv4_address: 172.19.77.12
+
   genesis-i2p-chain:
     container_name: genesis-i2p-chain
     image: divax/divachain:develop
+    depends_on:
+      - genesis-i2p-http
+      - genesis-i2p-udp
     environment:
       GENESIS: 1
       GENESIS_PATH: /genesis/block.v3.json
@@ -43,10 +67,10 @@ services:
       I2P_SAM_FORWARD_HOST_UDP: 172.19.77.21
       I2P_SAM_FORWARD_PORT_UDP: 17470
     volumes:
-      - genesis-blockstore:/blockstore
-      - genesis-state:/state
-      - ../keys:/keys
-      - ../genesis:/genesis
+      - ./state:/blockstore
+      - ./state:/state
+      - ./keys:/keys
+      - ./genesis:/genesis
     networks:
       network.genesis-i2p:
         ipv4_address: 172.19.77.21
@@ -58,9 +82,3 @@ networks:
       driver: default
       config:
         - subnet: 172.19.77.0/24
-
-volumes:
-  genesis-blockstore:
-    name: genesis-blockstore
-  genesis-state:
-    name: genesis-state
