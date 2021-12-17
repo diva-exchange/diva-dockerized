@@ -42,7 +42,7 @@ services:
 
   genesis-i2p-chain:
     container_name: genesis-i2p-chain
-    image: divax/divachain:develop
+    image: divax/divachain:latest
     depends_on:
       - genesis-i2p-http
       - genesis-i2p-udp
