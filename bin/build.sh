@@ -96,6 +96,7 @@ then
   running "Creating Genesis Block using I2P"
 
   cp ${PROJECT_PATH}/build/genesis-i2p.yml ./genesis-i2p.yml
+  sudo docker-compose -f ./genesis-i2p.yml pull
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose -f ./genesis-i2p.yml up -d
   # wait a bit to make sure all keys are created
   sleep 30
