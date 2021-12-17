@@ -29,7 +29,7 @@ source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 # env vars
-JOIN_DIVA_TESTNET=${JOIN_DIVA_TESTNET:-0}
+DIVA_TESTNET=${DIVA_TESTNET:-0}
 JOIN_NETWORK=${JOIN_NETWORK:-}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 SIZE_NETWORK=${SIZE_NETWORK:-7}
@@ -40,7 +40,7 @@ NODE_ENV=${NODE_ENV:-production}
 LOG_LEVEL=${LOG_LEVEL:-trace}
 
 # Handle joining
-if [[ ${JOIN_DIVA_TESTNET} > 0 ]]
+if [[ ${DIVA_TESTNET} > 0 ]]
 then
  JOIN_NETWORK=diva.i2p/testnet
  SIZE_NETWORK=1
@@ -104,6 +104,13 @@ then
   # shut down the genesis container and clean up
   sudo docker-compose --log-level ERROR -f ./genesis-i2p.yml down --volumes
   rm ./genesis-i2p.yml
+
+  # handle joining
+  if [[ -n ${JOIN_NETWORK} ]]
+  then
+    rm -rf ./genesis/block.v3.json
+    cp ${PROJECT_PATH}/build/dummy.block.v3.json ./genesis/block.v3.json
+  fi
 
   if [[ -f genesis/local.config ]]
   then
