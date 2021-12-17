@@ -127,12 +127,10 @@ class Build {
         `        ipv4_address: ${baseIP}200\n\n`;
     }
 
-    const mapConfig = new Map(
-      JSON.parse(fs.readFileSync('genesis/local.config').toString())
-    );
+    const arrayConfig = JSON.parse(fs.readFileSync('genesis/local.config').toString());
 
     let seq = 1;
-    mapConfig.forEach((config: any) => {
+    arrayConfig.forEach((config: any) => {
       const nameChain = `n${seq}.chain.${baseDomain}`;
 
       const http = toB32(config.http) + '.b32.i2p';
