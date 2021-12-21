@@ -32,6 +32,5 @@ then
   error "Path not found: ${PATH_DOMAIN}";
   exit 3
 fi
-cd ${PATH_DOMAIN}
 
 BASE_DOMAIN=${BASE_DOMAIN} bin/halt.sh && BASE_DOMAIN=${BASE_DOMAIN} NO_BOOTSTRAPPING=1 bin/start.sh
