@@ -24,4 +24,14 @@ PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${PROJECT_PATH}
 PROJECT_PATH=`pwd`
 
-bin/halt.sh && NO_BOOTSTRAPPING=1 bin/start.sh
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
+
+PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
+if [[ ! -d ${PATH_DOMAIN} ]]
+then
+  error "Path not found: ${PATH_DOMAIN}";
+  exit 3
+fi
+cd ${PATH_DOMAIN}
+
+BASE_DOMAIN=${BASE_DOMAIN} bin/halt.sh && BASE_DOMAIN=${BASE_DOMAIN} NO_BOOTSTRAPPING=1 bin/start.sh
