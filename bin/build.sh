@@ -91,7 +91,7 @@ then
   fi
 fi
 
-if [[ ! -f genesis/block.v3.json ]]
+if [[ ! -f genesis/block.v4.json ]]
 then
   running "Creating Genesis Block using I2P"
 
@@ -108,7 +108,7 @@ then
   # handle joining
   if [[ -n ${JOIN_NETWORK} ]]
   then
-    rm -rf ./genesis/block.v3.json
+    rm -rf ./genesis/block.v4.json
     cp ${PROJECT_PATH}/build/dummy.block.v4.json ./genesis/block.v4.json
   fi
 
