@@ -109,7 +109,7 @@ then
   if [[ -n ${JOIN_NETWORK} ]]
   then
     rm -rf ./genesis/block.v3.json
-    cp ${PROJECT_PATH}/build/dummy.block.v3.json ./genesis/block.v3.json
+    cp ${PROJECT_PATH}/build/dummy.block.v4.json ./genesis/block.v4.json
   fi
 
   if [[ -f genesis/local.config ]]
