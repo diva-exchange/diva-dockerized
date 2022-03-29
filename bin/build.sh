@@ -80,7 +80,8 @@ then
   then
     warn "The confirmation of this action will lead to DATA LOSS!"
     warn "If you want to keep the data, run a backup first."
-    confirm "Do you want to DELETE all local data and re-create your environment (y/N)?" || exit 3
+    confirm "Do you want to DELETE all local diva data and re-create your environment (y/N)?" || exit 3
+
     sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
     rm -rf ${PATH_DOMAIN}/genesis/*
     rm -rf ${PATH_DOMAIN}/keys/*
@@ -95,8 +96,14 @@ if [[ ! -f genesis/block.v4.json ]]
 then
   running "Creating Genesis Block using I2P"
 
+  if [[ -f ./genesis-i2p.yml ]]
+  then
+    sudo docker-compose --log-level ERROR -f ./genesis-i2p.yml down --volumes
+  fi
+
   cp ${PROJECT_PATH}/build/genesis-i2p.yml ./genesis-i2p.yml
   sudo docker-compose --log-level ERROR -f ./genesis-i2p.yml pull
+
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose -f ./genesis-i2p.yml up -d
   # wait a bit to make sure all keys are created
   sleep 30

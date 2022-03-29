@@ -28,7 +28,7 @@ services:
       BANDWIDTH: P
     networks:
       network.genesis-i2p:
-        ipv4_address: 172.19.77.11
+        ipv4_address: 10.19.77.11
 
   genesis-i2p-udp:
     container_name: genesis-i2p-udp
@@ -38,7 +38,7 @@ services:
       BANDWIDTH: P
     networks:
       network.genesis-i2p:
-        ipv4_address: 172.19.77.12
+        ipv4_address: 10.19.77.12
 
   genesis-i2p-chain:
     container_name: genesis-i2p-chain
@@ -53,18 +53,18 @@ services:
       SIZE_NETWORK: ${SIZE_NETWORK}
       NODE_ENV: development
       LOG_LEVEL: trace
-      IP: 172.19.77.21
+      IP: 10.19.77.21
       PORT: 17468
       BLOCK_FEED_PORT: 17469
-      I2P_SOCKS_HOST: 172.19.77.11
+      I2P_SOCKS_HOST: 10.19.77.11
       I2P_SOCKS_PORT: 4445
-      I2P_SAM_HTTP_HOST: 172.19.77.11
-      I2P_SAM_FORWARD_HTTP_HOST: 172.19.77.21
+      I2P_SAM_HTTP_HOST: 10.19.77.11
+      I2P_SAM_FORWARD_HTTP_HOST: 10.19.77.21
       I2P_SAM_FORWARD_HTTP_PORT: 17468
-      I2P_SAM_UDP_HOST: 172.19.77.12
-      I2P_SAM_LISTEN_UDP_HOST: 172.19.77.21
+      I2P_SAM_UDP_HOST: 10.19.77.12
+      I2P_SAM_LISTEN_UDP_HOST: 10.19.77.21
       I2P_SAM_LISTEN_UDP_PORT: 17470
-      I2P_SAM_FORWARD_HOST_UDP: 172.19.77.21
+      I2P_SAM_FORWARD_HOST_UDP: 10.19.77.21
       I2P_SAM_FORWARD_PORT_UDP: 17470
     volumes:
       - ./state:/blockstore
@@ -73,7 +73,7 @@ services:
       - ./genesis:/genesis
     networks:
       network.genesis-i2p:
-        ipv4_address: 172.19.77.21
+        ipv4_address: 10.19.77.21
 
 networks:
   network.genesis-i2p:
@@ -81,4 +81,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.19.77.0/24
+        - subnet: 10.19.77.0/24

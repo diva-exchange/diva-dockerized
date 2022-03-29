@@ -66,7 +66,7 @@ fi
 
 warn "The confirmation of this action will lead to DATA LOSS!"
 warn "If you want to keep the data, run a backup first."
-confirm "Do you want to DELETE all local data (y/N)?" || exit 5
+confirm "Do you want to DELETE all local diva data (y/N)?" || exit 5
 
 running "Purging ${PATH_DOMAIN}"
 sudo docker-compose -f ./diva.yml down --volumes
