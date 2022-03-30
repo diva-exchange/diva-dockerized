@@ -83,10 +83,10 @@ then
     confirm "Do you want to DELETE all local diva data and re-create your environment (y/N)?" || exit 3
 
     sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
-    rm -rf ${PATH_DOMAIN}/genesis/*
-    rm -rf ${PATH_DOMAIN}/keys/*
-    rm -rf ${PATH_DOMAIN}/state/*
-    rm -rf ${PATH_DOMAIN}/blockstore/*
+    sudo rm -rf ${PATH_DOMAIN}/genesis/*
+    sudo rm -rf ${PATH_DOMAIN}/keys/*
+    sudo rm -rf ${PATH_DOMAIN}/state/*
+    sudo rm -rf ${PATH_DOMAIN}/blockstore/*
   else
     sudo docker-compose -f ./diva.yml down
   fi
