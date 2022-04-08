@@ -48,7 +48,7 @@ services:
       - genesis-i2p-udp
     environment:
       GENESIS: 1
-      GENESIS_PATH: /genesis/block.v4.json
+      GENESIS_PATH: /genesis/block.v5.json
       GENESIS_CONFIG_PATH: /genesis/local.config
       SIZE_NETWORK: ${SIZE_NETWORK}
       NODE_ENV: development
