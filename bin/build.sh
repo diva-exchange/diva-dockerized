@@ -96,7 +96,7 @@ then
   sudo rm -rf ${PATH_DOMAIN}/blockstore/*
 fi
 
-if [[ ! -f genesis/block.v5.json ]]
+if [[ ! -f genesis/local.config ]]
 then
   running "Creating Genesis Block using I2P"
 
@@ -109,8 +109,13 @@ then
   sudo docker-compose --log-level ERROR -f ./genesis-i2p.yml pull
 
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker-compose -f ./genesis-i2p.yml up -d
-  # wait a bit to make sure all keys are created
-  sleep 30
+
+  running "Waiting for key generation"
+  # wait until all keys are created
+  while [[ ! -f genesis/local.config ]]
+  do
+    sleep 2
+  done
 
   # shut down the genesis container and clean up
   sudo docker-compose --log-level ERROR -f ./genesis-i2p.yml down --volumes
@@ -123,13 +128,7 @@ then
     cp ${PROJECT_PATH}/build/dummy.block.v5.json ./genesis/block.v5.json
   fi
 
-  if [[ -f genesis/local.config ]]
-  then
-    ok "Genesis Block successfully created"
-  else
-    error "Failed to create Genesis Block"
-    exit 4
-  fi
+  ok "Genesis Block successfully created"
 fi
 
 running "Creating diva.yml file"
