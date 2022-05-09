@@ -29,6 +29,7 @@ source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
+NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:1}
 
 PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
 if [[ ! -d ${PATH_DOMAIN} ]]
@@ -37,4 +38,4 @@ then
   exit 3
 fi
 
-BASE_DOMAIN=${BASE_DOMAIN} bin/halt.sh && BASE_DOMAIN=${BASE_DOMAIN} NO_BOOTSTRAPPING=1 bin/start.sh
+BASE_DOMAIN=${BASE_DOMAIN} bin/halt.sh && BASE_DOMAIN=${BASE_DOMAIN} NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING} bin/start.sh
