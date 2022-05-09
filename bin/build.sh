@@ -76,20 +76,20 @@ cd ${PATH_DOMAIN}
 
 if [[ -f ./diva.yml ]]
 then
-  if [[ ${PURGE} > 0 ]]
-  then
-    warn "The confirmation of this action will lead to DATA LOSS!"
-    warn "If you want to keep the data, run a backup first."
-    confirm "Do you want to DELETE all local diva data and re-create your environment (y/N)?" || exit 3
+  sudo docker-compose -f ./diva.yml down
+fi
 
-    sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
-    sudo rm -rf ${PATH_DOMAIN}/genesis/*
-    sudo rm -rf ${PATH_DOMAIN}/keys/*
-    sudo rm -rf ${PATH_DOMAIN}/state/*
-    sudo rm -rf ${PATH_DOMAIN}/blockstore/*
-  else
-    sudo docker-compose -f ./diva.yml down
-  fi
+if [[ ${PURGE} > 0 ]]
+then
+  warn "The confirmation of this action will lead to DATA LOSS!"
+  warn "If you want to keep the data, run a backup first."
+  confirm "Do you want to DELETE all local diva data and re-create your environment (y/N)?" || exit 3
+
+  sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
+  sudo rm -rf ${PATH_DOMAIN}/genesis/*
+  sudo rm -rf ${PATH_DOMAIN}/keys/*
+  sudo rm -rf ${PATH_DOMAIN}/state/*
+  sudo rm -rf ${PATH_DOMAIN}/blockstore/*
 fi
 
 if [[ ! -f genesis/block.v5.json ]]
