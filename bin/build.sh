@@ -85,7 +85,11 @@ then
   warn "If you want to keep the data, run a backup first."
   confirm "Do you want to DELETE all local diva data and re-create your environment (y/N)?" || exit 3
 
-  sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
+  if [[ -f ./diva.yml ]]
+  then
+    sudo docker-compose --log-level ERROR -f ./diva.yml down --volumes
+  fi
+
   sudo rm -rf ${PATH_DOMAIN}/genesis/*
   sudo rm -rf ${PATH_DOMAIN}/keys/*
   sudo rm -rf ${PATH_DOMAIN}/state/*
