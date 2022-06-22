@@ -30,6 +30,12 @@ source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 # env vars
 DIVA_TESTNET=${DIVA_TESTNET:-0}
+
+# Handle testnet
+if [[ ${DIVA_TESTNET} > 0 ]]
+then
+  BASE_DOMAIN=join.testnet.diva.i2p
+fi
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 
 if ! command_exists docker; then
@@ -40,14 +46,6 @@ fi
 if ! command_exists docker-compose; then
   error "docker-compose not available. Please install it first.";
   exit 2
-fi
-
-# Handle joining
-if [[ ${DIVA_TESTNET} > 0 ]]
-then
- JOIN_NETWORK=diva.i2p/testnet
- SIZE_NETWORK=1
- BASE_DOMAIN=join.testnet.diva.i2p
 fi
 
 PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
