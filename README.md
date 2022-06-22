@@ -37,11 +37,35 @@ After building the docker compose file, the containers can be **started**:
 DIVA_TESTNET=1 bin/start.sh
 ```  
 
-It is now possible to explore the local docker environment using docker commands, like `docker ps -a`.
+#### Check I2P
+The webconsoles of I2P are running within your local docker containers. Check them using http://172.19.72.11:7070/ and http://172.19.72.12:7070/ . These two URL's are assuming that you used the default configuration as given within this codebase. If you changed the IP config (see below, environment variable BASE_IP), you have to adapt the URL's because the docker container will run on different IP's.
+
+#### Check the Synchronization
+Now please visit http://localhost:3920 (the explorer). Refresh it from time to time to see whether your local chain syncronizes with the diva testnet. Sooner or later (like 10 minutes) it should be the same as here https://testnet.diva.exchange. 
+
+#### Warning: Joining the Very First Time
+If you are joining the network for the _very first time_, it will take a longer while (20 - 30 minutes) until you have a stable I2P network available. Please be patient. Please check the logs of divachain, `docker logs n1.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
+
+#### Troubleshooting 
+   
+1. Explore the local docker environment, using `docker ps -a`.
+2. Check the logs, using `docker logs n1.chain.join.testnet.diva.i2p`
+3. If synchronization is not working properly (like the very first time), try to restart the chain after a few minutes: `docker restart n1.chain.join.testnet.diva.i2p`
+
+#### Stopping
 
 To **stop** locally running DIVACHAIN Test Network containers, execute:
 ```
 DIVA_TESTNET=1 bin/halt.sh
+```
+
+### Purge Testnet DIVACHAIN data
+
+**Warning** This deletes all your local diva data within the folder `build/domains/join.testnet.diva.i2p` (keys, blockchain data).
+
+To purge local testnet data, execute:
+```
+DIVA_TESTNET=1 bin/purge.sh
 ```
 
 ### Leave the DIVACHAIN Network
