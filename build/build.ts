@@ -21,6 +21,7 @@ import fs from 'fs';
 import { toB32 } from '@diva.exchange/i2p-sam';
 
 const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
+const DEFAULT_HOST_BASE_IP = '127.19.72.';
 const DEFAULT_BASE_IP = '172.19.72.';
 const DEFAULT_PORT = 17468;
 const DEFAULT_BLOCK_FEED_PORT = 17469;
@@ -39,6 +40,7 @@ class Build {
     const joinNetwork = process.env.JOIN_NETWORK || '';
 
     const baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
+    const hostBaseIP = process.env.HOST_BASE_IP || DEFAULT_HOST_BASE_IP;
     const baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
     const port =
       Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
@@ -81,6 +83,8 @@ class Build {
       '      BANDWIDTH: P\n' +
       '    volumes:\n' +
       `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
+      '    ports:\n' +
+      `      - ${hostBaseIP}11:7070:7070\n` +
       '    networks:\n' +
       `      network.${baseDomain}:\n` +
       `        ipv4_address: ${baseIP}11\n\n`;
@@ -100,6 +104,8 @@ class Build {
       '      BANDWIDTH: P\n' +
       '    volumes:\n' +
       `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
+      '    ports:\n' +
+      `      - ${hostBaseIP}12:7070:7070\n` +
       '    networks:\n' +
       `      network.${baseDomain}:\n` +
       `        ipv4_address: ${baseIP}12\n\n`;
@@ -121,7 +127,7 @@ class Build {
         `      URL_API: http://${baseIP}21:${port}\n` +
         `      URL_FEED: ws://${baseIP}21:${port_block_feed}\n` +
         '    ports:\n' +
-        `      - ${port_ui}:${port_ui}\n` +
+        `      - ${hostBaseIP}200:${port_ui}:${port_ui}\n` +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}200\n\n`;
@@ -171,6 +177,8 @@ class Build {
         '      - ./state:/state\n' +
         '      - ./keys:/keys\n' +
         '      - ./genesis:/genesis\n' +
+        '    ports:\n' +
+        `      - ${hostBaseIP}${20 + seq}:${port}:${port}\n` +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}${20 + seq}\n\n`;
@@ -194,6 +202,8 @@ class Build {
           `      PORT: ${port_protocol}\n` +
           `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
           `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${port_block_feed}\n` +
+          '    ports:\n' +
+          `      - ${hostBaseIP}${120 + seq}:${port_protocol}:${port_protocol}\n` +
           '    networks:\n' +
           `      network.${baseDomain}:\n` +
           `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
