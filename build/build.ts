@@ -149,12 +149,12 @@ class Build {
         `      UDP: ${udp}\n` +
         `      I2P_SOCKS_HOST: ${baseIP}10\n` +
         `      I2P_SAM_HTTP_HOST: ${baseIP}10\n` +
-        `      I2P_SAM_FORWARD_HTTP_HOST: 0.0.0.0\n` +
+        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}1\n` +
         `      I2P_SAM_FORWARD_HTTP_PORT: ${basePort + seq}\n` +
         `      I2P_SAM_UDP_HOST: ${baseIP}11\n` +
         `      I2P_SAM_LISTEN_UDP_HOST: 0.0.0.0\n` +
         `      I2P_SAM_LISTEN_UDP_PORT: ${basePort + 1000 + seq}\n` +
-        `      I2P_SAM_FORWARD_UDP_HOST: 0.0.0.0\n` +
+        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}1\n` +
         `      I2P_SAM_FORWARD_UDP_PORT: ${basePort + 1000 + seq}\n` +
         (joinNetwork
           ? `      BOOTSTRAP: http://${joinNetwork}\n` +
@@ -166,8 +166,8 @@ class Build {
         '      - ./keys:/keys\n' +
         '      - ./genesis:/genesis\n' +
         '    ports:\n' +
-        `      - ${basePort + seq}:${basePort + seq}\n` +
-        `      - ${basePort + 2000 + seq}:${basePort + 2000 + seq}\n` +
+        `      - ${hostBaseIP}${20 + seq}:${basePort + seq}:${basePort + seq}\n` +
+        `      - ${hostBaseIP}${20 + seq}:${basePort + 2000 + seq}:${basePort + 2000 + seq}\n` +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}${20 + seq}\n\n`;
@@ -192,7 +192,7 @@ class Build {
           `      URL_API_CHAIN: http://${baseIP}1:${basePort + seq}\n` +
           `      URL_BLOCK_FEED: ws://${baseIP}1:${basePort + 2000 + seq}\n` +
           '    ports:\n' +
-          `      - ${basePort + 3000 + seq}:${basePort + 3000 + seq}\n` +
+          `      - ${hostBaseIP}${120 + seq}:${basePort + 3000 + seq}:${basePort + 3000 + seq}\n` +
           '    networks:\n' +
           `      network.${baseDomain}:\n` +
           `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
