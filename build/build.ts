@@ -149,12 +149,12 @@ class Build {
         `      UDP: ${udp}\n` +
         `      I2P_SOCKS_HOST: ${baseIP}10\n` +
         `      I2P_SAM_HTTP_HOST: ${baseIP}10\n` +
-        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}1\n` +
+        `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
         `      I2P_SAM_FORWARD_HTTP_PORT: ${basePort + seq}\n` +
         `      I2P_SAM_UDP_HOST: ${baseIP}11\n` +
         `      I2P_SAM_LISTEN_UDP_HOST: 0.0.0.0\n` +
         `      I2P_SAM_LISTEN_UDP_PORT: ${basePort + 1000 + seq}\n` +
-        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}1\n` +
+        `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
         `      I2P_SAM_FORWARD_UDP_PORT: ${basePort + 1000 + seq}\n` +
         (joinNetwork
           ? `      BOOTSTRAP: http://${joinNetwork}\n` +
