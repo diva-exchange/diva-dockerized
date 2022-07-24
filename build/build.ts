@@ -112,8 +112,8 @@ class Build {
         '    environment:\n' +
         `      HTTP_IP: 0.0.0.0\n` +
         `      HTTP_PORT: ${port_ui}\n` +
-        `      URL_API: http://${baseIP}1:${basePort}\n` +
-        `      URL_FEED: ws://${baseIP}1:${basePort + 2000}\n` +
+        `      URL_API: http://${baseIP}20:${basePort}\n` +
+        `      URL_FEED: ws://${baseIP}20:${basePort + 2000}\n` +
         '    ports:\n' +
         `      - ${port_ui}:${port_ui}\n` +
         '    networks:\n' +
@@ -189,8 +189,8 @@ class Build {
           `      LOG_LEVEL: ${levelLog}\n` +
           `      IP: 0.0.0.0\n` +
           `      PORT: ${basePort + 3000 + seq}\n` +
-          `      URL_API_CHAIN: http://${baseIP}1:${basePort + seq}\n` +
-          `      URL_BLOCK_FEED: ws://${baseIP}1:${basePort + 2000 + seq}\n` +
+          `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${basePort + seq}\n` +
+          `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${basePort + 2000 + seq}\n` +
           '    ports:\n' +
           `      - ${hostBaseIP}${120 + seq}:${basePort + 3000 + seq}:${basePort + 3000 + seq}\n` +
           '    networks:\n' +
