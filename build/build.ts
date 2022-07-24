@@ -110,10 +110,10 @@ class Build {
         `      - n0.chain.${baseDomain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
-        `      HTTP_IP: ${baseIP}200\n` +
+        `      HTTP_IP: 0.0.0.0\n` +
         `      HTTP_PORT: ${port_ui}\n` +
-        `      URL_API: http://${baseIP}1:${basePort + 1}\n` +
-        `      URL_FEED: ws://${baseIP}1:${basePort + 2000 + 1}\n` +
+        `      URL_API: http://${baseIP}1:${basePort}\n` +
+        `      URL_FEED: ws://${baseIP}1:${basePort + 2000}\n` +
         '    ports:\n' +
         `      - ${port_ui}:${port_ui}\n` +
         '    networks:\n' +
