@@ -35,20 +35,20 @@ DIVA_TESTNET=1 bin/start.sh
 ```  
 
 #### Check I2P
-The webconsoles of I2P are running within your local docker containers. Check them using http://127.19.72.11:7070/ and http://127.19.72.12:7070/. These two URL's are assuming that the default configuration is used. If you changed the IP config (see below, environment variable HOST_BASE_IP), you have to adapt the URL's because the docker container will run on different IP's.
+The webconsoles of I2P are running within your local docker containers. Check them using http://127.19.72.10:7070/ and http://127.19.72.11:7070/. These two URL's are assuming that the default configuration is used. If you changed the IP config (see below, environment variable HOST_BASE_IP), you have to adapt the URL's because the docker container will run on different IP's.
 
 #### Check the Synchronization
-Now please visit http://127.19.72.200:3920 (the explorer). Refresh it from time to time to see whether your local chain syncronizes with the diva testnet. Sooner or later (like 10 minutes) it should be the same as here https://testnet.diva.exchange. 
+Now please visit http://localhost:3920 (the explorer). Refresh it from time to time to see whether your local chain syncronizes with the diva testnet. Sooner or later (like 10 minutes) it should be the same as here https://testnet.diva.exchange. 
 
 #### Warning: Joining the Very First Time
-If you are joining the network for the _very first time_, it will take a longer while (20 - 30 minutes) until you have a stable I2P network available. Please be patient. Check the logs of divachain, `docker logs n1.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
+If you are joining the network for the _very first time_, it will take a longer while (20 - 30 minutes) until you have a stable I2P network available. Please be patient. Check the logs of divachain, `docker logs n0.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
 
 #### Troubleshooting 
 1. Explore the local docker environment, using `docker ps -a`.
-2. Check the logs, using `docker logs n1.chain.join.testnet.diva.i2p`
-3. If synchronization is not working properly (like the very first time), try to restart the chain after a few minutes: `docker restart n1.chain.join.testnet.diva.i2p`
-4. Access local explorer, http://127.19.72.200:3920 (URL as set in default config, see HOST_BASE_IP)
-5. Access local I2P webconsole, http://127.19.72.11:7070/ and http://127.19.72.12:7070/ (URL as set in default config)
+2. Check the logs, using `docker logs n0.chain.join.testnet.diva.i2p`
+3. If synchronization is not working properly (like the very first time), try to restart the chain after a few minutes: `docker restart n0.chain.join.testnet.diva.i2p`
+4. Access local explorer, http://localhost:3920 (URL as set in default config, see HOST_BASE_IP)
+5. Access local I2P webconsole, http://127.19.72.10:7070/ and http://127.19.72.11:7070/ (URL as set in default config)
 
 #### Stopping
 To **stop** locally running DIVA Test Network containers, execute:
