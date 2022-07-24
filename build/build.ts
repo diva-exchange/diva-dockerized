@@ -107,7 +107,7 @@ class Build {
         `    container_name: explorer.${baseDomain}\n` +
         `    image: ${image_explorer}\n` +
         '    depends_on:\n' +
-        `      - n1.chain.${baseDomain}\n` +
+        `      - n0.chain.${baseDomain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      HTTP_IP: ${baseIP}200\n` +
