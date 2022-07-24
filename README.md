@@ -142,7 +142,7 @@ String: valid local base IP, like 172.19.72. Used as IP's for docker containers.
 
 Default: `172.19.72.`
 
-### PORT
+### BASE_PORT
 Integer: >1024, <48000
 
 Default: `17468`
