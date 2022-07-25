@@ -127,7 +127,7 @@ class Build {
         `      URL_API: http://${baseIP}21:${port}\n` +
         `      URL_FEED: ws://${baseIP}21:${port_block_feed}\n` +
         '    ports:\n' +
-        `      - ${hostBaseIP}200:${port_ui}:${port_ui}\n` +
+        `      - ${port_ui}:${port_ui}\n` +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}200\n\n`;
