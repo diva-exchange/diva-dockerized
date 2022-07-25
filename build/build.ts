@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021 diva.exchange
+ * Copyright (C) 2021-2022 diva.exchange
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,10 @@ import { toB32 } from '@diva.exchange/i2p-sam';
 const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
 const DEFAULT_HOST_BASE_IP = '127.19.72.';
 const DEFAULT_BASE_IP = '172.19.72.';
-const DEFAULT_BASE_PORT = 17468;
+const DEFAULT_PORT = 17468;
+const DEFAULT_BLOCK_FEED_PORT = 17469;
 const DEFAULT_UI_PORT = 3920;
+const DEFAULT_PROTOCOL_PORT = 19720;
 
 class Build {
   static make() {
@@ -40,14 +42,24 @@ class Build {
     const baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
     const hostBaseIP = process.env.HOST_BASE_IP || DEFAULT_HOST_BASE_IP;
     const baseIP = process.env.BASE_IP || DEFAULT_BASE_IP;
-    const basePort =
-      Number(process.env.BASE_PORT) > 1024 && Number(process.env.BASE_PORT) < 48000
-        ? Number(process.env.BASE_PORT)
-        : DEFAULT_BASE_PORT;
+    const port =
+      Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
+        ? Number(process.env.PORT)
+        : DEFAULT_PORT;
+    const port_block_feed =
+      Number(process.env.BLOCK_FFED_PORT) > 1024 &&
+      Number(process.env.BLOCK_FFED_PORT) < 48000
+        ? Number(process.env.BLOCK_FFED_PORT)
+        : DEFAULT_BLOCK_FEED_PORT;
     const port_ui =
       Number(process.env.UI_PORT) > 1024 && Number(process.env.UI_PORT) < 48000
         ? Number(process.env.UI_PORT)
         : DEFAULT_UI_PORT;
+    const port_protocol =
+      Number(process.env.PORT_PROTOCOL) > 1024 &&
+      Number(process.env.PORT_PROTOCOL) < 48000
+        ? Number(process.env.PORT_PROTOCOL)
+        : DEFAULT_PROTOCOL_PORT;
     const envNode =
       process.env.NODE_ENV === 'development' ? 'development' : 'production';
     const levelLog = process.env.LOG_LEVEL || 'warn';
@@ -72,10 +84,10 @@ class Build {
       '    volumes:\n' +
       `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
       '    ports:\n' +
-      `      - ${hostBaseIP}10:7070:7070\n` +
+      `      - ${hostBaseIP}11:7070:7070\n` +
       '    networks:\n' +
       `      network.${baseDomain}:\n` +
-      `        ipv4_address: ${baseIP}10\n\n`;
+      `        ipv4_address: ${baseIP}11\n\n`;
     volumes =
       volumes +
       `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
@@ -93,10 +105,10 @@ class Build {
       '    volumes:\n' +
       `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
       '    ports:\n' +
-      `      - ${hostBaseIP}11:7070:7070\n` +
+      `      - ${hostBaseIP}12:7070:7070\n` +
       '    networks:\n' +
       `      network.${baseDomain}:\n` +
-      `        ipv4_address: ${baseIP}11\n\n`;
+      `        ipv4_address: ${baseIP}12\n\n`;
     volumes =
       volumes + `  i2p.udp.${baseDomain}:\n    name: i2p.udp.${baseDomain}\n`;
 
@@ -107,13 +119,13 @@ class Build {
         `    container_name: explorer.${baseDomain}\n` +
         `    image: ${image_explorer}\n` +
         '    depends_on:\n' +
-        `      - n0.chain.${baseDomain}\n` +
+        `      - n1.chain.${baseDomain}\n` +
         '    restart: unless-stopped\n' +
         '    environment:\n' +
-        `      HTTP_IP: 0.0.0.0\n` +
+        `      HTTP_IP: ${baseIP}200\n` +
         `      HTTP_PORT: ${port_ui}\n` +
-        `      URL_API: http://${baseIP}20:${basePort}\n` +
-        `      URL_FEED: ws://${baseIP}20:${basePort + 2000}\n` +
+        `      URL_API: http://${baseIP}21:${port}\n` +
+        `      URL_FEED: ws://${baseIP}21:${port_block_feed}\n` +
         '    ports:\n' +
         `      - ${port_ui}:${port_ui}\n` +
         '    networks:\n' +
@@ -123,7 +135,7 @@ class Build {
 
     const arrayConfig = JSON.parse(fs.readFileSync('genesis/local.config').toString());
 
-    let seq = 0;
+    let seq = 1;
     arrayConfig.forEach((config: any) => {
       const nameChain = `n${seq}.chain.${baseDomain}`;
 
@@ -142,20 +154,20 @@ class Build {
         '    environment:\n' +
         `      NODE_ENV: ${envNode}\n` +
         `      LOG_LEVEL: ${levelLog}\n` +
-        `      IP: 0.0.0.0\n` +
-        `      PORT: ${basePort + seq}\n` +
-        `      BLOCK_FEED_PORT: ${basePort + 2000 + seq}\n` +
+        `      IP: ${baseIP}${20 + seq}\n` +
+        `      PORT: ${port}\n` +
+        `      BLOCK_FEED_PORT: ${port + 1}\n` +
         `      HTTP: ${http}\n` +
         `      UDP: ${udp}\n` +
-        `      I2P_SOCKS_HOST: ${baseIP}10\n` +
-        `      I2P_SAM_HTTP_HOST: ${baseIP}10\n` +
+        `      I2P_SOCKS_HOST: ${baseIP}11\n` +
+        `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
         `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
-        `      I2P_SAM_FORWARD_HTTP_PORT: ${basePort + seq}\n` +
-        `      I2P_SAM_UDP_HOST: ${baseIP}11\n` +
-        `      I2P_SAM_LISTEN_UDP_HOST: 0.0.0.0\n` +
-        `      I2P_SAM_LISTEN_UDP_PORT: ${basePort + 1000 + seq}\n` +
+        `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
+        `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
+        `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
+        `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
         `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
-        `      I2P_SAM_FORWARD_UDP_PORT: ${basePort + 1000 + seq}\n` +
+        `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n` +
         (joinNetwork
           ? `      BOOTSTRAP: http://${joinNetwork}\n` +
             '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n'
@@ -166,8 +178,7 @@ class Build {
         '      - ./keys:/keys\n' +
         '      - ./genesis:/genesis\n' +
         '    ports:\n' +
-        `      - ${hostBaseIP}${20 + seq}:${basePort + seq}:${basePort + seq}\n` +
-        `      - ${hostBaseIP}${20 + seq}:${basePort + 2000 + seq}:${basePort + 2000 + seq}\n` +
+        `      - ${hostBaseIP}${20 + seq}:${port}:${port}\n` +
         '    networks:\n' +
         `      network.${baseDomain}:\n` +
         `        ipv4_address: ${baseIP}${20 + seq}\n\n`;
@@ -187,12 +198,12 @@ class Build {
           '    environment:\n' +
           `      NODE_ENV: ${envNode}\n` +
           `      LOG_LEVEL: ${levelLog}\n` +
-          `      IP: 0.0.0.0\n` +
-          `      PORT: ${basePort + 3000 + seq}\n` +
-          `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${basePort + seq}\n` +
-          `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${basePort + 2000 + seq}\n` +
+          `      IP: ${baseIP}${120 + seq}\n` +
+          `      PORT: ${port_protocol}\n` +
+          `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
+          `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${port_block_feed}\n` +
           '    ports:\n' +
-          `      - ${hostBaseIP}${120 + seq}:${basePort + 3000 + seq}:${basePort + 3000 + seq}\n` +
+          `      - ${hostBaseIP}${120 + seq}:${port_protocol}:${port_protocol}\n` +
           '    networks:\n' +
           `      network.${baseDomain}:\n` +
           `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
