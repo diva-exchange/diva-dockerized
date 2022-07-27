@@ -105,7 +105,7 @@ It is possible to specify docker images to build the .yml file used by docker co
 Use the environment variables IMAGE_I2P, IMAGE_CHAIN, IMAGE_PROTOCOL and IMAGE_EXPLORER to pass specific image names to the build process. Here is an example:
 
 ```
-DIVA_TESTNET=1 IMAGE_CHAIN=divax/divachain:develop bin/build.sh
+DIVA_TESTNET=1 LOG_LEVEL=trace IMAGE_CHAIN=divax/divachain:develop bin/build.sh
 ```
 
 This will build a .yml file using a specific docker image as divachain.
@@ -163,14 +163,23 @@ String: production, development
 Default: `production`
 
 ### LOG_LEVEL
+Logging level of NodeJS applications, like divachain
+
 String: trace, info, warn, error, critical
 
-Default: `trace`
+Default: `error`
 
 ### PURGE
 Boolean: 1 (true) or 0
 
 Default: `0`
+
+### I2P_LOGLEVEL
+Logging level of I2P
+
+String: debug, info, warn, error, none
+
+Default: `none`
 
 ## Contact the Developers
 On [DIVA.EXCHANGE](https://www.diva.exchange) you'll find various options to get in touch with the team.

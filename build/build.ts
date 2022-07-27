@@ -20,6 +20,7 @@
 import fs from 'fs';
 import { toB32 } from '@diva.exchange/i2p-sam';
 
+const DEFAULT_I2P_LOGLEVEL = 'none';
 const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
 const DEFAULT_HOST_BASE_IP = '127.19.72.';
 const DEFAULT_BASE_IP = '172.19.72.';
@@ -30,6 +31,7 @@ const DEFAULT_PROTOCOL_PORT = 19720;
 
 class Build {
   static make() {
+    const loglevel_i2p = process.env.I2P_LOGLEVEL || DEFAULT_I2P_LOGLEVEL;
     const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
     const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
     const image_protocol =
@@ -81,6 +83,7 @@ class Build {
       '      ENABLE_SOCKSPROXY: 1\n' +
       '      ENABLE_SAM: 1\n' +
       '      BANDWIDTH: P\n' +
+      `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
       `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
       '    ports:\n' +
@@ -102,6 +105,7 @@ class Build {
       '    environment:\n' +
       '      ENABLE_SAM: 1\n' +
       '      BANDWIDTH: P\n' +
+      `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
       `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
       '    ports:\n' +

@@ -29,6 +29,7 @@ source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
 
 # env vars
+I2P_LOGLEVEL=${I2P_LOGLEVEL:-none}
 DIVA_TESTNET=${DIVA_TESTNET:-0}
 JOIN_NETWORK=${JOIN_NETWORK:-}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
@@ -37,7 +38,7 @@ PURGE=${PURGE:-0}
 BASE_IP=${BASE_IP:-172.19.72.}
 PORT=${PORT:-17468}
 NODE_ENV=${NODE_ENV:-production}
-LOG_LEVEL=${LOG_LEVEL:-trace}
+LOG_LEVEL=${LOG_LEVEL:-error}
 
 # Handle joining
 if [[ ${DIVA_TESTNET} > 0 ]]
