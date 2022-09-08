@@ -4,8 +4,6 @@ This project has the following purpose: even if DIVA.EXCHANGE consists of severa
 Online Demo and Test sites:
 * https://testnet.diva.exchange - The public DIVA.EXCHANGE testnet. Everybody can join.
 
-It's licenced under [AGPLv3](LICENSE).
-
 ## Get Started
 Basically there are two options: either join an existing network or create your own.
 
@@ -14,9 +12,11 @@ To start with, it is recommended to join the existing DIVA test network. The tes
 ### Docker Compose & Clone the Code
 **IMPORTANT**: To start a local DIVA testnet, make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker-compose --version` in a terminal.
 
-Clone the code repository:
+If you don't have a github account, create one on github.com. If you want to keep your email hidden from github, use some public email provider like "protonmail" and use "tor" to sign up there.  
+
+Fork & clone the code repository:
 ```
-git clone https://codeberg.org/diva.exchange/diva-dockerized.git
+git clone https://github.com/YOUR-GITHUB-USERNAME/diva-dockerized.git
 cd diva-dockerized
 npm i
 ```
@@ -24,7 +24,7 @@ npm i
 Now, either build your own local testnet or join the existing [DIVA testnet](https://testnet.diva.exchange). 
 
 ### Join the public DIVA Test Network
-To join the DIVA test network, build a local docker compose file first. This is an automated process. Here is an example on how to join the DIVA test network via I2P (it will ask for the root password, since it has to access docker):
+To join the DIVA test network, build a local docker compose file first. This is an automated process. Here is an example on how to join the DIVA test network via I2P (it will ask for the root password, since it has to access the docker daemon and this access needs elevated privileges):
 ```
 DIVA_TESTNET=1 bin/build.sh
 ```
@@ -181,6 +181,15 @@ String: debug, info, warn, error, none
 
 Default: `none`
 
+## Contributions
+Contributions are very welcome. This is the general workflow:
+1. Fork the project on https://github.com/diva-exchange/diva-dockerized/
+2. Clone or pull the forked project to your local developer environment
+3. Make your changes, commit and push them to github
+4. Create a new pull request on github
+
+If you have questions, please just contact us (see below).
+
 ## Contact the Developers
 On [DIVA.EXCHANGE](https://www.diva.exchange) you'll find various options to get in touch with the team.
 
@@ -189,11 +198,11 @@ Talk to us via Telegram [https://t.me/diva_exchange_chat_de]() (English or Germa
 ## Donations
 Your donation goes entirely to the project. Your donation makes the development of DIVA.EXCHANGE faster.
 
-XMR: 42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx
+XMR: [42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx](monero:42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx)
 
-BTC: 3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs
+BTC: [3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs](bitcoin:3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs)
 
 Awesome, thank you!
 
 ## License
-[AGPLv3](LICENSE)
+[AGPLv3](https://github.com/diva-exchange/diva-dockerized/blob/main/LICENSE)
