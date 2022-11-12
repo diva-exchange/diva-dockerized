@@ -10,11 +10,11 @@ Basically there are two options: either join an existing network or create your 
 To start with, it is recommended to join the existing DIVA test network. The test network can be explored on https://testnet.diva.exchange.
   
 ### Docker Compose & Clone the Code
-**IMPORTANT**: To start a local DIVA testnet, make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker-compose --version` in a terminal.
+**IMPORTANT**: To start a local DIVA testnet, make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker compose version` in a terminal.
 
-If you don't have a github account, create one on github.com. If you want to keep your email hidden from github, use some public email provider like "protonmail" and use "tor" to sign up there.  
+If you don't have a github account, create one on github.com. Fork the project to your own github repository.
 
-Fork & clone the code repository:
+Then clone the code repository:
 ```
 git clone https://github.com/YOUR-GITHUB-USERNAME/diva-dockerized.git
 cd diva-dockerized
@@ -183,26 +183,40 @@ Default: `none`
 
 ## Contributions
 Contributions are very welcome. This is the general workflow:
-1. Fork the project on https://github.com/diva-exchange/diva-dockerized/
-2. Clone or pull the forked project to your local developer environment
-3. Make your changes, commit and push them to github
-4. Create a new pull request on github
+
+1. Fork from https://github.com/diva-exchange/diva-dockerized/
+2. Pull the forked project to your local developer environment
+3. Make your changes, test, commit and push them
+4. Create a new pull request on github.com
+
+It is strongly recommended to sign your commits: https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key
 
 If you have questions, please just contact us (see below).
 
+## Donations
+
+Your donation goes entirely to the project. Your donation makes the development of DIVA.EXCHANGE faster. Thanks a lot.
+
+### XMR
+
+42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx
+
+![XMR](https://www.diva.exchange/wp-content/uploads/2020/06/diva-exchange-monero-qr-code-1.jpg)
+
+or via https://www.diva.exchange/en/join-in/
+
+### BTC
+
+3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs
+
+![BTC](https://www.diva.exchange/wp-content/uploads/2020/06/diva-exchange-bitcoin-qr-code-1.jpg)
+
 ## Contact the Developers
+
 On [DIVA.EXCHANGE](https://www.diva.exchange) you'll find various options to get in touch with the team.
 
-Talk to us via Telegram [https://t.me/diva_exchange_chat_de]() (English or German).
-
-## Donations
-Your donation goes entirely to the project. Your donation makes the development of DIVA.EXCHANGE faster.
-
-XMR: [42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx](monero:42QLvHvkc9bahHadQfEzuJJx4ZHnGhQzBXa8C9H3c472diEvVRzevwpN7VAUpCPePCiDhehH4BAWh8kYicoSxpusMmhfwgx)
-
-BTC: [3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs](bitcoin:3Ebuzhsbs6DrUQuwvMu722LhD8cNfhG1gs)
-
-Awesome, thank you!
+Talk to us via [Telegram](https://t.me/diva_exchange_chat_de) (English or German).
 
 ## License
+
 [AGPLv3](https://github.com/diva-exchange/diva-dockerized/blob/main/LICENSE)
