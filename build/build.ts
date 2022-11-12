@@ -32,7 +32,7 @@ const DEFAULT_PROTOCOL_PORT = 19720;
 class Build {
   static make() {
     const loglevel_i2p = process.env.I2P_LOGLEVEL || DEFAULT_I2P_LOGLEVEL;
-    const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:latest';
+    const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:current';
     const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
     const image_protocol =
       process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
