@@ -38,7 +38,7 @@ PURGE=${PURGE:-0}
 BASE_IP=${BASE_IP:-172.19.72.}
 PORT=${PORT:-17468}
 NODE_ENV=${NODE_ENV:-production}
-LOG_LEVEL=${LOG_LEVEL:-trace}
+LOG_LEVEL=${LOG_LEVEL:-info}
 
 # Handle joining
 if [[ ${DIVA_TESTNET} -gt 0 ]]

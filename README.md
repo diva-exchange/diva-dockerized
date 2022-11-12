@@ -1,17 +1,18 @@
-# DIVA.EXCHANGE "Dockerized"
-This project has the following purpose: even if DIVA.EXCHANGE consists of several independent modules, it still should be easy to have the complete environment available.
+# DIVA "Dockerized"
+This project has the following purpose: even if DIVA consists of several independent modules, it still should be easy to have the complete environment available.
 
 Online Demo and Test sites:
-* https://testnet.diva.exchange - The public DIVA.EXCHANGE testnet. Everybody can join.
+* https://testnet.diva.exchange - The public DIVA testnet. Everybody can join.
 
 ## Get Started
 Basically there are two options: either join an existing network or create your own.
 
 To start with, it is recommended to join the existing DIVA test network. The test network can be explored on https://testnet.diva.exchange.
   
-### Docker Compose & Clone the Code
-**IMPORTANT**: To start a local DIVA testnet, make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker compose version` in a terminal.
+### Docker Compose
+**IMPORTANT**: Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker compose version` in a terminal.
 
+### Cloning the Code
 If you don't have a github account, create one on github.com. Fork the project to your own github repository.
 
 Then clone the code repository:
@@ -41,7 +42,7 @@ The webconsoles of I2P are running within your local docker containers. Check th
 Now please visit http://127.19.72.200:3920 (the explorer). Refresh it from time to time to see whether your local chain syncronizes with the diva testnet. Sooner or later (like 10 minutes) it should be the same as here https://testnet.diva.exchange. 
 
 #### Warning: Joining the Very First Time
-If you are joining the network for the _very first time_, it will take a longer while (20 - 30 minutes) until you have a stable I2P network available. Please be patient. Check the logs of divachain, `docker logs n1.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
+If you are joining the network for the _very first time_, it will take a longer while (maybe even up to 20 minutes) until you have a stable I2P network available. Please be patient. Check the logs of divachain, `docker logs n1.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
 
 #### Troubleshooting 
 1. Explore the local docker environment, using `docker ps -a`.
@@ -93,7 +94,7 @@ BASE_DOMAIN=testnet.local bin/halt.sh
 ```
 
 ### Purge local DIVA data
-**Warning** This deletes all your local diva data within the folder `build/domains/testnet.local` (keys, blockchain data).
+**Warning** This deletes all your local DIVA data within the folder `build/domains/testnet.local` (keys, blockchain data).
 
 To purge all local data, execute:
 ```
@@ -167,7 +168,7 @@ Logging level of NodeJS applications, like divachain
 
 String: trace, info, warn, error, critical
 
-Default: `error`
+Default: `info`
 
 ### PURGE
 Boolean: 1 (true) or 0
