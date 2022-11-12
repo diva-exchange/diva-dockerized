@@ -1,6 +1,6 @@
 {
   "name": "@diva.exchange/diva-dockerized",
-  "version": "0.30.3",
+  "version": "0.31.0",
   "description": "diva - Distributed value exchange upholding security, reliability and privacy",
   "keywords": [
     "blockchain",
@@ -21,17 +21,17 @@
     "lint": "prettier -w \"**/*.ts\" && eslint --fix build/ --ext .ts"
   },
   "devDependencies": {
-    "@types/node": "^18.7.16",
-    "@typescript-eslint/eslint-plugin": "^5.36.2",
-    "@typescript-eslint/parser": "^5.36.2",
-    "eslint": "^8.23.0",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@diva.exchange/i2p-sam": "^4.1.4"
+    "@diva.exchange/i2p-sam": "^4.1.5"
   }
 }
