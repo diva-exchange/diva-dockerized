@@ -21,12 +21,12 @@
 set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
-cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`
+cd "${PROJECT_PATH}"
+PROJECT_PATH=$( pwd )
 
 # load helpers
-source "${PROJECT_PATH}/bin/util/echos.sh"
-source "${PROJECT_PATH}/bin/util/helpers.sh"
+source "${PROJECT_PATH}"/bin/util/echos.sh
+source "${PROJECT_PATH}"/bin/util/helpers.sh
 
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING:1}

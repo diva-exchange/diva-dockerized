@@ -21,8 +21,8 @@
 set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
-cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`
+cd "${PROJECT_PATH}"
+PROJECT_PATH=$( pwd )
 
 # load helpers
 source "${PROJECT_PATH}/bin/util/echos.sh"
@@ -32,7 +32,7 @@ source "${PROJECT_PATH}/bin/util/helpers.sh"
 DIVA_TESTNET=${DIVA_TESTNET:-0}
 
 # Handle testnet
-if [[ ${DIVA_TESTNET} > 0 ]]
+if [[ ${DIVA_TESTNET} -gt 0 ]]
 then
   BASE_DOMAIN=join.testnet.diva.i2p
 fi
@@ -43,8 +43,8 @@ if ! command_exists docker; then
   exit 1
 fi
 
-if ! command_exists docker-compose; then
-  error "docker-compose not available. Please install it first.";
+if ! command_exists docker compose; then
+  error "docker compose not available. Please install it first.";
   exit 2
 fi
 
@@ -54,7 +54,7 @@ then
   error "Path not found: ${PATH_DOMAIN}";
   exit 3
 fi
-cd ${PATH_DOMAIN}
+cd "${PATH_DOMAIN}"
 
 if [[ ! -f ./diva.yml ]]
 then
@@ -67,6 +67,6 @@ warn "If you want to keep the data, run a backup first."
 confirm "Do you want to DELETE all local diva data (y/N)?" || exit 5
 
 running "Purging ${PATH_DOMAIN}"
-sudo docker-compose -f ./diva.yml down --volumes
-BASE_DOMAIN=${BASE_DOMAIN} ${PROJECT_PATH}/bin/clean.sh
+sudo docker compose -f ./diva.yml down --volumes
+BASE_DOMAIN=${BASE_DOMAIN} "${PROJECT_PATH}"/bin/clean.sh
 ok "Purged ${PATH_DOMAIN}"

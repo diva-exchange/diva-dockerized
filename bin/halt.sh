@@ -33,10 +33,8 @@ DIVA_TESTNET=${DIVA_TESTNET:-0}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 
 # Handle joining
-if [[ ${DIVA_TESTNET} > 0 ]]
+if [[ ${DIVA_TESTNET} -gt 0 ]]
 then
- JOIN_NETWORK=diva.i2p/testnet
- SIZE_NETWORK=1
  BASE_DOMAIN=join.testnet.diva.i2p
 fi
 
@@ -55,5 +53,5 @@ then
 fi
 
 running "Halting ${PATH_DOMAIN}"
-sudo docker-compose -f ./diva.yml down
+sudo docker compose -f ./diva.yml down
 ok "Halted ${PATH_DOMAIN}"

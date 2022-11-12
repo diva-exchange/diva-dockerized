@@ -21,8 +21,8 @@
 set -e
 
 PROJECT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"/../
-cd ${PROJECT_PATH}
-PROJECT_PATH=`pwd`
+cd "${PROJECT_PATH}"
+PROJECT_PATH=$( pwd )
 
 # load helpers
 source "${PROJECT_PATH}/bin/util/echos.sh"
@@ -38,16 +38,14 @@ if ! command_exists docker; then
   exit 1
 fi
 
-if ! command_exists docker-compose; then
-  error "docker-compose not available. Please install it first.";
+if ! command_exists docker compose; then
+  error "docker compose not available. Please install it first.";
   exit 2
 fi
 
 # Handle joining
-if [[ ${DIVA_TESTNET} > 0 ]]
+if [[ ${DIVA_TESTNET} -gt 0 ]]
 then
- JOIN_NETWORK=diva.i2p/testnet
- SIZE_NETWORK=1
  BASE_DOMAIN=join.testnet.diva.i2p
 fi
 
@@ -57,7 +55,7 @@ then
   error "Path not found: ${PATH_DOMAIN}";
   exit 3
 fi
-cd ${PATH_DOMAIN}
+cd "${PATH_DOMAIN}"
 
 if [[ ! -f ./diva.yml ]]
 then
@@ -66,8 +64,8 @@ then
 fi
 
 running "Pulling ${PATH_DOMAIN}"
-sudo docker-compose -f ./diva.yml pull
+sudo docker compose -f ./diva.yml pull
 
 running "Starting ${PATH_DOMAIN}"
-sudo NO_BOOTSTRAPPING=${NO_BOOTSTRAPPING} docker-compose -f ./diva.yml up -d
+sudo NO_BOOTSTRAPPING="${NO_BOOTSTRAPPING}" docker compose -f ./diva.yml up -d
 ok "Started ${PATH_DOMAIN}"
