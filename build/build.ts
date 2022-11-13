@@ -37,7 +37,7 @@ class Build {
     const image_protocol =
       process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
     const image_explorer =
-      process.env.IMAGE_EXPLORER || 'divax/explorer:latest';
+      process.env.IMAGE_EXPLORER || 'divax/explorer:current';
 
     const joinNetwork = process.env.JOIN_NETWORK || '';
 
