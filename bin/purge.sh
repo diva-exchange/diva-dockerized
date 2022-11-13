@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2021 diva.exchange
+# Copyright (C) 2020-2022 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
+# Author/Maintainer: DIVA.EXCHANGE Association <contact@diva.exchange>
 #
+
 # -e  Exit immediately if a simple command exits with a non-zero status
 set -e
 
