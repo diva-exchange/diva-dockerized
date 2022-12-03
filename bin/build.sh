@@ -32,6 +32,7 @@ source "${PROJECT_PATH}"/bin/util/helpers.sh
 # env vars
 I2P_LOGLEVEL=${I2P_LOGLEVEL:-none}
 DIVA_TESTNET=${DIVA_TESTNET:-0}
+IS_TESTNET=${IS_TESTNET:-0}
 JOIN_NETWORK=${JOIN_NETWORK:-}
 BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
 SIZE_NETWORK=${SIZE_NETWORK:-7}
@@ -47,6 +48,7 @@ then
  JOIN_NETWORK=diva.i2p/testnet
  SIZE_NETWORK=1
  BASE_DOMAIN=testnet.diva.i2p
+ IS_TESTNET=1
 fi
 
 if [[ -n ${JOIN_NETWORK} ]]
@@ -141,6 +143,7 @@ JOIN_NETWORK=${JOIN_NETWORK} \
   PORT=${PORT} \
   NODE_ENV=${NODE_ENV} \
   LOG_LEVEL=${LOG_LEVEL} \
+  IS_TESTNET=${IS_TESTNET} \
   "${PROJECT_PATH}"/node_modules/.bin/ts-node "${PROJECT_PATH}"/build/build.ts
 
 ok "Created diva.yml file"

@@ -39,6 +39,7 @@ class Build {
     const image_explorer =
       process.env.IMAGE_EXPLORER || 'divax/explorer:current';
 
+    const isTestnet = process.env.IS_TESTNET || '0';
     const joinNetwork = process.env.JOIN_NETWORK || '';
 
     const baseDomain = process.env.BASE_DOMAIN || DEFAULT_BASE_DOMAIN;
@@ -157,6 +158,7 @@ class Build {
         '    restart: unless-stopped\n' +
         '    environment:\n' +
         `      NODE_ENV: ${envNode}\n` +
+        `      IS_TESTNET: ${isTestnet}\n` +
         `      LOG_LEVEL: ${levelLog}\n` +
         `      IP: ${baseIP}${20 + seq}\n` +
         `      PORT: ${port}\n` +
