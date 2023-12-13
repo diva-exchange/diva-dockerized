@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2020-2022 diva.exchange
+# Copyright (C) 2021-2023 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -127,8 +127,8 @@ then
   # handle joining
   if [[ -n ${JOIN_NETWORK} ]]
   then
-    rm -rf ./genesis/block.v5.json
-    cp "${PROJECT_PATH}"/build/dummy.block.v5.json ./genesis/block.v5.json
+    rm -rf ./genesis/block.v7.json
+    cp "${PROJECT_PATH}"/build/dummy.block.v7.json ./genesis/block.v7.json
   fi
 
   ok "Genesis Block successfully created"

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021-2022 diva.exchange
+ * Copyright (C) 2021-2023 diva.exchange
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Author/Maintainer: Konrad Bächler <konrad@diva.exchange>
+ * Author/Maintainer: DIVA.EXCHANGE Association, https://diva.exchange
  */
 
 import fs from 'fs';
@@ -83,6 +83,7 @@ class Build {
       '    environment:\n' +
       '      ENABLE_SOCKSPROXY: 1\n' +
       '      ENABLE_SAM: 1\n' +
+      '      ENABLE_HIDDEN: 1\n' +
       '      BANDWIDTH: P\n' +
       `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
@@ -105,6 +106,7 @@ class Build {
       '    restart: unless-stopped\n' +
       '    environment:\n' +
       '      ENABLE_SAM: 1\n' +
+      '      ENABLE_HIDDEN: 1\n' +
       '      BANDWIDTH: P\n' +
       `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
