@@ -29,7 +29,7 @@ const DEFAULT_BLOCK_FEED_PORT = 17469;
 const DEFAULT_UI_PORT = 3920;
 const DEFAULT_PROTOCOL_PORT = 19720;
 
-class Build {
+export class Build {
   static make() {
     const loglevel_i2p = process.env.I2P_LOGLEVEL || DEFAULT_I2P_LOGLEVEL;
     const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:current';

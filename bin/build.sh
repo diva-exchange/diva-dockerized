@@ -136,6 +136,8 @@ fi
 
 running "Creating diva.yml file"
 
+tsc
+
 JOIN_NETWORK=${JOIN_NETWORK} \
   SIZE_NETWORK=${SIZE_NETWORK} \
   BASE_DOMAIN=${BASE_DOMAIN} \
@@ -144,6 +146,6 @@ JOIN_NETWORK=${JOIN_NETWORK} \
   NODE_ENV=${NODE_ENV} \
   LOG_LEVEL=${LOG_LEVEL} \
   IS_TESTNET=${IS_TESTNET} \
-  "${PROJECT_PATH}"/node_modules/.bin/ts-node "${PROJECT_PATH}"/build/build.ts
+  node "${PROJECT_PATH}"/dist/build.js
 
 ok "Created diva.yml file"

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
     "strictNullChecks": true,
     "esModuleInterop": true,
     "downlevelIteration": true,

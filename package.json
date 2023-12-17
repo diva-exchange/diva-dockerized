@@ -1,5 +1,6 @@
 {
   "name": "@diva.exchange/diva-dockerized",
+  "type": "module",
   "version": "0.31.4",
   "description": "diva - Distributed value exchange upholding security, reliability and privacy",
   "keywords": [
@@ -17,6 +18,9 @@
     "type": "git",
     "url": "https://github.com/diva-exchange/diva-dockerized.git"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "lint": "prettier -w \"**/*.ts\" && eslint --fix build/ --ext .ts"
   },
@@ -28,7 +32,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
     "prettier": "^3.1.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
