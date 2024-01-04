@@ -4,11 +4,8 @@ WARNING: **ALPHA software - HIGHLY EXPERIMENTAL**
 
 This project has the following purpose: even if DIVA consists of several independent modules, it still should be easy to have the complete environment available.
 
-## Get Started
-Basically there are two options: either join an existing network or create your own.
-
-To start with, it is recommended to join the existing DIVA test network. The test network can be explored on https://testnet.diva.exchange.
-  
+## Get Started - How to create your own test network
+ 
 ### Docker Compose
 **IMPORTANT**: Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker compose version` in a terminal.
 
@@ -22,11 +19,8 @@ cd diva-dockerized
 npm i
 ```
 
-Now, build your own local testnet. 
-
-
-### Local, I2P based DIVA Test Network
-To create an I2P-based DIVA test network, build a local docker compose file first. This is an automated process. Here is an example:
+### Build the local, I2P based DIVA Test Network
+To create a local I2P-based DIVA test network, build a local docker compose file first. This is an automated process. Here is an example:
 ```
 BASE_IP=172.19.73. HOST_BASE_IP=127.19.73. bin/build.sh
 ```
