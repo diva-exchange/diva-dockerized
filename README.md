@@ -1,8 +1,8 @@
 # DIVA "Dockerized"
-This project has the following purpose: even if DIVA consists of several independent modules, it still should be easy to have the complete environment available.
 
-Online Demo and Test sites:
-* https://testnet.diva.exchange - The public DIVA testnet. Everybody can join.
+WARNING: **ALPHA software - HIGHLY EXPERIMENTAL**
+
+This project has the following purpose: even if DIVA consists of several independent modules, it still should be easy to have the complete environment available.
 
 ## Get Started
 Basically there are two options: either join an existing network or create your own.
@@ -13,72 +13,22 @@ To start with, it is recommended to join the existing DIVA test network. The tes
 **IMPORTANT**: Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed. Check your Docker Compose installation by executing `docker compose version` in a terminal.
 
 ### Cloning the Code
-If you don't have a github account, create one on github.com. Fork the project to your own github repository.
+If you don't have a GitHub account, create one on github.com. Fork the project to your own GitHub repository.
 
 Then clone the code repository:
 ```
-git clone https://github.com/YOUR-GITHUB-USERNAME/diva-dockerized.git
+git clone -b develop-tx https://github.com/YOUR-GITHUB-USERNAME/diva-dockerized.git
 cd diva-dockerized
 npm i
 ```
 
-Now, either build your own local testnet or join the existing [DIVA testnet](https://testnet.diva.exchange). 
+Now, build your own local testnet. 
 
-### Join the public DIVA Test Network
-To join the DIVA test network, build a local docker compose file first. This is an automated process. Here is an example on how to join the DIVA test network via I2P (it will ask for the root password, since it has to access the docker daemon and this access needs elevated privileges):
-```
-DIVA_TESTNET=1 bin/build.sh
-```
-
-After building the docker compose file, the containers can be **started**:
-```
-DIVA_TESTNET=1 bin/start.sh
-```  
-
-#### Check I2P
-The webconsoles of I2P are running within your local docker containers. Check them using http://127.19.72.11:7070/ and http://127.19.72.12:7070/. These two URL's are assuming that the default configuration is used. If you changed the IP config (see below, environment variable HOST_BASE_IP), you have to adapt the URL's because the docker container will run on different IP's.
-
-#### Check the Synchronization
-Now please visit http://127.19.72.200:3920 (the explorer). Refresh it from time to time to see whether your local chain syncronizes with the diva testnet. Sooner or later (like 10 minutes) it should be the same as here https://testnet.diva.exchange. 
-
-#### Warning: Joining the Very First Time
-If you are joining the network for the _very first time_, it will take a longer while (maybe even up to 20 minutes) until you have a stable I2P network available. Please be patient. Check the logs of divachain, `docker logs n1.chain.join.testnet.diva.i2p`, to see whether it synchronizes. If it does not synchronize properly restart it (see Troubleshooting below).
-
-#### Troubleshooting 
-1. Explore the local docker environment, using `docker ps -a`.
-2. Check the logs, using `docker logs n1.chain.join.testnet.diva.i2p`
-3. If synchronization is not working properly (like the very first time), try to restart the chain after a few minutes: `docker restart n1.chain.join.testnet.diva.i2p`
-4. Access local explorer, http://127.19.72.200:3920 (URL as set in default config, see HOST_BASE_IP)
-5. Access local I2P webconsole, http://127.19.72.11:7070/ and http://127.19.72.12:7070/ (URL as set in default config)
-
-#### Stopping
-To **stop** locally running DIVA Test Network containers, execute:
-```
-DIVA_TESTNET=1 bin/halt.sh
-```
-
-#### Restarting
-To **restart** the locally running DIVA Test Network containers, execute:
-```
-BASE_DOMAIN=join.testnet.diva.i2p bin/restart.sh
-```
-This restarts the complete stack (I2P, divachain, protocol).
-
-### Purge DIVA Test Network data
-**Warning** This deletes all your local diva data within the folder `build/domains/join.testnet.diva.i2p` (keys, blockchain data).
-
-To purge local testnet data, execute:
-```
-DIVA_TESTNET=1 bin/purge.sh
-```
-
-### Leave the DIVA Network
-tbd.
 
 ### Local, I2P based DIVA Test Network
 To create an I2P-based DIVA test network, build a local docker compose file first. This is an automated process. Here is an example:
 ```
-BASE_IP=172.19.73. HOST_BASE_IP=127.19.73. BASE_DOMAIN=testnet.local bin/build.sh
+BASE_IP=172.19.73. HOST_BASE_IP=127.19.73. bin/build.sh
 ```
 
 After building the docker compose file, the containers can be **started**:
@@ -106,7 +56,7 @@ It is possible to specify docker images to build the .yml file used by docker co
 Use the environment variables IMAGE_I2P, IMAGE_CHAIN, IMAGE_PROTOCOL and IMAGE_EXPLORER to pass specific image names to the build process. Here is an example:
 
 ```
-DIVA_TESTNET=1 LOG_LEVEL=trace IMAGE_CHAIN=divax/divachain:develop bin/build.sh
+LOG_LEVEL=trace IMAGE_CHAIN=divax/divachain:develop-tx bin/build.sh
 ```
 
 This will build a .yml file using a specific docker image as divachain.

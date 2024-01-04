@@ -5,14 +5,17 @@ const DEFAULT_BASE_DOMAIN = 'testnet.diva.i2p';
 const DEFAULT_HOST_BASE_IP = '127.19.72.';
 const DEFAULT_BASE_IP = '172.19.72.';
 const DEFAULT_PORT = 17468;
-const DEFAULT_BLOCK_FEED_PORT = 17469;
+const DEFAULT_TX_FEED_PORT = 17469;
 const DEFAULT_UI_PORT = 3920;
 const DEFAULT_PROTOCOL_PORT = 19720;
+const DEFAULT_I2P_SOCKS_PORT = 4445;
+const DEFAULT_I2P_SAM_TCP_PORT = 7656;
+const DEFAULT_I2P_SAM_UDP_PORT = 7656;
 export class Build {
     static make() {
         const loglevel_i2p = process.env.I2P_LOGLEVEL || DEFAULT_I2P_LOGLEVEL;
         const image_i2p = process.env.IMAGE_I2P || 'divax/i2p:current';
-        const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:latest';
+        const image_chain = process.env.IMAGE_CHAIN || 'divax/divachain:develop-tx';
         const image_protocol = process.env.IMAGE_PROTOCOL || 'divax/divaprotocol:latest';
         const image_explorer = process.env.IMAGE_EXPLORER || 'divax/explorer:current';
         const isTestnet = process.env.IS_TESTNET || '0';
@@ -23,10 +26,10 @@ export class Build {
         const port = Number(process.env.PORT) > 1024 && Number(process.env.PORT) < 48000
             ? Number(process.env.PORT)
             : DEFAULT_PORT;
-        const port_block_feed = Number(process.env.BLOCK_FFED_PORT) > 1024 &&
-            Number(process.env.BLOCK_FFED_PORT) < 48000
-            ? Number(process.env.BLOCK_FFED_PORT)
-            : DEFAULT_BLOCK_FEED_PORT;
+        const port_tx_feed = Number(process.env.TX_FFED_PORT) > 1024 &&
+            Number(process.env.TX_FFED_PORT) < 48000
+            ? Number(process.env.TX_FFED_PORT)
+            : DEFAULT_TX_FEED_PORT;
         const port_ui = Number(process.env.UI_PORT) > 1024 && Number(process.env.UI_PORT) < 48000
             ? Number(process.env.UI_PORT)
             : DEFAULT_UI_PORT;
@@ -36,8 +39,8 @@ export class Build {
             : DEFAULT_PROTOCOL_PORT;
         const envNode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
         const levelLog = process.env.LOG_LEVEL || 'warn';
-        const hasExplorer = Number(process.env.HAS_EXPLORER || 1) > 0;
-        const hasProtocol = Number(process.env.HAS_PROTOCOL || 1) > 0;
+        const hasExplorer = false;
+        const hasProtocol = false;
         let yml = 'version: "3.7"\nservices:\n';
         let volumes = '';
         yml =
@@ -95,7 +98,7 @@ export class Build {
                     `      HTTP_IP: ${baseIP}200\n` +
                     `      HTTP_PORT: ${port_ui}\n` +
                     `      URL_API: http://${baseIP}21:${port}\n` +
-                    `      URL_FEED: ws://${baseIP}21:${port_block_feed}\n` +
+                    `      URL_FEED: ws://${baseIP}21:${port_tx_feed}\n` +
                     '    ports:\n' +
                     `      - ${port_ui}:${port_ui}\n` +
                     '    networks:\n' +
@@ -123,25 +126,22 @@ export class Build {
                     `      LOG_LEVEL: ${levelLog}\n` +
                     `      IP: ${baseIP}${20 + seq}\n` +
                     `      PORT: ${port}\n` +
-                    `      BLOCK_FEED_PORT: ${port + 1}\n` +
+                    `      TX_FEED_PORT: ${port + 1}\n` +
                     `      HTTP: ${http}\n` +
                     `      UDP: ${udp}\n` +
-                    `      I2P_SOCKS_HOST: ${baseIP}11\n` +
-                    `      I2P_SAM_HTTP_HOST: ${baseIP}11\n` +
-                    `      I2P_SAM_FORWARD_HTTP_HOST: ${baseIP}${20 + seq}\n` +
-                    `      I2P_SAM_FORWARD_HTTP_PORT: ${port}\n` +
-                    `      I2P_SAM_UDP_HOST: ${baseIP}12\n` +
-                    `      I2P_SAM_LISTEN_UDP_HOST: ${baseIP}${20 + seq}\n` +
-                    `      I2P_SAM_LISTEN_UDP_PORT: ${port + 2}\n` +
-                    `      I2P_SAM_FORWARD_UDP_HOST: ${baseIP}${20 + seq}\n` +
-                    `      I2P_SAM_FORWARD_UDP_PORT: ${port + 2}\n` +
+                    `      I2P_SOCKS: ${baseIP}11:${DEFAULT_I2P_SOCKS_PORT}\n` +
+                    `      I2P_SAM_HTTP: ${baseIP}11:${DEFAULT_I2P_SAM_TCP_PORT}\n` +
+                    `      I2P_SAM_FORWARD_HTTP: ${baseIP}${20 + seq}:${port}\n` +
+                    `      I2P_SAM_UDP: ${baseIP}12:${DEFAULT_I2P_SAM_UDP_PORT}\n` +
+                    `      I2P_SAM_LISTEN_UDP: ${baseIP}${20 + seq}:${port + 2}\n` +
+                    `      I2P_SAM_FORWARD_UDP: ${baseIP}${20 + seq}:${port + 2}\n` +
                     (joinNetwork
                         ? `      BOOTSTRAP: http://${joinNetwork}\n` +
                             '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n'
                         : '') +
                     '    volumes:\n' +
-                    '      - ./blockstore:/blockstore\n' +
-                    '      - ./state:/state\n' +
+                    '      - ./db/chain:/db/chain\n' +
+                    '      - ./db/state:/db/state\n' +
                     '      - ./keys:/keys\n' +
                     '      - ./genesis:/genesis\n' +
                     '    ports:\n' +
@@ -165,7 +165,7 @@ export class Build {
                         `      IP: ${baseIP}${120 + seq}\n` +
                         `      PORT: ${port_protocol}\n` +
                         `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
-                        `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${port_block_feed}\n` +
+                        `      URL_TX_FEED: ws://${baseIP}${20 + seq}:${port_tx_feed}\n` +
                         '    ports:\n' +
                         `      - ${hostBaseIP}${120 + seq}:${port_protocol}:${port_protocol}\n` +
                         '    networks:\n' +
