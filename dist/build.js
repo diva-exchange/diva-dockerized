@@ -52,8 +52,6 @@ export class Build {
                 '    environment:\n' +
                 '      ENABLE_SOCKSPROXY: 1\n' +
                 '      ENABLE_SAM: 1\n' +
-                '      ENABLE_HIDDEN: 1\n' +
-                '      BANDWIDTH: P\n' +
                 `      LOGLEVEL: ${loglevel_i2p}\n` +
                 '    volumes:\n' +
                 `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
@@ -73,8 +71,6 @@ export class Build {
                 '    restart: unless-stopped\n' +
                 '    environment:\n' +
                 '      ENABLE_SAM: 1\n' +
-                '      ENABLE_HIDDEN: 1\n' +
-                '      BANDWIDTH: P\n' +
                 `      LOGLEVEL: ${loglevel_i2p}\n` +
                 '    volumes:\n' +
                 `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +

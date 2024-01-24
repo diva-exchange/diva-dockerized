@@ -87,8 +87,6 @@ export class Build {
       '    environment:\n' +
       '      ENABLE_SOCKSPROXY: 1\n' +
       '      ENABLE_SAM: 1\n' +
-      '      ENABLE_HIDDEN: 1\n' +
-      '      BANDWIDTH: P\n' +
       `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
       `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
@@ -98,8 +96,7 @@ export class Build {
       `      network.${baseDomain}:\n` +
       `        ipv4_address: ${baseIP}11\n\n`;
     volumes =
-      volumes +
-      `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
+      volumes + `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
 
     // udp
     yml =
@@ -110,8 +107,6 @@ export class Build {
       '    restart: unless-stopped\n' +
       '    environment:\n' +
       '      ENABLE_SAM: 1\n' +
-      '      ENABLE_HIDDEN: 1\n' +
-      '      BANDWIDTH: P\n' +
       `      LOGLEVEL: ${loglevel_i2p}\n` +
       '    volumes:\n' +
       `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
@@ -144,7 +139,10 @@ export class Build {
         `        ipv4_address: ${baseIP}200\n\n`;
     }
 
-    const arrayConfig = JSON.parse(fs.readFileSync('genesis/local.config').toString());
+    const arrayConfig = JSON.parse(
+      fs.readFileSync('genesis/local.config').toString(),
+    );
+    fs.unlinkSync('genesis/local.config');
 
     let seq = 1;
     arrayConfig.forEach((config: any) => {

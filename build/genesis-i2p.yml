@@ -22,11 +22,13 @@ services:
   genesis-i2p-http:
     container_name: genesis-i2p-http
     image: divax/i2p:current
-    restart: unless-stopped
+    restart: no
+    healthcheck:
+      test: nc -z -w1 10.19.77.11 7656 || exit 1
+      start_period: 5s
     environment:
       ENABLE_SOCKSPROXY: 1
       ENABLE_SAM: 1
-      BANDWIDTH: P
     networks:
       network.genesis-i2p:
         ipv4_address: 10.19.77.11
@@ -34,10 +36,12 @@ services:
   genesis-i2p-udp:
     container_name: genesis-i2p-udp
     image: divax/i2p:current
-    restart: unless-stopped
+    restart: no
+    healthcheck:
+      test: nc -z -w1 10.19.77.12 7656 || exit 1
+      start_period: 5s
     environment:
       ENABLE_SAM: 1
-      BANDWIDTH: P
     networks:
       network.genesis-i2p:
         ipv4_address: 10.19.77.12
@@ -45,10 +49,12 @@ services:
   genesis-i2p-chain:
     container_name: genesis-i2p-chain
     image: divax/divachain:develop-tx
+    restart: no
     depends_on:
-      - genesis-i2p-http
-      - genesis-i2p-udp
-    restart: unless-stopped
+      genesis-i2p-udp:
+        condition: service_healthy
+      genesis-i2p-http:
+        condition: service_healthy
     environment:
       GENESIS: 1
       GENESIS_PATH: /genesis/tx.v1.json
@@ -59,16 +65,12 @@ services:
       IP: 10.19.77.21
       PORT: 17468
       TX_FEED_PORT: 17469
-      I2P_SOCKS_HOST: 10.19.77.11
-      I2P_SOCKS_PORT: 4445
-      I2P_SAM_HTTP_HOST: 10.19.77.11
-      I2P_SAM_FORWARD_HTTP_HOST: 10.19.77.21
-      I2P_SAM_FORWARD_HTTP_PORT: 17468
-      I2P_SAM_UDP_HOST: 10.19.77.12
-      I2P_SAM_LISTEN_UDP_HOST: 10.19.77.21
-      I2P_SAM_LISTEN_UDP_PORT: 17470
-      I2P_SAM_FORWARD_HOST_UDP: 10.19.77.21
-      I2P_SAM_FORWARD_PORT_UDP: 17470
+      I2P_SOCKS: 10.19.77.11:4445
+      I2P_SAM_HTTP: 10.19.77.11:7656
+      I2P_SAM_FORWARD_HTTP: 10.19.77.21:17468
+      I2P_SAM_UDP: 10.19.77.12:7656
+      I2P_SAM_LISTEN_UDP: 10.19.77.21:17470
+      I2P_SAM_FORWARD_UDP: 10.19.77.21:17470
     volumes:
       - ./db/chain:/db/chain
       - ./db/state:/db/state

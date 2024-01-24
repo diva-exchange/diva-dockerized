@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2021-2023 diva.exchange
+# Copyright (C) 2021-2024 diva.exchange
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -29,16 +29,6 @@ PROJECT_PATH=$( pwd )
 source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
 
-# env vars
-DIVA_TESTNET=${DIVA_TESTNET:-0}
-
-# Handle testnet
-if [[ ${DIVA_TESTNET} -gt 0 ]]
-then
-  BASE_DOMAIN=join.testnet.diva.i2p
-fi
-BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
-
 if ! command_exists docker; then
   error "docker not available. Please install it first.";
   exit 1
@@ -49,6 +39,16 @@ if ! command_exists docker compose; then
   exit 2
 fi
 
+# env vars
+DIVA_TESTNET=${DIVA_TESTNET:-0}
+
+# Handle testnet
+if [[ ${DIVA_TESTNET} -gt 0 ]]
+then
+  BASE_DOMAIN=join.testnet.diva.i2p
+fi
+BASE_DOMAIN=${BASE_DOMAIN:-testnet.local}
+
 PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
 if [[ ! -d ${PATH_DOMAIN} ]]
 then
@@ -57,17 +57,21 @@ then
 fi
 cd "${PATH_DOMAIN}"
 
-if [[ ! -f ./diva.yml ]]
-then
-  error "File not found: ${PATH_DOMAIN}/diva.yml";
-  exit 4
-fi
-
 warn "The confirmation of this action will lead to DATA LOSS!"
 warn "If you want to keep the data, run a backup first."
-confirm "Do you want to DELETE all local diva data (y/N)?" || exit 5
+confirm "Do you want to DELETE all local diva data (y/N)?" || exit 4
 
 running "Purging ${PATH_DOMAIN}"
-sudo docker compose -f ./diva.yml down --volumes
+
+if [[ -f ./genesis-i2p.yml ]]
+then
+  sudo docker compose -f ./genesis-i2p.yml down --volumes
+fi
+
+if [[ -f ./diva.yml ]]
+then
+  sudo docker compose -f ./diva.yml down --volumes
+fi
+
 BASE_DOMAIN=${BASE_DOMAIN} "${PROJECT_PATH}"/bin/clean.sh
 ok "Purged ${PATH_DOMAIN}"

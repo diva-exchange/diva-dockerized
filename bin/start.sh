@@ -64,8 +64,8 @@ then
   exit 4
 fi
 
-running "Pulling ${PATH_DOMAIN}"
-sudo docker compose -f ./diva.yml pull
+# running "Pulling ${PATH_DOMAIN}"
+# sudo docker compose -f ./diva.yml pull
 
 running "Starting ${PATH_DOMAIN}"
 sudo NO_BOOTSTRAPPING="${NO_BOOTSTRAPPING}" docker compose -f ./diva.yml up -d

@@ -29,6 +29,17 @@ PROJECT_PATH=$( pwd )
 source "${PROJECT_PATH}"/bin/util/echos.sh
 source "${PROJECT_PATH}"/bin/util/helpers.sh
 
+# check docker installation
+if ! command_exists docker; then
+  error "docker not available. Please install it first.";
+  exit 1
+fi
+
+if ! command_exists docker compose; then
+  error "docker compose not available. Please install it first.";
+  exit 2
+fi
+
 # env vars
 I2P_LOGLEVEL=${I2P_LOGLEVEL:-none}
 DIVA_TESTNET=0
@@ -55,16 +66,6 @@ if [[ -n ${JOIN_NETWORK} ]]
 then
  SIZE_NETWORK=1
  BASE_DOMAIN=join.${BASE_DOMAIN}
-fi
-
-if ! command_exists docker; then
-  error "docker not available. Please install it first.";
-  exit 1
-fi
-
-if ! command_exists docker compose; then
-  error "docker compose not available. Please install it first.";
-  exit 2
 fi
 
 PATH_DOMAIN=${PROJECT_PATH}/build/domains/${BASE_DOMAIN}
@@ -111,7 +112,9 @@ then
 
   cp "${PROJECT_PATH}"/build/dummy.tx.v1.json ./genesis/tx.v1.json
   cp "${PROJECT_PATH}"/build/genesis-i2p.yml ./genesis-i2p.yml
-  sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml pull
+
+  running "Starting I2P network and divachain..."
+  #sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml pull
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml up -d
 
   running "Waiting for key generation"
@@ -121,7 +124,6 @@ then
     sleep 2
   done
 
-  # shut down the genesis container and clean up
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml down --volumes
   rm ./genesis-i2p.yml
 
