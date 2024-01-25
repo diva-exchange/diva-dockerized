@@ -114,7 +114,7 @@ then
   cp "${PROJECT_PATH}"/build/genesis-i2p.yml ./genesis-i2p.yml
 
   running "Starting I2P network and divachain..."
-  #sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml pull
+  sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml pull
   sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml up -d
 
   running "Waiting for key generation"
