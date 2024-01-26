@@ -53,9 +53,15 @@ export class Build {
                 '      BANDWIDTH: P\n' +
                 `      LOGLEVEL: ${loglevel_i2p}\n` +
                 '    volumes:\n' +
-                `      - i2p.http.${baseDomain}:/home/i2pd/data\n` +
+                '      - type: "volume"\n' +
+                `        source: "i2p.http.${baseDomain}"\n` +
+                '        target: "/home/i2pd/data"\n' +
                 '    ports:\n' +
-                `      - ${hostBaseIP}11:7070:7070\n` +
+                '      - target: 7070\n' +
+                `        host_ip: ${hostBaseIP}11\n` +
+                '        published: "7070"\n' +
+                '        protocol: tcp\n' +
+                '        mode: host\n' +
                 '    networks:\n' +
                 `      network.${baseDomain}:\n` +
                 `        ipv4_address: ${baseIP}11\n\n`;
@@ -74,9 +80,15 @@ export class Build {
                 '      BANDWIDTH: P\n' +
                 `      LOGLEVEL: ${loglevel_i2p}\n` +
                 '    volumes:\n' +
-                `      - i2p.udp.${baseDomain}:/home/i2pd/data\n` +
+                '      - type: "bind"\n' +
+                `        source: "i2p.udp.${baseDomain}"\n` +
+                '        target: "/home/i2pd/data"\n' +
                 '    ports:\n' +
-                `      - ${hostBaseIP}12:7070:7070\n` +
+                '      - target: 7070\n' +
+                `        host_ip: ${hostBaseIP}12\n` +
+                '        published: "7070"\n' +
+                '        protocol: tcp\n' +
+                '        mode: host\n' +
                 '    networks:\n' +
                 `      network.${baseDomain}:\n` +
                 `        ipv4_address: ${baseIP}12\n\n`;
@@ -89,7 +101,8 @@ export class Build {
                     `    container_name: explorer.${baseDomain}\n` +
                     `    image: ${image_explorer}\n` +
                     '    depends_on:\n' +
-                    `      - n1.chain.${baseDomain}\n` +
+                    `      n1.chain.${baseDomain}:\n` +
+                    '        condition: service_started\n' +
                     '    restart: unless-stopped\n' +
                     '    environment:\n' +
                     `      HTTP_IP: ${baseIP}200\n` +
@@ -97,7 +110,10 @@ export class Build {
                     `      URL_API: http://${baseIP}21:${port}\n` +
                     `      URL_FEED: ws://${baseIP}21:${port_block_feed}\n` +
                     '    ports:\n' +
-                    `      - ${port_ui}:${port_ui}\n` +
+                    `      - target: ${port_ui}\n` +
+                    `        published: "${port_ui}"\n` +
+                    '        protocol: tcp\n' +
+                    '        mode: host\n' +
                     '    networks:\n' +
                     `      network.${baseDomain}:\n` +
                     `        ipv4_address: ${baseIP}200\n\n`;
@@ -114,8 +130,10 @@ export class Build {
                     `    container_name: ${nameChain}\n` +
                     `    image: ${image_chain}\n` +
                     '    depends_on:\n' +
-                    `      - i2p.http.${baseDomain}\n` +
-                    `      - i2p.udp.${baseDomain}\n` +
+                    `      i2p.http.${baseDomain}:\n` +
+                    '        condition: service_started\n' +
+                    `      i2p.udp.${baseDomain}:\n` +
+                    '        condition: service_started\n' +
                     '    restart: unless-stopped\n' +
                     '    environment:\n' +
                     `      NODE_ENV: ${envNode}\n` +
@@ -140,12 +158,24 @@ export class Build {
                             '      NO_BOOTSTRAPPING: ${NO_BOOTSTRAPPING:-0}\n'
                         : '') +
                     '    volumes:\n' +
-                    '      - ./blockstore:/blockstore\n' +
-                    '      - ./state:/state\n' +
-                    '      - ./keys:/keys\n' +
-                    '      - ./genesis:/genesis\n' +
+                    '      - type: "bind"\n' +
+                    '        source: "./blockstore"\n' +
+                    '        target: "/blockstore"\n' +
+                    '      - type: "bind"\n' +
+                    '        source: "./state"\n' +
+                    '        target: "/state"\n' +
+                    '      - type: "bind"\n' +
+                    '        source: "./keys"\n' +
+                    '        target: "/keys"\n' +
+                    '      - type: "bind"\n' +
+                    '        source: "./genesis"\n' +
+                    '        target: "/genesis"\n' +
                     '    ports:\n' +
-                    `      - ${hostBaseIP}${20 + seq}:${port}:${port}\n` +
+                    `      - target: ${port}\n` +
+                    `        host_ip: ${hostBaseIP}${20 + seq}\n` +
+                    `        published: "${port}"\n` +
+                    '        protocol: tcp\n' +
+                    '        mode: host\n' +
                     '    networks:\n' +
                     `      network.${baseDomain}:\n` +
                     `        ipv4_address: ${baseIP}${20 + seq}\n\n`;
@@ -157,7 +187,8 @@ export class Build {
                         `    container_name: ${nameProtocol}\n` +
                         `    image: ${image_protocol}\n` +
                         '    depends_on:\n' +
-                        `      - ${nameChain}\n` +
+                        `      ${nameChain}:\n` +
+                        '        condition: service_started\n' +
                         '    restart: unless-stopped\n' +
                         '    environment:\n' +
                         `      NODE_ENV: ${envNode}\n` +
@@ -167,7 +198,11 @@ export class Build {
                         `      URL_API_CHAIN: http://${baseIP}${20 + seq}:${port}\n` +
                         `      URL_BLOCK_FEED: ws://${baseIP}${20 + seq}:${port_block_feed}\n` +
                         '    ports:\n' +
-                        `      - ${hostBaseIP}${120 + seq}:${port_protocol}:${port_protocol}\n` +
+                        `      - target: ${port_protocol}\n` +
+                        `        host_ip: ${hostBaseIP}${120 + seq}\n` +
+                        `        published: "${port_protocol}"\n` +
+                        '        protocol: tcp\n' +
+                        '        mode: host\n' +
                         '    networks:\n' +
                         `      network.${baseDomain}:\n` +
                         `        ipv4_address: ${baseIP}${120 + seq}\n\n`;
