@@ -1,0 +1,77 @@
+#!/usr/bin/env sh
+#
+# Copyright (C) 2021-2023 diva.exchange
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Author/Maintainer: DIVA.EXCHANGE Association <contact@diva.exchange>
+#
+
+set -eu
+
+cd $APPDIR
+
+echo "Running from APPDIR: $APPDIR"
+
+
+# SELF=$(readlink -f "$0")
+# HERE=${SELF%/*}
+HERE=$APPDIR
+if [ -z "${DIVAAPPIMG_RELAUNCHED:-}" ]; then
+    export PATH="${HERE}/usr/bin/:${HERE}/usr/sbin/:${HERE}/usr/games/:${HERE}/bin/:${HERE}/sbin/${PATH:+:$PATH}"
+    export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/i386-linux-gnu/:${HERE}/usr/lib/x86_64-linux-gnu/:${HERE}/usr/lib32/:${HERE}/usr/lib64/:${HERE}/lib/:${HERE}/lib/i386-linux-gnu/:${HERE}/lib/x86_64-linux-gnu/::${HERE}/lib32/:${HERE}/lib64/:${HERE}/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export PYTHONPATH="${HERE}/usr/share/pyshared/${PYTHONPATH:+:$PYTHONPATH}"
+    export XDG_DATA_DIRS="${HERE}/usr/share/${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"
+    export PERLLIB="${HERE}/usr/share/perl5/:${HERE}/usr/lib/perl5/${PERLLIB:+:$PERLLIB}"
+    export GSETTINGS_SCHEMA_DIR="${HERE}/usr/share/glib-2.0/schemas/${GSETTINGS_SCHEMA_DIR:+:$GSETTINGS_SCHEMA_DIR}"
+    export QT_PLUGIN_PATH="${HERE}/usr/lib/qt4/plugins/:${HERE}/usr/lib/i386-linux-gnu/qt4/plugins/:${HERE}/usr/lib/x86_64-linux-gnu/qt4/plugins/:${HERE}/usr/lib32/qt4/plugins/:${HERE}/usr/lib64/qt4/plugins/:${HERE}/usr/lib/qt5/plugins/:${HERE}/usr/lib/i386-linux-gnu/qt5/plugins/:${HERE}/usr/lib/x86_64-linux-gnu/qt5/plugins/:${HERE}/usr/lib32/qt5/plugins/:${HERE}/usr/lib64/qt5/plugins/${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}"
+# EXEC=$(grep -e '^Exec=.*' "${HERE}"/*.desktop | head -n 1 | cut -d "=" -f 2 | cut -d " " -f 1)
+#
+
+    export DIVAAPPIMG_RELAUNCHED=1
+    echo RELAUNCH with sh from within appimage
+    # RELAUNCH the script again with own sh, so that it certainly has the correct c library
+    echo exec "$APPDIR/bin/sh" "$0" "$@"
+    exec "$APPDIR/bin/sh" "$0" "$@"
+    exit 0
+fi
+
+echo beforeldd
+
+
+# APPIMG_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# cd "${APPIMG_PATH}"
+# APPIMG_PATH=$( pwd )
+
+
+export DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share/divax}"
+
+if [ ! -d "$DATA_DIR" ]; then
+    mkdir -p "$DATA_DIR"
+    cp -R opt/i2pd/data/ "$DATA_DIR"
+fi
+
+# cleanup() {
+#    # TODO: stop i2pd when done
+# }
+#
+# trap cleanup EXIT
+
+# TODO: start i2pd
+# exec opt/i2pd/bin/i2pd --datadir=$DATA_DIR/data --conf=etc/i2pd.conf
+
+# TODO: start divachain
+exec ./divachain "$@"
+
+

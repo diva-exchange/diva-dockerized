@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  For Reference: https://www.freedesktop.org/software/appstream/docs/chap-Quickstart.html#sect-Quickstart-DesktopApps -->
+<component type="desktop-application">
+  <id>exchange.diva.divachain</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-1.0</project_license>
+  <name>divax</name>
+  <summary>Free Banking Technology For Everyone</summary>
+  <description>
+    <p>You have your own private &amp; secure banking technology.
+    A free software and network project based on blockchain and I2P technology.</p>
+
+    <p>The creators behind DIVA.EXCHANGE are convinced that digital values are becoming common means of payment and stores of value.</p>
+
+    <p>The free software project demonstrates how the storage, trade and payment transactions with digital values can be carried out without central service providers – securely and with rigorous privacy protection.</p>
+
+    <p>This brings us one step closer to the vision that every person can be his or her own bank in the future.</p>
+  </description>
+  <launchable type="desktop-id">exchange.diva.divachain.desktop</launchable>
+  <url type="homepage">https://www.diva.exchange</url>
+  <project_group>DIVA.EXCHANGE</project_group>
+
+
+  <!-- <screenshots> -->
+  <!-- <screenshot type="default"> -->
+  <!-- <image>https://myapp.org/img.png</image> -->
+  <!-- </screenshot> -->
+  <!-- </screenshots> -->
+  <provides>
+    <id>exchange.diva.divachain.desktop</id>
+    <!--   <binary>appimagetool</binary> -->
+  </provides>
+</component>
