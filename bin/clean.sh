@@ -28,17 +28,18 @@ PROJECT_PATH=$( pwd )
 # load helpers
 source "${PROJECT_PATH}"/bin/util/echos.sh
 source "${PROJECT_PATH}"/bin/util/helpers.sh
+source "${PROJECT_PATH}"/bin/util/commands.sh
 
 BASE_DOMAIN=${BASE_DOMAIN:-}
 
 if [[ ${BASE_DOMAIN} = "*" ]]
 then
   info "Removing ${PROJECT_PATH}/build/domains/*"
-  sudo rm -rf "${PROJECT_PATH}"/build/domains/*
+  as_root rm -rf "${PROJECT_PATH}"/build/domains/*
 elif [[ -n ${BASE_DOMAIN} && -d ${PROJECT_PATH}/build/domains/${BASE_DOMAIN} ]]
 then
   info "Removing ${PROJECT_PATH}/build/domains/${BASE_DOMAIN}"
-  sudo rm -rf "${PROJECT_PATH}"/build/domains/"${BASE_DOMAIN}"
+  as_root rm -rf "${PROJECT_PATH}"/build/domains/"${BASE_DOMAIN}"
 else
   warn "Set BASE_DOMAIN to a existing directory name (see domains directory)"
   exit 1
