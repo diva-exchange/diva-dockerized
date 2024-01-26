@@ -136,6 +136,8 @@ fi
 
 running "Creating diva.yml file"
 
+npm install
+
 tsc
 
 JOIN_NETWORK=${JOIN_NETWORK} \
