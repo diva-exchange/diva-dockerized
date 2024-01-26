@@ -28,6 +28,7 @@ PROJECT_PATH=$( pwd )
 # load helpers
 source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
+source "${PROJECT_PATH}/bin/util/commands.sh"
 
 # env vars
 DIVA_TESTNET=${DIVA_TESTNET:-0}
@@ -68,6 +69,6 @@ warn "If you want to keep the data, run a backup first."
 confirm "Do you want to DELETE all local diva data (y/N)?" || exit 5
 
 running "Purging ${PATH_DOMAIN}"
-sudo docker compose -f ./diva.yml down --volumes
+as_root docker compose -f ./diva.yml down --volumes
 BASE_DOMAIN=${BASE_DOMAIN} "${PROJECT_PATH}"/bin/clean.sh
 ok "Purged ${PATH_DOMAIN}"
