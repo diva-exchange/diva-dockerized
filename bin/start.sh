@@ -28,6 +28,7 @@ PROJECT_PATH=$( pwd )
 # load helpers
 source "${PROJECT_PATH}/bin/util/echos.sh"
 source "${PROJECT_PATH}/bin/util/helpers.sh"
+source "${PROJECT_PATH}/bin/util/commands.sh"
 
 # env vars
 DIVA_TESTNET=${DIVA_TESTNET:-0}
@@ -65,8 +66,8 @@ then
 fi
 
 running "Pulling ${PATH_DOMAIN}"
-sudo docker compose -f ./diva.yml pull
+as_root docker compose -f ./diva.yml pull
 
 running "Starting ${PATH_DOMAIN}"
-sudo NO_BOOTSTRAPPING="${NO_BOOTSTRAPPING}" docker compose -f ./diva.yml up -d
+NO_BOOTSTRAPPING="${NO_BOOTSTRAPPING}" as_root docker compose -f ./diva.yml up -d
 ok "Started ${PATH_DOMAIN}"

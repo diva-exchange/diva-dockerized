@@ -28,6 +28,7 @@ PROJECT_PATH=$( pwd )
 # load helpers
 source "${PROJECT_PATH}"/bin/util/echos.sh
 source "${PROJECT_PATH}"/bin/util/helpers.sh
+source "${PROJECT_PATH}"/bin/util/commands.sh
 
 # env vars
 I2P_LOGLEVEL=${I2P_LOGLEVEL:-none}
@@ -80,7 +81,7 @@ cd "${PATH_DOMAIN}"
 
 if [[ -f ./diva.yml ]]
 then
-  sudo docker compose -f ./diva.yml down
+  as_root docker compose -f ./diva.yml down
 fi
 
 if [[ ${PURGE} -gt 0 ]]
@@ -91,13 +92,13 @@ then
 
   if [[ -f ./diva.yml ]]
   then
-    sudo docker compose -f ./diva.yml down --volumes
+    as_root docker compose -f ./diva.yml down --volumes
   fi
 
-  sudo rm -rf "${PATH_DOMAIN}"/genesis/*
-  sudo rm -rf "${PATH_DOMAIN}"/keys/*
-  sudo rm -rf "${PATH_DOMAIN}"/state/*
-  sudo rm -rf "${PATH_DOMAIN}"/blockstore/*
+  as_root rm -rf "${PATH_DOMAIN}"/genesis/*
+  as_root rm -rf "${PATH_DOMAIN}"/keys/*
+  as_root rm -rf "${PATH_DOMAIN}"/state/*
+  as_root rm -rf "${PATH_DOMAIN}"/blockstore/*
 fi
 
 if [[ ! -f genesis/local.config ]]
@@ -106,12 +107,12 @@ then
 
   if [[ -f ./genesis-i2p.yml ]]
   then
-    sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml down --volumes
+    SIZE_NETWORK=${SIZE_NETWORK} as_root docker compose -f ./genesis-i2p.yml down --volumes
   fi
 
   cp "${PROJECT_PATH}"/build/genesis-i2p.yml ./genesis-i2p.yml
-  sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml pull
-  sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml up -d
+  SIZE_NETWORK=${SIZE_NETWORK} as_root docker compose -f ./genesis-i2p.yml pull
+  SIZE_NETWORK=${SIZE_NETWORK} as_root docker compose -f ./genesis-i2p.yml up -d
 
   running "Waiting for key generation"
   # wait until all keys are created
@@ -121,7 +122,7 @@ then
   done
 
   # shut down the genesis container and clean up
-  sudo SIZE_NETWORK=${SIZE_NETWORK} docker compose -f ./genesis-i2p.yml down --volumes
+  SIZE_NETWORK=${SIZE_NETWORK} as_root docker compose -f ./genesis-i2p.yml down --volumes
   rm ./genesis-i2p.yml
 
   # handle joining
