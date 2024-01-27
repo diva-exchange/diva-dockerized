@@ -29,8 +29,9 @@ echo "Running from APPDIR: $APPDIR"
 # HERE=${SELF%/*}
 HERE=$APPDIR
 if [ -z "${DIVAAPPIMG_RELAUNCHED:-}" ]; then
+    export ORIG_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/i386-linux-gnu/:${HERE}/usr/lib/x86_64-linux-gnu/:${HERE}/usr/lib32/:${HERE}/usr/lib64/:${HERE}/lib/:${HERE}/lib/i386-linux-gnu/:${HERE}/lib/x86_64-linux-gnu/::${HERE}/lib32/:${HERE}/lib64/:${HERE}/lib:${ORIG_LD_LIBRARY_PATH:+:$ORIG_LD_LIBRARY_PATH}"
     export PATH="${HERE}/usr/bin/:${HERE}/usr/sbin/:${HERE}/usr/games/:${HERE}/bin/:${HERE}/sbin/${PATH:+:$PATH}"
-    export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/i386-linux-gnu/:${HERE}/usr/lib/x86_64-linux-gnu/:${HERE}/usr/lib32/:${HERE}/usr/lib64/:${HERE}/lib/:${HERE}/lib/i386-linux-gnu/:${HERE}/lib/x86_64-linux-gnu/::${HERE}/lib32/:${HERE}/lib64/:${HERE}/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     export PYTHONPATH="${HERE}/usr/share/pyshared/${PYTHONPATH:+:$PYTHONPATH}"
     export XDG_DATA_DIRS="${HERE}/usr/share/${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"
     export PERLLIB="${HERE}/usr/share/perl5/:${HERE}/usr/lib/perl5/${PERLLIB:+:$PERLLIB}"
@@ -47,8 +48,6 @@ if [ -z "${DIVAAPPIMG_RELAUNCHED:-}" ]; then
     exit 0
 fi
 
-echo beforeldd
-
 
 # APPIMG_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # cd "${APPIMG_PATH}"
@@ -62,16 +61,19 @@ if [ ! -d "$DATA_DIR" ]; then
     cp -R opt/i2pd/data/ "$DATA_DIR"
 fi
 
-# cleanup() {
-#    # TODO: stop i2pd when done
-# }
-#
-# trap cleanup EXIT
 
-# TODO: start i2pd
-# exec opt/i2pd/bin/i2pd --datadir=$DATA_DIR/data --conf=etc/i2pd.conf
+# START I2P and kill it when the script is done
+I2P_PID=
+trap "kill \$I2P_PID" EXIT
+export LD_LIBRARY_PATH="${HERE}/opt/i2pd/usr/lib/:${HERE}/opt/i2pd/lib:${ORIG_LD_LIBRARY_PATH:+:$ORIG_LD_LIBRARY_PATH}"
+# ldd opt/i2pd/bin/i2pd
+opt/i2pd/bin/i2pd --datadir="$DATA_DIR/data" --conf=etc/i2pd.conf &
+I2P_PID=$!
 
-# TODO: start divachain
-exec ./divachain "$@"
+echo started i2pd in background
+
+# cannot exec here, because of TRAP EXIT to kill i2p
+# ldd ./divachain
+./divachain "$@"
 
 
