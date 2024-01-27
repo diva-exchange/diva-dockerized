@@ -58,19 +58,21 @@ grab_i2pd_build() {
     done
     docker rm -v "$id"
 
-    for binary in "$APP_DIR/opt/i2pd/bin/i2pd" "$APP_DIR/bin/sh"; do
-        patchelf --debug --set-interpreter ./opt/i2pd/lib/ld-musl-x86_64.so.1 "$binary"
+    for binary in $(printf "%s/%s\n" "$APP_DIR/opt/i2pd" "${I2PD_LIBS[@]}") "$APP_DIR/opt/i2pd/bin/i2pd" "$APP_DIR/bin/sh"; do
+        patchelf --debug --set-interpreter ./opt/i2pd/lib/ld-musl-x86_64.so.1 "$binary" || true
     done
 }
 
 grab_divachain_build() {
     DIVACHAIN_LIBS=(
+        /lib/x86_64-linux-gnu/ld-2.31.so
         /lib/x86_64-linux-gnu/libdl.so.2
         /usr/lib/x86_64-linux-gnu/libstdc++.so.6
         /lib/x86_64-linux-gnu/libm.so.6
         /lib/x86_64-linux-gnu/libpthread.so.0
         /lib/x86_64-linux-gnu/libc.so.6
-        /lib64/ld-linux-x86-64.so.2
+        /lib/x86_64-linux-gnu/libc-2.31.so
+        # /lib64/ld-linux-x86-64.so.2
     )
 
 
