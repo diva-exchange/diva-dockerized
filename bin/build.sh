@@ -139,7 +139,7 @@ fi
 
 running "Creating diva.yml file"
 
-tsc
+"${PROJECT_PATH}"/node_modules/.bin/tsc
 
 JOIN_NETWORK=${JOIN_NETWORK} \
   SIZE_NETWORK=${SIZE_NETWORK} \

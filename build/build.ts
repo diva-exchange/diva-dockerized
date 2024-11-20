@@ -75,7 +75,7 @@ export class Build {
     const hasProtocol = false; // Number(process.env.HAS_PROTOCOL || 1) > 0;
 
     // docker compose Yml file
-    let yml = 'version: "3.7"\nservices:\n';
+    let yml = 'name: diva\nservices:\n';
     let volumes = '';
     // http
     yml =

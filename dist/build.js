@@ -41,7 +41,7 @@ export class Build {
         const levelLog = process.env.LOG_LEVEL || 'warn';
         const hasExplorer = false;
         const hasProtocol = false;
-        let yml = 'version: "3.7"\nservices:\n';
+        let yml = 'name: diva\nservices:\n';
         let volumes = '';
         yml =
             yml +
@@ -61,8 +61,7 @@ export class Build {
                 `      network.${baseDomain}:\n` +
                 `        ipv4_address: ${baseIP}11\n\n`;
         volumes =
-            volumes +
-                `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
+            volumes + `  i2p.http.${baseDomain}:\n    name: i2p.http.${baseDomain}\n`;
         yml =
             yml +
                 `  i2p.udp.${baseDomain}:\n` +
@@ -102,6 +101,7 @@ export class Build {
                     `        ipv4_address: ${baseIP}200\n\n`;
         }
         const arrayConfig = JSON.parse(fs.readFileSync('genesis/local.config').toString());
+        fs.unlinkSync('genesis/local.config');
         let seq = 1;
         arrayConfig.forEach((config) => {
             const nameChain = `n${seq}.chain.${baseDomain}`;
